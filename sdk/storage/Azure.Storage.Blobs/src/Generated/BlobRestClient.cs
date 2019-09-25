@@ -12767,13 +12767,13 @@ namespace Azure.Storage.Blobs.Models
 }
 #endregion enum strings AccessTier
 
-#region class AccountInfo
+#region struct AccountInfo
 namespace Azure.Storage.Blobs.Models
 {
     /// <summary>
     /// AccountInfo
     /// </summary>
-    public partial class AccountInfo
+    public partial struct AccountInfo
     {
         /// <summary>
         /// Identifies the sku name of the account
@@ -12806,7 +12806,7 @@ namespace Azure.Storage.Blobs.Models
         }
     }
 }
-#endregion class AccountInfo
+#endregion struct AccountInfo
 
 #region enum AccountKind
 namespace Azure.Storage.Blobs.Models

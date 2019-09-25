@@ -4,7 +4,7 @@
 
 import {
     IProject,
-    IServiceModel, IService, IServiceInfo, 
+    IServiceModel, IService, IServiceInfo,
     IModels, IModelType, isObjectType, isEnumType, isPrimitiveType,
     IObjectType, IProperties, IProperty,
     IEnumType, IEnumValue,
@@ -18,21 +18,21 @@ import * as naming from './naming';
 import * as template from './template';
 
 // Load the swagger into a more usable form
-export async function create(project: IProject) : Promise<IServiceModel> {
+export async function create(project: IProject): Promise<IServiceModel> {
     // Get the service properties
     const info = createServiceInfo(project);
     project.cache.info = info;
-    
+
     // Process global parameters
-    const params = optional(() => project.swagger.parameters, { });
+    const params = optional(() => project.swagger.parameters, {});
     Object.keys(params).forEach(name => getGlobalParameter(project, `#/parameters/${name}`));
 
     // Process global definitions
-    const defs = optional(() => project.swagger.definitions, { });
+    const defs = optional(() => project.swagger.definitions, {});
     Object.keys(defs).forEach(name => getGlobalDefinition(project, `#/definitions/${name}`));
-    
+
     // Process global responses
-    const responses = optional(() => project.swagger.responses, { });
+    const responses = optional(() => project.swagger.responses, {});
     Object.keys(responses).forEach(name => getGlobalResponse(project, 'default', `#/responses/${name}`));
 
     // Process service operations
@@ -44,7 +44,7 @@ export async function create(project: IProject) : Promise<IServiceModel> {
     unsupported(() => project.swagger.externalDocs);
 
     // Filter the list of models to generate
-    const models: IModels = { };
+    const models: IModels = {};
     for (const [name, model] of Object.entries(project.cache.customTypes)) {
         if (!model) { continue; }
         if (model.external) { continue; }
@@ -97,7 +97,7 @@ function unsupported(fn: () => any, location?: string): void {
     if (value !== null && value !== undefined) {
         let msg = `Generator does not support ${fn.toString()}`;
         if (location) { msg += ` (in ${location})`; }
-        throw msg;       
+        throw msg;
     }
 }
 
@@ -238,7 +238,7 @@ function createServiceInfo(project: IProject): IServiceInfo {
         const location = `project.swagger['x-ms-parameterized-host']`;
 
         // Load the parameters
-        const params: IParameters = { };
+        const params: IParameters = {};
         if (host.parameters && host.parameters.length > 0) {
             for (let i = 0; i < host.parameters.length; i++) {
                 const p = createParameter(project, host.parameters[i], `${location}.parameters[${i}]`);
@@ -259,7 +259,7 @@ function createServiceInfo(project: IProject): IServiceInfo {
         project.context.verbose(`project.swagger.securityDefinitions is being ignored`);
     }
 
-    let isPublic: boolean|undefined = project.swagger.info[`x-ms-code-generation-settings`][`x-az-public`];
+    let isPublic: boolean | undefined = project.swagger.info[`x-ms-code-generation-settings`][`x-az-public`];
     if (isPublic === undefined) {
         isPublic = true;
     }
@@ -268,7 +268,7 @@ function createServiceInfo(project: IProject): IServiceInfo {
     const title = <string>required(() => project.swagger.info.title);
     return {
         title: title,
-        description: <string|null>optional(() => project.swagger.info.description, null),
+        description: <string | null>optional(() => project.swagger.info.description, null),
         namespace: <string>required(() => project.swagger.info[`x-ms-code-generation-settings`].namespace),
         extensionsName: <string>optional(
             () => project.swagger.info[`x-ms-code-generation-settings`][`client-extensions-name`],
@@ -276,7 +276,7 @@ function createServiceInfo(project: IProject): IServiceInfo {
         modelFactoryName: <string>optional(
             () => project.swagger.info[`x-ms-code-generation-settings`][`client-model-factory-name`],
             title + ' ModelFactory'),
-        versions: [ <string>required(() => project.swagger.info.version) ],
+        versions: [<string>required(() => project.swagger.info.version)],
         public: isPublic,
         sync: <boolean>optional(() => project.swagger.info[`x-ms-code-generation-settings`][`x-az-include-sync-methods`], false),
         consumes: [`application/xml`],
@@ -304,16 +304,16 @@ function createParameter(project: IProject, swagger: any, location: string): IPa
 
     const reqd = optional(() => swagger.required, at === `path`);
     if (at === `path` && !reqd) { throw `${location}.required must be true for path parameters`; }
-    
+
     const clientName = optional(() => swagger[`x-ms-client-name`], name);
     const skipUrlEncoding = optional(() => swagger[`x-ms-skip-url-encoding`], false);
-    
-    const parameterLocation: string|undefined = swagger[`x-ms-parameter-location`];
+
+    const parameterLocation: string | undefined = swagger[`x-ms-parameter-location`];
     if (parameterLocation === 'client') {
         throw `'x-ms-parameter-location: client' is not currently supported (in ${location})`;
     }
 
-    let parameterGroup: string|undefined = undefined;
+    let parameterGroup: string | undefined = undefined;
     const grouping = swagger[`x-ms-parameter-grouping`];
     if (grouping) {
         parameterGroup = grouping.name;
@@ -328,7 +328,7 @@ function createParameter(project: IProject, swagger: any, location: string): IPa
     // TODO: Flip to '(at === `body`) ? ' instead of the 'schema || ' if there's trouble
     const model = createType(project, clientName, swagger.schema || swagger, location);
     if (reqd) { checkIfConstant(model); }
-    
+
     // Make all the model properties writeable
     enableMutation(model);
 
@@ -382,12 +382,12 @@ function createType(project: IProject, name: string, swagger: any, location: str
 
 function createObjectType(project: IProject, name: string, swagger: any, location: string): IObjectType {
     if (swagger.type !== `object`) {
-       project.context.warn(`${location}.type should be object, not ${swagger.type}`);
+        project.context.warn(`${location}.type should be object, not ${swagger.type}`);
     }
 
     // Get the properties
-    const properties: IProperties = { };
-    for (const [name, def] of <[string, any]>Object.entries(swagger.properties || { })) {
+    const properties: IProperties = {};
+    for (const [name, def] of <[string, any]>Object.entries(swagger.properties || {})) {
         unsupported(() => def[`x-ms-client-flatten`], `${location}.properties['${name}']`);
         unsupported(() => def[`x-ms-mutability`], `${location}.properties['${name}']`);
 
@@ -396,7 +396,7 @@ function createObjectType(project: IProject, name: string, swagger: any, locatio
             clientName: optional(() => def[`x-ms-client-name`], name),
             description: def.description,
             readonly: true,
-            xml: def.xml || { },
+            xml: def.xml || {},
             model: createType(project, name, def, `${location}.properties['${name}']`)
         };
     }
@@ -411,11 +411,11 @@ function createObjectType(project: IProject, name: string, swagger: any, locatio
     }
 
     // Add additional
-    let additional: IModelType|undefined = undefined;
+    let additional: IModelType | undefined = undefined;
     if (swagger.additionalProperties) {
         additional = createType(project, '__additional__', swagger.additionalProperties, `${location}.additionalProperties`);
     }
-    
+
     unsupported(() => swagger.allOf, location);
     unsupported(() => swagger.externalDocs, location);
     unsupported(() => swagger.example, location);
@@ -423,11 +423,13 @@ function createObjectType(project: IProject, name: string, swagger: any, locatio
     unsupported(() => swagger[`x-ms-discriminator-value`], location);
     unsupported(() => swagger.readOnly, location);
     unsupported(() => swagger[`x-ms-azure-resource`], location);
-    
-    let isPublic: boolean|undefined = swagger[`x-az-public`];
+
+    let isPublic: boolean | undefined = swagger[`x-az-public`];
     if (isPublic === undefined) {
         isPublic = true;
     }
+
+    let isStruct: boolean | undefined = swagger[`x-az-struct`];
 
     const info = <IServiceInfo>required(() => project.cache.info);
     return {
@@ -437,21 +439,22 @@ function createObjectType(project: IProject, name: string, swagger: any, locatio
         description: swagger.description,
         properties,
         additionalPropeties: additional,
-        xml: swagger.xml || { },
+        xml: swagger.xml || {},
         serialize: false,
         deserialize: false,
         disableWarnings: swagger[`x-az-disable-warnings`],
         public: isPublic,
+        struct: isStruct,
         extendedHeaders: []
     };
 }
 
 function createEnumType(project: IProject, name: string, swagger: any, location: string): IEnumType {
     if (swagger.type !== `string`) {
-       project.context.warn(`${location}.type should be string, not ${swagger.type} for enum`);
+        project.context.warn(`${location}.type should be string, not ${swagger.type} for enum`);
     }
 
-    let modelAsString: boolean|undefined = undefined;
+    let modelAsString: boolean | undefined = undefined;
     let values: IEnumValue[];
     let originalValues = <IEnumValue[]>(swagger.enum || []).map((v: any) => ({ value: v }));
     const ex = swagger[`x-ms-enum`];
@@ -466,7 +469,7 @@ function createEnumType(project: IProject, name: string, swagger: any, location:
     // Check if we need a custom serializer
     const customSerialization = values.some(v => (v.value !== naming.enumField(v.name || v.value)));
 
-    let isPublic: boolean|undefined = swagger[`x-az-public`];
+    let isPublic: boolean | undefined = swagger[`x-az-public`];
     if (isPublic === undefined) {
         isPublic = true;
     }
@@ -496,15 +499,15 @@ function createPrimitiveType(project: IProject, swagger: any, location: string):
         type = 'long';
     }
 
-    let dictionaryPrefix = <string|undefined>swagger[`x-ms-header-collection-prefix`];
-    let itemType: IPrimitiveType|undefined = undefined;
+    let dictionaryPrefix = <string | undefined>swagger[`x-ms-header-collection-prefix`];
+    let itemType: IPrimitiveType | undefined = undefined;
     if (swagger.items) {
         itemType = createType(project, '__item__', swagger.items, `${location}.items`);
-    } else if (dictionaryPrefix || swagger.additionalProperties ) {
-        itemType = createType(project, '__dictionary__', swagger.additionalProperties || {type: "string"}, `${location}.additionalProperties`);
+    } else if (dictionaryPrefix || swagger.additionalProperties) {
+        itemType = createType(project, '__dictionary__', swagger.additionalProperties || { type: "string" }, `${location}.additionalProperties`);
         type = "dictionary";
     }
-    
+
     if (type === `object`) {
         project.context.warn(`${location}.type should not be object`);
     }
@@ -526,7 +529,7 @@ function createPrimitiveType(project: IProject, swagger: any, location: string):
         uniqueItems: swagger.uniqueItems,
         pattern: swagger.pattern,
         defaultValue: swagger.default,
-        xml: swagger.xml || { },
+        xml: swagger.xml || {},
         itemType,
         dictionaryPrefix,
         extendedHeaders: []
@@ -587,8 +590,8 @@ function createResponse(project: IProject, code: string, name: string, swagger: 
         response.code = code;
         return response;
     }
-    
-    let model: IModelType|undefined = undefined;
+
+    let model: IModelType | undefined = undefined;
     if (swagger.schema) {
         model = createType(project, name, swagger.schema, `${location}['${code}'].schema`);
     }
@@ -598,10 +601,12 @@ function createResponse(project: IProject, code: string, name: string, swagger: 
 
     unsupported(() => swagger.examples, `${location}['${code}']`);
 
-    let isPublic: boolean|undefined = swagger[`x-az-public`];
+    let isPublic: boolean | undefined = swagger[`x-az-public`];
     if (isPublic === undefined) {
         isPublic = true;
     }
+
+    let isStruct: boolean = swagger[`x-az-struct`];
 
     return {
         code,
@@ -612,12 +617,13 @@ function createResponse(project: IProject, code: string, name: string, swagger: 
         headers,
         exception: <boolean>optional(() => swagger[`x-az-create-exception`]),
         public: isPublic,
-        returnStream: <boolean>optional(() => swagger[`x-az-stream`])
+        returnStream: <boolean>optional(() => swagger[`x-az-stream`]),
+        struct: isStruct
     };
 }
 
 function createHeaders(project: IProject, swagger: any, location: string): IHeaders {
-    const headers: IHeaders = { };
+    const headers: IHeaders = {};
     for (const [name, def] of <[string, any]>Object.entries(swagger || {})) {
         let ignore = def[`x-az-demote-header`];
         if (ignore === undefined) {
@@ -644,18 +650,18 @@ function createService(project: IProject): IService {
         name: naming.type(required(() => project.swagger.info[`x-ms-code-generation-settings`][`client-name`])),
         namespace: naming.namespace(info.namespace),
         extensionsName: naming.type(info.extensionsName),
-        groups: { },
-        operations: { }
+        groups: {},
+        operations: {}
     };
 
     // Process the paths
-    for (const [path, def] of <[string, any]>Object.entries(optional(() => project.swagger.paths, { }))) {
+    for (const [path, def] of <[string, any]>Object.entries(optional(() => project.swagger.paths, {}))) {
         addOperations(project, service, path, def, `project.swagger.paths['${path}']`);
     }
-    for (const [path, def] of <[string, any]>Object.entries(optional(() => project.swagger[`x-ms-paths`], { }))) {
+    for (const [path, def] of <[string, any]>Object.entries(optional(() => project.swagger[`x-ms-paths`], {}))) {
         addOperations(project, service, path, def, `project.swagger['x-ms-paths']['${path}']`);
     }
- 
+
     return service;
 }
 
@@ -677,9 +683,9 @@ function addOperations(project: IProject, service: IService, path: string, swagg
     // Create the full path
     const info = <IServiceInfo>required(() => project.cache.info);
     let fullPath: string = info.host ? info.host.template.template + path : path;
-    
+
     // Process the individual operations
-    for (const [method, def] of <[string, any]>Object.entries(swagger || { })) {
+    for (const [method, def] of <[string, any]>Object.entries(swagger || {})) {
         if (method === `parameters`) { continue; }
 
         const name = `${method} ${fullPath}`;
@@ -687,11 +693,11 @@ function addOperations(project: IProject, service: IService, path: string, swagg
 
         // Not yet implemented
         const op = createOperation(project, method, def, fullPath, groupParameters, nextLocation);
-        
+
         // Add the operation to the right part of the service
         if (op.group) {
             let operations = service.groups[op.group];
-            if (!operations) { operations = service.groups[op.group] = { }; }
+            if (!operations) { operations = service.groups[op.group] = {}; }
             operations[name] = op;
         } else {
             service.operations[name] = op;
@@ -705,13 +711,13 @@ function createOperation(project: IProject, method: string, def: any, fullPath: 
     unsupported(() => def.externalDocs, location);
     unsupported(() => def.deprecated, location);
     unsupported(() => def.security, location);
-    
+
     // Process schemes
     const schemes = optional(() => def.schemes, [`https`]);
     if (schemes.length != 1 || schemes[0] != `https`) {
         throw `Only HTTPS is supported for swagger.schemes (in ${location})`;
     }
-    
+
     // Proces produces + consumes
     const info = <IServiceInfo>required(() => project.cache.info);
     const serializationFormats: { [key: string]: (string | undefined) } = {
@@ -724,13 +730,13 @@ function createOperation(project: IProject, method: string, def: any, fullPath: 
         throw `Only application/xml and application/octet-stream are supported for swagger.consumes, not ${consumes.join(', ')} (in ${location})`;
     }
     let consumed = <string>serializationFormats[consumes[0]];
-    
+
     let produces = optional(() => def.produces, [...info.produces]);
     if (produces.length != 1 || produces[0] != `application/xml` && produces[0] != `application/octet-stream`) {
         throw `Only application/xml and application/octet-stream are supported for swagger.produces, not ${produces.join(', ')} (in ${location})`;
     }
     let produced = <string>serializationFormats[produces[0]];
-    
+
     // Get the name and group
     let operationId: string = def.operationId;
     let group: string | undefined = undefined;
@@ -768,7 +774,7 @@ function createOperation(project: IProject, method: string, def: any, fullPath: 
         responses[code] = createResponse(project, code, responseName + ' ' + code, op, `${location}.responses['${code}']`);
     }
     const responseGroup = getOperationResponse(project, responses, responseName, location);
-    
+
     // Create the operation
     return {
         name: operationId,
@@ -832,14 +838,14 @@ function getOperationParameters(project: IProject, info: IServiceInfo, path: tem
             type: 'object',
             external: true,
             namespace: 'Azure.Core.Pipeline',
-            properties: { },
-            xml: { }
+            properties: {},
+            xml: {}
         },
         trace: false
     });
 
     return parameters;
-    
+
     // Replace any existing parameters or add them to the end of the list
     function addOrReplaceParameter(param: IParameter): void {
         const existing = parameters.findIndex(p => p.name === param.name && p.location === param.location);
@@ -853,7 +859,7 @@ function getOperationParameters(project: IProject, info: IServiceInfo, path: tem
 
     // Create groups of parameters based on their parameterGroup
     function groupParameters(parameters: IParameter[]) {
-        const groups: { [key: string]: IParameter[]|undefined } = { };
+        const groups: { [key: string]: IParameter[] | undefined } = {};
         parameters.forEach(p => {
             if (p.parameterGroup) {
                 let nameGroup = groups[p.parameterGroup];
@@ -867,10 +873,10 @@ function getOperationParameters(project: IProject, info: IServiceInfo, path: tem
     }
 }
 
-function getOperationResponse(project: IProject, responses: IResponses, defaultName: string, location: string) : IResponseGroup {
+function getOperationResponse(project: IProject, responses: IResponses, defaultName: string, location: string): IResponseGroup {
     let model: IModelType;
     const all = <IResponse[]>Object.values(responses);
-    
+
     // Get other failure types
     const failures = all.filter(s => s.code[0] !== `2` && s.code !== `default`);
     for (const other of failures) {
@@ -902,14 +908,14 @@ function getOperationResponse(project: IProject, responses: IResponses, defaultN
             break;
     }
     model.returnStream = successes[0].returnStream;
-    
+
     // Return all the responses
     return {
         model,
         successes,
         failures
     };
-    
+
     function createResponseType(response: IResponse, defaultName: string, location: string): IModelType {
         const headers = <IHeader[]>Object.values(response.headers);
         const ignoredHeaders = headers.filter(h => h.ignore);
@@ -945,7 +951,8 @@ function getOperationResponse(project: IProject, responses: IResponses, defaultN
             name: response.clientName || defaultName,
             namespace: `${info.namespace}.Models`,
             public: response.public,
-            properties: { },
+            struct: response.struct,
+            properties: {},
             serialize: false,
             deserialize: false,
             extendedHeaders: ignoredHeaders
@@ -959,7 +966,7 @@ function getOperationResponse(project: IProject, responses: IResponses, defaultN
                 clientName: header.clientName || header.name,
                 required: true,
                 readonly: true,
-                xml: { },
+                xml: {},
                 model: header.model
             };
         }
@@ -972,7 +979,7 @@ function getOperationResponse(project: IProject, responses: IResponses, defaultN
                 clientName: response.bodyClientName,
                 required: true,
                 readonly: true,
-                xml: { },
+                xml: {},
                 model: response.body
             };
         }
@@ -997,7 +1004,8 @@ function getOperationResponse(project: IProject, responses: IResponses, defaultN
             body: a.body || b.body,
             bodyClientName: a.bodyClientName || b.bodyClientName,
             headers: { ...b.headers, ...a.headers },
-            public: a.public && b.public
+            public: a.public && b.public,
+            struct: a.struct && b.struct
         };
     }
 }
