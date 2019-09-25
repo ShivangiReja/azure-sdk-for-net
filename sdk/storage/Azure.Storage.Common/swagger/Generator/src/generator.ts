@@ -846,7 +846,8 @@ function generateObject(w: IndentWriter, model: IServiceModel, type: IObjectType
         w.line(`/// ${type.description || type.name}`);
         w.line(`/// </summary>`);
         if (type.disableWarnings) { w.line(`#pragma warning disable ${type.disableWarnings}`); }
-        w.line(`${type.public ? 'public' : 'internal'} partial class ${naming.type(type.name)}`);
+        if (type.struct) { w.line(`${type.public ? 'public' : 'internal'} partial struct ${naming.type(type.name)}`); }
+        else { w.line(`${type.public ? 'public' : 'internal'} partial class ${naming.type(type.name)}`); }
         if (type.disableWarnings) { w.line(`#pragma warning restore ${type.disableWarnings}`); }
         const separator = IndentWriter.createFenceposter();
         w.scope('{', '}', () => {
