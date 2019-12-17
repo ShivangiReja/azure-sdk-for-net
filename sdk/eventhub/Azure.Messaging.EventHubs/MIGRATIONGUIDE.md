@@ -14,9 +14,9 @@ clients, rather than having a single `EventHubClient`:
 * [EventHubConsumerClient](https://docs.microsoft.com/en-us/dotnet/api/azure.messaging.eventhubs.eventhubconsumerclient?view=azure-dotnet-preview) 
   for receiving messages.
 
-We've also defined [EventHubConnection](https://docs.microsoft.com/en-us/dotnet/api/azure.messaging.eventhubs.eventhubconnection?view=azure-dotnet-preview) which enables client communications with a specific Event Hub instance within an Event Hubs namespace. A single connection may be shared among multiple Event Hub producers and/or consumers,or may be used as a dedicated connection for a single producer or consumer client.
+We've also defined [EventHubConnection](https://docs.microsoft.com/en-us/dotnet/api/azure.messaging.eventhubs.eventhubconnection?view=azure-dotnet-preview) which enables client communications with a specific Event Hub instance within an Event Hubs namespace. A single connection may be shared among multiple Event Hub producers and/or consumers, or may be used as a dedicated connection for a single producer or consumer client.
 
-We've introduced a new library Azure.Messaging.EventHubs.Processor(https://www.nuget.org/packages/Azure.Messaging.EventHubs.Processor/5.0.0-preview.6) where we have [EventProcessorClient][(https://github.com/Azure/azure-sdk-for-net/blob/master/sdk/eventhub/Azure.Messaging.EventHubs.Processor/src/EventProcessorClient.cs) which is responsible for consuming events for the configured Event Hub and consumer group across all partitions, it also supports checkpointing and load balancing. Currently, only Azure Storage Blobs is supported.
+We've introduced a new library [Azure.Messaging.EventHubs.Processor](https://www.nuget.org/packages/Azure.Messaging.EventHubs.Processor/5.0.0-preview.6) where we have [EventProcessorClient](https://github.com/Azure/azure-sdk-for-net/blob/master/sdk/eventhub/Azure.Messaging.EventHubs.Processor/src/EventProcessorClient.cs) which is responsible for consuming events for the configured Event Hub and consumer group across all partitions, it also supports checkpointing and load balancing. Currently, only Azure Storage Blobs is supported.
 
 ### Client constructors
 
