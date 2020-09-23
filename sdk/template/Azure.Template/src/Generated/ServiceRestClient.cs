@@ -6,6 +6,7 @@
 #nullable disable
 
 using System;
+using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,69 +19,80 @@ namespace Azure.Template
 {
     internal partial class ServiceRestClient
     {
-        private string vaultBaseUrl;
-        private string apiVersion;
+        private string endpoint;
         private ClientDiagnostics _clientDiagnostics;
         private HttpPipeline _pipeline;
 
         /// <summary> Initializes a new instance of ServiceRestClient. </summary>
         /// <param name="clientDiagnostics"> The handler for diagnostic messaging in the client. </param>
         /// <param name="pipeline"> The HTTP pipeline for sending and receiving REST requests and responses. </param>
-        /// <param name="vaultBaseUrl"> The vault name, for example https://myvault.vault.azure.net. </param>
-        /// <param name="apiVersion"> Api Version. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="vaultBaseUrl"/> or <paramref name="apiVersion"/> is null. </exception>
-        public ServiceRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string vaultBaseUrl, string apiVersion = "7.0")
+        /// <param name="endpoint"> Supported Cognitive Services endpoints. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="endpoint"/> is null. </exception>
+        public ServiceRestClient(ClientDiagnostics clientDiagnostics, HttpPipeline pipeline, string endpoint)
         {
-            if (vaultBaseUrl == null)
+            if (endpoint == null)
             {
-                throw new ArgumentNullException(nameof(vaultBaseUrl));
-            }
-            if (apiVersion == null)
-            {
-                throw new ArgumentNullException(nameof(apiVersion));
+                throw new ArgumentNullException(nameof(endpoint));
             }
 
-            this.vaultBaseUrl = vaultBaseUrl;
-            this.apiVersion = apiVersion;
+            this.endpoint = endpoint;
             _clientDiagnostics = clientDiagnostics;
             _pipeline = pipeline;
         }
 
-        internal HttpMessage CreateGetSecretRequest(string secretName)
+        internal HttpMessage CreateClassifyImageRequest(Guid projectId, string publishedName, Stream imageData, string application)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
-            request.Method = RequestMethod.Get;
+            request.Method = RequestMethod.Post;
             var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(vaultBaseUrl, false);
-            uri.AppendPath("/secrets/", false);
-            uri.AppendPath(secretName, true);
-            uri.AppendQuery("api-version", apiVersion, true);
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/customvision/v3.1/prediction", false);
+            uri.AppendPath("/", false);
+            uri.AppendPath(projectId, true);
+            uri.AppendPath("/classify/iterations/", false);
+            uri.AppendPath(publishedName, true);
+            uri.AppendPath("/image", false);
+            if (application != null)
+            {
+                uri.AppendQuery("application", application, true);
+            }
             request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "multipart/form-data");
+            request.Headers.Add("Accept", "application/json, application/xml, text/xml");
+            var content = new MultipartFormDataContent();
+            content.Add(RequestContent.Create(imageData), "imageData", null);
+            content.ApplyToRequest(request);
             return message;
         }
 
-        /// <summary> The GET operation is applicable to any secret stored in Azure Key Vault. This operation requires the secrets/get permission. </summary>
-        /// <param name="secretName"> The name of the secret. </param>
+        /// <summary> Classify an image and saves the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageData"> Binary image data. Supported formats are JPEG, GIF, PNG, and BMP. Supports images up to 4MB. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="secretName"/> is null. </exception>
-        public async Task<Response<SecretBundle>> GetSecretAsync(string secretName, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageData"/> is null. </exception>
+        public async Task<Response<ImagePrediction>> ClassifyImageAsync(Guid projectId, string publishedName, Stream imageData, string application = null, CancellationToken cancellationToken = default)
         {
-            if (secretName == null)
+            if (publishedName == null)
             {
-                throw new ArgumentNullException(nameof(secretName));
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageData == null)
+            {
+                throw new ArgumentNullException(nameof(imageData));
             }
 
-            using var message = CreateGetSecretRequest(secretName);
+            using var message = CreateClassifyImageRequest(projectId, publishedName, imageData, application);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
                 case 200:
                     {
-                        SecretBundle value = default;
+                        ImagePrediction value = default;
                         using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
-                        value = SecretBundle.DeserializeSecretBundle(document.RootElement);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
@@ -88,26 +100,691 @@ namespace Azure.Template
             }
         }
 
-        /// <summary> The GET operation is applicable to any secret stored in Azure Key Vault. This operation requires the secrets/get permission. </summary>
-        /// <param name="secretName"> The name of the secret. </param>
+        /// <summary> Classify an image and saves the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageData"> Binary image data. Supported formats are JPEG, GIF, PNG, and BMP. Supports images up to 4MB. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="secretName"/> is null. </exception>
-        public Response<SecretBundle> GetSecret(string secretName, CancellationToken cancellationToken = default)
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageData"/> is null. </exception>
+        public Response<ImagePrediction> ClassifyImage(Guid projectId, string publishedName, Stream imageData, string application = null, CancellationToken cancellationToken = default)
         {
-            if (secretName == null)
+            if (publishedName == null)
             {
-                throw new ArgumentNullException(nameof(secretName));
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageData == null)
+            {
+                throw new ArgumentNullException(nameof(imageData));
             }
 
-            using var message = CreateGetSecretRequest(secretName);
+            using var message = CreateClassifyImageRequest(projectId, publishedName, imageData, application);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
                 case 200:
                     {
-                        SecretBundle value = default;
+                        ImagePrediction value = default;
                         using var document = JsonDocument.Parse(message.Response.ContentStream);
-                        value = SecretBundle.DeserializeSecretBundle(document.RootElement);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateClassifyImageWithNoStoreRequest(Guid projectId, string publishedName, Stream imageData, string application)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/customvision/v3.1/prediction", false);
+            uri.AppendPath("/", false);
+            uri.AppendPath(projectId, true);
+            uri.AppendPath("/classify/iterations/", false);
+            uri.AppendPath(publishedName, true);
+            uri.AppendPath("/image/nostore", false);
+            if (application != null)
+            {
+                uri.AppendQuery("application", application, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Content-Type", "multipart/form-data");
+            request.Headers.Add("Accept", "application/json, application/xml, text/xml");
+            var content = new MultipartFormDataContent();
+            content.Add(RequestContent.Create(imageData), "imageData", null);
+            content.ApplyToRequest(request);
+            return message;
+        }
+
+        /// <summary> Classify an image without saving the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageData"> Binary image data. Supported formats are JPEG, GIF, PNG, and BMP. Supports images up to 4MB. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageData"/> is null. </exception>
+        public async Task<Response<ImagePrediction>> ClassifyImageWithNoStoreAsync(Guid projectId, string publishedName, Stream imageData, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageData == null)
+            {
+                throw new ArgumentNullException(nameof(imageData));
+            }
+
+            using var message = CreateClassifyImageWithNoStoreRequest(projectId, publishedName, imageData, application);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> Classify an image without saving the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageData"> Binary image data. Supported formats are JPEG, GIF, PNG, and BMP. Supports images up to 4MB. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageData"/> is null. </exception>
+        public Response<ImagePrediction> ClassifyImageWithNoStore(Guid projectId, string publishedName, Stream imageData, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageData == null)
+            {
+                throw new ArgumentNullException(nameof(imageData));
+            }
+
+            using var message = CreateClassifyImageWithNoStoreRequest(projectId, publishedName, imageData, application);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateClassifyImageUrlRequest(Guid projectId, string publishedName, ImageUrl imageUrl, string application)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/customvision/v3.1/prediction", false);
+            uri.AppendPath("/", false);
+            uri.AppendPath(projectId, true);
+            uri.AppendPath("/classify/iterations/", false);
+            uri.AppendPath(publishedName, true);
+            uri.AppendPath("/url", false);
+            if (application != null)
+            {
+                uri.AppendQuery("application", application, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Content-Type", "application/json");
+            request.Headers.Add("Accept", "application/json, application/xml, text/xml");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(imageUrl);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Classify an image url and saves the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageUrl"> An ImageUrl that contains the url of the image to be evaluated. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageUrl"/> is null. </exception>
+        public async Task<Response<ImagePrediction>> ClassifyImageUrlAsync(Guid projectId, string publishedName, ImageUrl imageUrl, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageUrl == null)
+            {
+                throw new ArgumentNullException(nameof(imageUrl));
+            }
+
+            using var message = CreateClassifyImageUrlRequest(projectId, publishedName, imageUrl, application);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> Classify an image url and saves the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageUrl"> An ImageUrl that contains the url of the image to be evaluated. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageUrl"/> is null. </exception>
+        public Response<ImagePrediction> ClassifyImageUrl(Guid projectId, string publishedName, ImageUrl imageUrl, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageUrl == null)
+            {
+                throw new ArgumentNullException(nameof(imageUrl));
+            }
+
+            using var message = CreateClassifyImageUrlRequest(projectId, publishedName, imageUrl, application);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateClassifyImageUrlWithNoStoreRequest(Guid projectId, string publishedName, ImageUrl imageUrl, string application)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/customvision/v3.1/prediction", false);
+            uri.AppendPath("/", false);
+            uri.AppendPath(projectId, true);
+            uri.AppendPath("/classify/iterations/", false);
+            uri.AppendPath(publishedName, true);
+            uri.AppendPath("/url/nostore", false);
+            if (application != null)
+            {
+                uri.AppendQuery("application", application, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Content-Type", "application/json");
+            request.Headers.Add("Accept", "application/json, application/xml, text/xml");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(imageUrl);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Classify an image url without saving the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageUrl"> An {Iris.Web.Api.Models.ImageUrl} that contains the url of the image to be evaluated. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageUrl"/> is null. </exception>
+        public async Task<Response<ImagePrediction>> ClassifyImageUrlWithNoStoreAsync(Guid projectId, string publishedName, ImageUrl imageUrl, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageUrl == null)
+            {
+                throw new ArgumentNullException(nameof(imageUrl));
+            }
+
+            using var message = CreateClassifyImageUrlWithNoStoreRequest(projectId, publishedName, imageUrl, application);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> Classify an image url without saving the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageUrl"> An {Iris.Web.Api.Models.ImageUrl} that contains the url of the image to be evaluated. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageUrl"/> is null. </exception>
+        public Response<ImagePrediction> ClassifyImageUrlWithNoStore(Guid projectId, string publishedName, ImageUrl imageUrl, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageUrl == null)
+            {
+                throw new ArgumentNullException(nameof(imageUrl));
+            }
+
+            using var message = CreateClassifyImageUrlWithNoStoreRequest(projectId, publishedName, imageUrl, application);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateDetectImageRequest(Guid projectId, string publishedName, Stream imageData, string application)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/customvision/v3.1/prediction", false);
+            uri.AppendPath("/", false);
+            uri.AppendPath(projectId, true);
+            uri.AppendPath("/detect/iterations/", false);
+            uri.AppendPath(publishedName, true);
+            uri.AppendPath("/image", false);
+            if (application != null)
+            {
+                uri.AppendQuery("application", application, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Content-Type", "multipart/form-data");
+            request.Headers.Add("Accept", "application/json, application/xml, text/xml");
+            var content = new MultipartFormDataContent();
+            content.Add(RequestContent.Create(imageData), "imageData", null);
+            content.ApplyToRequest(request);
+            return message;
+        }
+
+        /// <summary> Detect objects in an image and saves the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageData"> Binary image data. Supported formats are JPEG, GIF, PNG, and BMP. Supports images up to 4MB. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageData"/> is null. </exception>
+        public async Task<Response<ImagePrediction>> DetectImageAsync(Guid projectId, string publishedName, Stream imageData, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageData == null)
+            {
+                throw new ArgumentNullException(nameof(imageData));
+            }
+
+            using var message = CreateDetectImageRequest(projectId, publishedName, imageData, application);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> Detect objects in an image and saves the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageData"> Binary image data. Supported formats are JPEG, GIF, PNG, and BMP. Supports images up to 4MB. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageData"/> is null. </exception>
+        public Response<ImagePrediction> DetectImage(Guid projectId, string publishedName, Stream imageData, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageData == null)
+            {
+                throw new ArgumentNullException(nameof(imageData));
+            }
+
+            using var message = CreateDetectImageRequest(projectId, publishedName, imageData, application);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateDetectImageWithNoStoreRequest(Guid projectId, string publishedName, Stream imageData, string application)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/customvision/v3.1/prediction", false);
+            uri.AppendPath("/", false);
+            uri.AppendPath(projectId, true);
+            uri.AppendPath("/detect/iterations/", false);
+            uri.AppendPath(publishedName, true);
+            uri.AppendPath("/image/nostore", false);
+            if (application != null)
+            {
+                uri.AppendQuery("application", application, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Content-Type", "multipart/form-data");
+            request.Headers.Add("Accept", "application/json, application/xml, text/xml");
+            var content = new MultipartFormDataContent();
+            content.Add(RequestContent.Create(imageData), "imageData", null);
+            content.ApplyToRequest(request);
+            return message;
+        }
+
+        /// <summary> Detect objects in an image without saving the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageData"> Binary image data. Supported formats are JPEG, GIF, PNG, and BMP. Supports images up to 4MB. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageData"/> is null. </exception>
+        public async Task<Response<ImagePrediction>> DetectImageWithNoStoreAsync(Guid projectId, string publishedName, Stream imageData, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageData == null)
+            {
+                throw new ArgumentNullException(nameof(imageData));
+            }
+
+            using var message = CreateDetectImageWithNoStoreRequest(projectId, publishedName, imageData, application);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> Detect objects in an image without saving the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageData"> Binary image data. Supported formats are JPEG, GIF, PNG, and BMP. Supports images up to 4MB. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageData"/> is null. </exception>
+        public Response<ImagePrediction> DetectImageWithNoStore(Guid projectId, string publishedName, Stream imageData, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageData == null)
+            {
+                throw new ArgumentNullException(nameof(imageData));
+            }
+
+            using var message = CreateDetectImageWithNoStoreRequest(projectId, publishedName, imageData, application);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateDetectImageUrlRequest(Guid projectId, string publishedName, ImageUrl imageUrl, string application)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/customvision/v3.1/prediction", false);
+            uri.AppendPath("/", false);
+            uri.AppendPath(projectId, true);
+            uri.AppendPath("/detect/iterations/", false);
+            uri.AppendPath(publishedName, true);
+            uri.AppendPath("/url", false);
+            if (application != null)
+            {
+                uri.AppendQuery("application", application, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Content-Type", "application/json");
+            request.Headers.Add("Accept", "application/json, application/xml, text/xml");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(imageUrl);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Detect objects in an image url and saves the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageUrl"> An ImageUrl that contains the url of the image to be evaluated. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageUrl"/> is null. </exception>
+        public async Task<Response<ImagePrediction>> DetectImageUrlAsync(Guid projectId, string publishedName, ImageUrl imageUrl, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageUrl == null)
+            {
+                throw new ArgumentNullException(nameof(imageUrl));
+            }
+
+            using var message = CreateDetectImageUrlRequest(projectId, publishedName, imageUrl, application);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> Detect objects in an image url and saves the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageUrl"> An ImageUrl that contains the url of the image to be evaluated. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageUrl"/> is null. </exception>
+        public Response<ImagePrediction> DetectImageUrl(Guid projectId, string publishedName, ImageUrl imageUrl, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageUrl == null)
+            {
+                throw new ArgumentNullException(nameof(imageUrl));
+            }
+
+            using var message = CreateDetectImageUrlRequest(projectId, publishedName, imageUrl, application);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateDetectImageUrlWithNoStoreRequest(Guid projectId, string publishedName, ImageUrl imageUrl, string application)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/customvision/v3.1/prediction", false);
+            uri.AppendPath("/", false);
+            uri.AppendPath(projectId, true);
+            uri.AppendPath("/detect/iterations/", false);
+            uri.AppendPath(publishedName, true);
+            uri.AppendPath("/url/nostore", false);
+            if (application != null)
+            {
+                uri.AppendQuery("application", application, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Content-Type", "application/json");
+            request.Headers.Add("Accept", "application/json, application/xml, text/xml");
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(imageUrl);
+            request.Content = content;
+            return message;
+        }
+
+        /// <summary> Detect objects in an image url without saving the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageUrl"> An {Iris.Web.Api.Models.ImageUrl} that contains the url of the image to be evaluated. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageUrl"/> is null. </exception>
+        public async Task<Response<ImagePrediction>> DetectImageUrlWithNoStoreAsync(Guid projectId, string publishedName, ImageUrl imageUrl, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageUrl == null)
+            {
+                throw new ArgumentNullException(nameof(imageUrl));
+            }
+
+            using var message = CreateDetectImageUrlWithNoStoreRequest(projectId, publishedName, imageUrl, application);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> Detect objects in an image url without saving the result. </summary>
+        /// <param name="projectId"> The project id. </param>
+        /// <param name="publishedName"> Specifies the name of the model to evaluate against. </param>
+        /// <param name="imageUrl"> An {Iris.Web.Api.Models.ImageUrl} that contains the url of the image to be evaluated. </param>
+        /// <param name="application"> Optional. Specifies the name of application using the endpoint. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="publishedName"/> or <paramref name="imageUrl"/> is null. </exception>
+        public Response<ImagePrediction> DetectImageUrlWithNoStore(Guid projectId, string publishedName, ImageUrl imageUrl, string application = null, CancellationToken cancellationToken = default)
+        {
+            if (publishedName == null)
+            {
+                throw new ArgumentNullException(nameof(publishedName));
+            }
+            if (imageUrl == null)
+            {
+                throw new ArgumentNullException(nameof(imageUrl));
+            }
+
+            using var message = CreateDetectImageUrlWithNoStoreRequest(projectId, publishedName, imageUrl, application);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        ImagePrediction value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = ImagePrediction.DeserializeImagePrediction(document.RootElement);
                         return Response.FromValue(value, message.Response);
                     }
                 default:
