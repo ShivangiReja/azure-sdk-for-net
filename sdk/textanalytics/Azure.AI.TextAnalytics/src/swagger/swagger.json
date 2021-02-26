@@ -672,84 +672,84 @@
       }
     }
   },
-    "x-ms-paths": {
-      "/entities/health/jobs/{jobId}/{nextLink}": {
-        "get": {
-          "x-ms-pageable": {
-            "nextLinkName": "nextLink",
-            "itemName": "values"
+  "x-ms-paths": {
+    "/entities/health/jobs/{jobId}/{nextLink}": {
+      "get": {
+        "x-ms-pageable": {
+          "nextLinkName": "nextLink",
+          "itemName": "values"
+        },
+        "produces": [
+          "application/json",
+          "text/json"
+        ],
+        "description": "Get details of the healthcare prediction job specified by the jobId.",
+        "operationId": "nextHealthStatus",
+        "summary": "Get healthcare analysis job status and results",
+        "parameters": [
+          {
+            "$ref": "#/parameters/JobId"
           },
-          "produces": [
-            "application/json",
-            "text/json"
-          ],
-          "description": "Get details of the healthcare prediction job specified by the jobId.",
-          "operationId": "nextHealthStatus",
-          "summary": "Get healthcare analysis job status and results",
-          "parameters": [
-            {
-              "$ref": "#/parameters/JobId"
-            },
-            {
-              "default": 20,
-              "description": "(Optional) Set the maximum number of results per task. When both $top and $skip are specified, $skip is applied first.",
-              "in": "query",
-              "maximum": 50,
-              "minimum": 1,
-              "name": "$top",
-              "type": "integer"
-            },
-            {
-              "default": 0,
-              "description": "(Optional) Set the number of elements to offset in the response. When both $top and $skip are specified, $skip is applied first.",
-              "in": "query",
-              "minimum": 0,
-              "name": "$skip",
-              "type": "integer"
-            },
-            {
-              "$ref": "#/parameters/ShowStats"
-            },
-            {
-              "name": "nextLink",
-              "in": "path",
-              "required": true,
-              "type": "string",
-              "description": "Next link for list operation.",
-              "x-ms-skip-url-encoding": true
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "$ref": "#/definitions/HealthcareJobState"
-              }
-            },
-            "404": {
-              "description": "Job ID not found.",
-              "schema": {
-                "$ref": "#/definitions/ErrorResponse"
-              },
-              "x-ms-error-response": true
-            },
-            "500": {
-              "description": "Internal error response",
-              "schema": {
-                "$ref": "#/definitions/ErrorResponse"
-              },
-              "x-ms-error-response": true
+          {
+            "default": 20,
+            "description": "(Optional) Set the maximum number of results per task. When both $top and $skip are specified, $skip is applied first.",
+            "in": "query",
+            "maximum": 50,
+            "minimum": 1,
+            "name": "$top",
+            "type": "integer"
+          },
+          {
+            "default": 0,
+            "description": "(Optional) Set the number of elements to offset in the response. When both $top and $skip are specified, $skip is applied first.",
+            "in": "query",
+            "minimum": 0,
+            "name": "$skip",
+            "type": "integer"
+          },
+          {
+            "$ref": "#/parameters/ShowStats"
+          },
+          {
+            "name": "nextLink",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Next link for list operation.",
+            "x-ms-skip-url-encoding": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/HealthcareJobState"
             }
           },
-          "x-ms-examples": {
-            "Successful Health request": {
-              "$ref": ".//examples//SuccessfulHealthStatusRequest.json"
-            }
+          "404": {
+            "description": "Job ID not found.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "x-ms-error-response": true
           },
-          "deprecated": false
-        }
+          "500": {
+            "description": "Internal error response",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "x-ms-error-response": true
+          }
+        },
+        "x-ms-examples": {
+          "Successful Health request": {
+            "$ref": ".//examples//SuccessfulHealthStatusRequest.json"
+          }
+        },
+        "deprecated": false
       }
-    },
+    }
+  },
   "definitions": {
     "JobManifest": {
       "properties": {
