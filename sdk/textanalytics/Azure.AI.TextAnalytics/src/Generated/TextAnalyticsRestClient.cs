@@ -927,7 +927,98 @@ namespace Azure.AI.TextAnalytics
             }
         }
 
-        internal HttpMessage CreateHealthStatusNextPageRequest(string nextLink, Guid jobId, int? top, int? skip, bool? showStats)
+        internal HttpMessage CreateNextHealthStatusRequest(Guid jobId, string nextLink, int? top, int? skip, bool? showStats)
+        {
+            var message = _pipeline.CreateMessage();
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.AppendRaw(endpoint, false);
+            uri.AppendRaw("/text/analytics/v3.1-preview.3", false);
+            uri.AppendPath("/entities/health/jobs/", false);
+            uri.AppendPath(jobId, true);
+            uri.AppendPath("/", false);
+            uri.AppendRawNextLink(nextLink, false);
+            if (top != null)
+            {
+                uri.AppendQuery("$top", top.Value, true);
+            }
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (showStats != null)
+            {
+                uri.AppendQuery("showStats", showStats.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json, text/json");
+            return message;
+        }
+
+        /// <summary> Get details of the healthcare prediction job specified by the jobId. </summary>
+        /// <param name="jobId"> Job ID. </param>
+        /// <param name="nextLink"> Next link for list operation. </param>
+        /// <param name="top"> (Optional) Set the maximum number of results per task. When both $top and $skip are specified, $skip is applied first. </param>
+        /// <param name="skip"> (Optional) Set the number of elements to offset in the response. When both $top and $skip are specified, $skip is applied first. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
+        public async Task<Response<HealthcareJobState>> NextHealthStatusAsync(Guid jobId, string nextLink, int? top = null, int? skip = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        {
+            if (nextLink == null)
+            {
+                throw new ArgumentNullException(nameof(nextLink));
+            }
+
+            using var message = CreateNextHealthStatusRequest(jobId, nextLink, top, skip, showStats);
+            await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        HealthcareJobState value = default;
+                        using var document = await JsonDocument.ParseAsync(message.Response.ContentStream, default, cancellationToken).ConfigureAwait(false);
+                        value = HealthcareJobState.DeserializeHealthcareJobState(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw await _clientDiagnostics.CreateRequestFailedExceptionAsync(message.Response).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary> Get details of the healthcare prediction job specified by the jobId. </summary>
+        /// <param name="jobId"> Job ID. </param>
+        /// <param name="nextLink"> Next link for list operation. </param>
+        /// <param name="top"> (Optional) Set the maximum number of results per task. When both $top and $skip are specified, $skip is applied first. </param>
+        /// <param name="skip"> (Optional) Set the number of elements to offset in the response. When both $top and $skip are specified, $skip is applied first. </param>
+        /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
+        public Response<HealthcareJobState> NextHealthStatus(Guid jobId, string nextLink, int? top = null, int? skip = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        {
+            if (nextLink == null)
+            {
+                throw new ArgumentNullException(nameof(nextLink));
+            }
+
+            using var message = CreateNextHealthStatusRequest(jobId, nextLink, top, skip, showStats);
+            _pipeline.Send(message, cancellationToken);
+            switch (message.Response.Status)
+            {
+                case 200:
+                    {
+                        HealthcareJobState value = default;
+                        using var document = JsonDocument.Parse(message.Response.ContentStream);
+                        value = HealthcareJobState.DeserializeHealthcareJobState(document.RootElement);
+                        return Response.FromValue(value, message.Response);
+                    }
+                default:
+                    throw _clientDiagnostics.CreateRequestFailedException(message.Response);
+            }
+        }
+
+        internal HttpMessage CreateNextHealthStatusNextPageRequest(string nextLink, Guid jobId, int? top, int? skip, bool? showStats)
         {
             var message = _pipeline.CreateMessage();
             var request = message.Request;
@@ -949,14 +1040,14 @@ namespace Azure.AI.TextAnalytics
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public async Task<Response<HealthcareJobState>> HealthStatusNextPageAsync(string nextLink, Guid jobId, int? top = null, int? skip = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        public async Task<Response<HealthcareJobState>> NextHealthStatusNextPageAsync(string nextLink, Guid jobId, int? top = null, int? skip = null, bool? showStats = null, CancellationToken cancellationToken = default)
         {
             if (nextLink == null)
             {
                 throw new ArgumentNullException(nameof(nextLink));
             }
 
-            using var message = CreateHealthStatusNextPageRequest(nextLink, jobId, top, skip, showStats);
+            using var message = CreateNextHealthStatusNextPageRequest(nextLink, jobId, top, skip, showStats);
             await _pipeline.SendAsync(message, cancellationToken).ConfigureAwait(false);
             switch (message.Response.Status)
             {
@@ -980,14 +1071,14 @@ namespace Azure.AI.TextAnalytics
         /// <param name="showStats"> (Optional) if set to true, response will contain request and document level statistics. </param>
         /// <param name="cancellationToken"> The cancellation token to use. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> is null. </exception>
-        public Response<HealthcareJobState> HealthStatusNextPage(string nextLink, Guid jobId, int? top = null, int? skip = null, bool? showStats = null, CancellationToken cancellationToken = default)
+        public Response<HealthcareJobState> NextHealthStatusNextPage(string nextLink, Guid jobId, int? top = null, int? skip = null, bool? showStats = null, CancellationToken cancellationToken = default)
         {
             if (nextLink == null)
             {
                 throw new ArgumentNullException(nameof(nextLink));
             }
 
-            using var message = CreateHealthStatusNextPageRequest(nextLink, jobId, top, skip, showStats);
+            using var message = CreateNextHealthStatusNextPageRequest(nextLink, jobId, top, skip, showStats);
             _pipeline.Send(message, cancellationToken);
             switch (message.Response.Status)
             {
