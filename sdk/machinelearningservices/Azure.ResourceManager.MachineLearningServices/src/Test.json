@@ -3599,11 +3599,6 @@
           "computeType": {
             "description": "The type of compute",
             "$ref": "#/definitions/ComputeType"
-          },
-          "nextLink": {
-            "readOnly": true,
-            "type": "string",
-            "description": "The continuation token."
           }
         },
         "required": [
