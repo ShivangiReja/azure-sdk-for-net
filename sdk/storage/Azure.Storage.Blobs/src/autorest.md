@@ -14,10 +14,11 @@ modelerfour:
 ### Generate DPG methods
 ```yaml
 protocol-method-list:
-  - GetProperties
-  - AcquireLease
+  - Blob_GetProperties
+  - Container_GetProperties
+  - Blob_AcquireLease
+  - Container_AcquireLease
 ```
-
 
 ### Don't include container name or blob in path - we have direct URIs.
 ``` yaml
