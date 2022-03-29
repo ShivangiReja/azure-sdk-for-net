@@ -1694,14 +1694,19 @@ namespace Azure.AI.MetricsAdvisor.Administration
             scope.Start();
             try
             {
-                using HttpMessage message = CreateCreateDataFeedRequest(content, context);
-                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+                return await InternalCreateDataFeedAsync(content, context).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 scope.Failed(e);
                 throw;
             }
+        }
+
+        private async ValueTask<Response> InternalCreateDataFeedAsync(RequestContent content, RequestContext context = null)
+        {
+            using HttpMessage message = CreateCreateDataFeedRequest(content, context);
+            return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
         }
 
         /// <summary> Create a new data feed. </summary>
@@ -1771,14 +1776,19 @@ namespace Azure.AI.MetricsAdvisor.Administration
             scope.Start();
             try
             {
-                using HttpMessage message = CreateCreateDataFeedRequest(content, context);
-                return _pipeline.ProcessMessage(message, context);
+                return InternalCreateDataFeed(content, context);
             }
             catch (Exception e)
             {
                 scope.Failed(e);
                 throw;
             }
+        }
+
+        private Response InternalCreateDataFeed(RequestContent content, RequestContext context = null)
+        {
+            using HttpMessage message = CreateCreateDataFeedRequest(content, context);
+            return _pipeline.ProcessMessage(message, context);
         }
 
         /// <summary> Get a data feed by its id. </summary>
@@ -1845,14 +1855,19 @@ namespace Azure.AI.MetricsAdvisor.Administration
             scope.Start();
             try
             {
-                using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
-                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+                return await InternalGetDataFeedByIdAsync(dataFeedId, context).ConfigureAwait(false);
             }
             catch (Exception e)
             {
                 scope.Failed(e);
                 throw;
             }
+        }
+
+        private async ValueTask<Response> InternalGetDataFeedByIdAsync(Guid dataFeedId, RequestContext context = null)
+        {
+            using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
+            return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
         }
 
         /// <summary> Get a data feed by its id. </summary>
@@ -1919,14 +1934,19 @@ namespace Azure.AI.MetricsAdvisor.Administration
             scope.Start();
             try
             {
-                using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
-                return _pipeline.ProcessMessage(message, context);
+                return InternalGetDataFeedById(dataFeedId, context);
             }
             catch (Exception e)
             {
                 scope.Failed(e);
                 throw;
             }
+        }
+
+        private Response InternalGetDataFeedById(Guid dataFeedId, RequestContext context = null)
+        {
+            using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
+            return _pipeline.ProcessMessage(message, context);
         }
 
         /// <summary> Update a data feed. </summary>
@@ -2966,7 +2986,12 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// </remarks>
         public virtual AsyncPageable<BinaryData> GetDataFeedsAsync(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
-            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetDataFeeds");
+            return InternalGetDataFeedsAsync("MetricsAdvisorAdministrationClient.GetDataFeeds", dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
+        }
+
+        private AsyncPageable<BinaryData> InternalGetDataFeedsAsync(string scope, string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, scope);
             async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
             {
                 do
@@ -3052,7 +3077,12 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// </remarks>
         public virtual Pageable<BinaryData> GetDataFeeds(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
-            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetDataFeeds");
+            return InternalGetDataFeeds("MetricsAdvisorAdministrationClient.GetDataFeeds", dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
+        }
+
+        private Pageable<BinaryData> InternalGetDataFeeds(string scopeName, string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, scopeName);
             IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
             {
                 do

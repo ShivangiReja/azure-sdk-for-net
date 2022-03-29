@@ -71,36 +71,36 @@ namespace Azure.AI.MetricsAdvisor
         /// <exception cref="ArgumentException"><paramref name="metricId"/> is empty or not a valid GUID.</exception>
         public virtual AsyncPageable<MetricFeedback> GetAllFeedbackAsync(string metricId, GetAllFeedbackOptions options = default, CancellationToken cancellationToken = default)
         {
-            Guid metricGuid = ClientCommon.ValidateGuid(metricId, nameof(metricId));
-            FeedbackFilter filter = options?.Filter;
-
-            MetricFeedbackFilter queryOptions = new MetricFeedbackFilter(metricGuid)
-            {
-                DimensionFilter = filter
-            };
-
-            if (filter != null)
-            {
-                queryOptions.EndTime = filter.EndsOn;
-                queryOptions.FeedbackType = filter.FeedbackKind;
-                queryOptions.StartTime = filter.StartsOn;
-                queryOptions.TimeMode = filter.TimeMode;
-            }
-
-            int? skip = options?.Skip;
-            int? maxPageSize = options?.MaxPageSize;
-            RequestContext context = new RequestContext()
-            {
-                CancellationToken = cancellationToken,
-            };
-
             using DiagnosticScope scope = ClientDiagnostics.CreateScope($"{nameof(MetricsAdvisorClient)}.{nameof(GetAllFeedback)}");
             scope.Start();
 
             try
             {
+                Guid metricGuid = ClientCommon.ValidateGuid(metricId, nameof(metricId));
+                FeedbackFilter filter = options?.Filter;
+
+                MetricFeedbackFilter queryOptions = new MetricFeedbackFilter(metricGuid)
+                {
+                    DimensionFilter = filter
+                };
+
+                if (filter != null)
+                {
+                    queryOptions.EndTime = filter.EndsOn;
+                    queryOptions.FeedbackType = filter.FeedbackKind;
+                    queryOptions.StartTime = filter.StartsOn;
+                    queryOptions.TimeMode = filter.TimeMode;
+                }
+
+                int? skip = options?.Skip;
+                int? maxPageSize = options?.MaxPageSize;
+                RequestContext context = new RequestContext()
+                {
+                    CancellationToken = cancellationToken,
+                };
+
                 RequestContent content = MetricFeedbackFilter.ToRequestContent(queryOptions);
-                AsyncPageable<BinaryData> pageableBindaryData = GetMetricFeedbacksAsync(content, skip, maxPageSize, context);
+                AsyncPageable<BinaryData> pageableBindaryData = InternalGetMetricFeedbacksAsync($"{nameof(MetricsAdvisorClient)}.{nameof(GetAllFeedback)}", content, skip, maxPageSize, context);
                 return PageableHelpers.Select(pageableBindaryData, response => MetricFeedbackList.FromResponse(response).Value);
             }
             catch (Exception e)
@@ -123,37 +123,37 @@ namespace Azure.AI.MetricsAdvisor
         /// <exception cref="ArgumentException"><paramref name="metricId"/> is empty or not a valid GUID.</exception>
         public virtual Pageable<MetricFeedback> GetAllFeedback(string metricId, GetAllFeedbackOptions options = default, CancellationToken cancellationToken = default)
         {
-            Guid metricGuid = ClientCommon.ValidateGuid(metricId, nameof(metricId));
-            FeedbackFilter filter = options?.Filter;
-
-            MetricFeedbackFilter queryOptions = new MetricFeedbackFilter(metricGuid)
-            {
-                DimensionFilter = filter
-            };
-
-            if (filter != null)
-            {
-                queryOptions.EndTime = filter.EndsOn;
-                queryOptions.FeedbackType = filter.FeedbackKind;
-                queryOptions.StartTime = filter.StartsOn;
-                queryOptions.TimeMode = filter.TimeMode;
-            }
-
-            int? skip = options?.Skip;
-            int? maxPageSize = options?.MaxPageSize;
-
-            RequestContext context = new RequestContext()
-            {
-                CancellationToken = cancellationToken,
-            };
-
             using DiagnosticScope scope = ClientDiagnostics.CreateScope($"{nameof(MetricsAdvisorClient)}.{nameof(GetAllFeedback)}");
             scope.Start();
 
             try
             {
+                Guid metricGuid = ClientCommon.ValidateGuid(metricId, nameof(metricId));
+                FeedbackFilter filter = options?.Filter;
+
+                MetricFeedbackFilter queryOptions = new MetricFeedbackFilter(metricGuid)
+                {
+                    DimensionFilter = filter
+                };
+
+                if (filter != null)
+                {
+                    queryOptions.EndTime = filter.EndsOn;
+                    queryOptions.FeedbackType = filter.FeedbackKind;
+                    queryOptions.StartTime = filter.StartsOn;
+                    queryOptions.TimeMode = filter.TimeMode;
+                }
+
+                int? skip = options?.Skip;
+                int? maxPageSize = options?.MaxPageSize;
+
+                RequestContext context = new RequestContext()
+                {
+                    CancellationToken = cancellationToken,
+                };
+
                 RequestContent content = MetricFeedbackFilter.ToRequestContent(queryOptions);
-                Pageable<BinaryData> pageableBindaryData = GetMetricFeedbacks(content, skip, maxPageSize, context);
+                Pageable<BinaryData> pageableBindaryData = IntetnalGetMetricFeedbacks($"{nameof(MetricsAdvisorClient)}.{nameof(GetAllFeedback)}", content, skip, maxPageSize, context);
                 return PageableHelpers.Select(pageableBindaryData, response => MetricFeedbackList.FromResponse(response).Value);
             }
             catch (Exception e)

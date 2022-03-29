@@ -1506,9 +1506,14 @@ namespace Azure.AI.MetricsAdvisor
         /// </remarks>
         public virtual AsyncPageable<BinaryData> GetMetricFeedbacksAsync(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
+            return InternalGetMetricFeedbacksAsync("MetricsAdvisorClient.GetMetricFeedbacks", content, skip, maxpagesize, context);
+        }
+
+        private AsyncPageable<BinaryData> InternalGetMetricFeedbacksAsync(string scopeName, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
             Argument.AssertNotNull(content, nameof(content));
 
-            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetMetricFeedbacks");
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, scopeName);
             async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
             {
                 do
@@ -1569,9 +1574,14 @@ namespace Azure.AI.MetricsAdvisor
         /// </remarks>
         public virtual Pageable<BinaryData> GetMetricFeedbacks(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
+            return IntetnalGetMetricFeedbacks("MetricsAdvisorClient.GetMetricFeedbacks", content, skip, maxpagesize, context);
+        }
+
+        private Pageable<BinaryData> IntetnalGetMetricFeedbacks(string scopeName, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
             Argument.AssertNotNull(content, nameof(content));
 
-            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetMetricFeedbacks");
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, scopeName);
             IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
             {
                 do

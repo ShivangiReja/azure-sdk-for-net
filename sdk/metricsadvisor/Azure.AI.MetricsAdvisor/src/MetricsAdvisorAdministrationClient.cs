@@ -87,7 +87,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
                 {
                     CancellationToken = cancellationToken,
                 };
-                Response response = await GetDataFeedByIdAsync(dataFeedGuid, context).ConfigureAwait(false);
+                Response response = await InternalGetDataFeedByIdAsync(dataFeedGuid, context).ConfigureAwait(false);
                 DataFeedDetail value = DataFeedDetail.FromResponse(response);
                 return Response.FromValue(new DataFeed(value), response);
             }
@@ -122,7 +122,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
                 {
                     CancellationToken = cancellationToken,
                 };
-                Response response = GetDataFeedById(dataFeedGuid, context);
+                Response response = InternalGetDataFeedById(dataFeedGuid, context);
                 DataFeedDetail value = DataFeedDetail.FromResponse(response);
                 return Response.FromValue(new DataFeed(value), response);
             }
@@ -142,28 +142,33 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// <returns>An <see cref="AsyncPageable{T}"/> containing the collection of <see cref="DataFeed"/>s.</returns>
         public virtual AsyncPageable<DataFeed> GetDataFeedsAsync(GetDataFeedsOptions options = default, CancellationToken cancellationToken = default)
         {
-            string name = options?.Filter?.Name;
-            DataFeedSourceKind? sourceKind = options?.Filter?.SourceKind;
-            DataFeedGranularityType? granularityType = options?.Filter?.GranularityType;
-            DataFeedStatus? status = options?.Filter?.Status;
-            string sourceKindValue = sourceKind.HasValue ? sourceKind.Value.ToString() : null;
-            string granularityTypeValue = granularityType.HasValue ? granularityType.Value.ToString() : null;
-            string statusValue = status.HasValue ? status.Value.ToString() : null;
-            RequestContext context = new RequestContext()
-            {
-                CancellationToken = cancellationToken,
-            };
-            string creator = options?.Filter?.Creator;
-            int? skip = options?.Skip;
-            int? maxPageSize = options?.MaxPageSize;
+            using DiagnosticScope scope = ClientDiagnostics.CreateScope($"{nameof(MetricsAdvisorAdministrationClient)}.{nameof(GetDataFeeds)}");
+            scope.Start();
 
             try
             {
-                AsyncPageable<BinaryData> pageableBindaryData = GetDataFeedsAsync(name, sourceKindValue, granularityTypeValue, statusValue, creator, skip, maxPageSize, context);
+                string name = options?.Filter?.Name;
+                DataFeedSourceKind? sourceKind = options?.Filter?.SourceKind;
+                DataFeedGranularityType? granularityType = options?.Filter?.GranularityType;
+                DataFeedStatus? status = options?.Filter?.Status;
+                string sourceKindValue = sourceKind.HasValue ? sourceKind.Value.ToString() : null;
+                string granularityTypeValue = granularityType.HasValue ? granularityType.Value.ToString() : null;
+                string statusValue = status.HasValue ? status.Value.ToString() : null;
+                string creator = options?.Filter?.Creator;
+                int? skip = options?.Skip;
+                int? maxPageSize = options?.MaxPageSize;
+
+                RequestContext context = new RequestContext()
+                {
+                    CancellationToken = cancellationToken,
+                };
+
+                AsyncPageable<BinaryData> pageableBindaryData = InternalGetDataFeedsAsync($"{nameof(MetricsAdvisorAdministrationClient)}.{nameof(GetDataFeeds)}", name, sourceKindValue, granularityTypeValue, statusValue, creator, skip, maxPageSize, context);
                 return PageableHelpers.Select(pageableBindaryData, response => ConvertToDataFeeds(DataFeedList.FromResponse(response).Value));
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                scope.Failed(e);
                 throw;
             }
         }
@@ -177,28 +182,33 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// <returns>A <see cref="Pageable{T}"/> containing the collection of <see cref="DataFeed"/>s.</returns>
         public virtual Pageable<DataFeed> GetDataFeeds(GetDataFeedsOptions options = default, CancellationToken cancellationToken = default)
         {
-            string name = options?.Filter?.Name;
-            DataFeedSourceKind? sourceKind = options?.Filter?.SourceKind;
-            DataFeedGranularityType? granularityType = options?.Filter?.GranularityType;
-            DataFeedStatus? status = options?.Filter?.Status;
-            string sourceKindValue = sourceKind.HasValue ? sourceKind.Value.ToString() : null;
-            string granularityTypeValue = granularityType.HasValue ? granularityType.Value.ToString() : null;
-            string statusValue = status.HasValue ? status.Value.ToString() : null;
-            RequestContext context = new RequestContext()
-            {
-                CancellationToken = cancellationToken,
-            };
-            string creator = options?.Filter?.Creator;
-            int? skip = options?.Skip;
-            int? maxPageSize = options?.MaxPageSize;
+            using DiagnosticScope scope = ClientDiagnostics.CreateScope($"{nameof(MetricsAdvisorAdministrationClient)}.{nameof(GetDataFeeds)}");
+            scope.Start();
 
             try
             {
-                Pageable<BinaryData> pageableBindaryData = GetDataFeeds(name, sourceKindValue, granularityTypeValue, statusValue, creator, skip, maxPageSize, context);
+                string name = options?.Filter?.Name;
+                DataFeedSourceKind? sourceKind = options?.Filter?.SourceKind;
+                DataFeedGranularityType? granularityType = options?.Filter?.GranularityType;
+                DataFeedStatus? status = options?.Filter?.Status;
+                string sourceKindValue = sourceKind.HasValue ? sourceKind.Value.ToString() : null;
+                string granularityTypeValue = granularityType.HasValue ? granularityType.Value.ToString() : null;
+                string statusValue = status.HasValue ? status.Value.ToString() : null;
+                string creator = options?.Filter?.Creator;
+                int? skip = options?.Skip;
+                int? maxPageSize = options?.MaxPageSize;
+
+                RequestContext context = new RequestContext()
+                {
+                    CancellationToken = cancellationToken,
+                };
+
+                Pageable<BinaryData> pageableBindaryData = InternalGetDataFeeds($"{nameof(MetricsAdvisorAdministrationClient)}.{nameof(GetDataFeeds)}", name, sourceKindValue, granularityTypeValue, statusValue, creator, skip, maxPageSize, context);
                 return PageableHelpers.Select(pageableBindaryData, response => ConvertToDataFeeds(DataFeedList.FromResponse(response).Value));
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                scope.Failed(e);
                 throw;
             }
         }
@@ -218,6 +228,9 @@ namespace Azure.AI.MetricsAdvisor.Administration
         {
             ValidateDataFeedToCreate(dataFeed, nameof(dataFeed));
 
+            using DiagnosticScope scope = ClientDiagnostics.CreateScope($"{nameof(MetricsAdvisorAdministrationClient)}.{nameof(CreateDataFeed)}");
+            scope.Start();
+
             try
             {
                 DataFeedDetail dataFeedDetail = dataFeed.GetDataFeedDetail();
@@ -227,7 +240,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
                     CancellationToken = cancellationToken,
                 };
 
-                Response response = await CreateDataFeedAsync(content, context).ConfigureAwait(false);
+                Response response = await InternalCreateDataFeedAsync(content, context).ConfigureAwait(false);
 
                 var location = response.Headers.TryGetValue("Location", out string value) ? value : null;
                 string dataFeedId = ClientCommon.GetDataFeedId(location);
@@ -243,8 +256,9 @@ namespace Azure.AI.MetricsAdvisor.Administration
                     throw new RequestFailedException($"The data feed has been created successfully, but the client failed to fetch its data. Data feed ID: {dataFeedId}", ex);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                scope.Failed(e);
                 throw;
             }
         }
@@ -264,6 +278,9 @@ namespace Azure.AI.MetricsAdvisor.Administration
         {
             ValidateDataFeedToCreate(dataFeed, nameof(dataFeed));
 
+            using DiagnosticScope scope = ClientDiagnostics.CreateScope($"{nameof(MetricsAdvisorAdministrationClient)}.{nameof(CreateDataFeed)}");
+            scope.Start();
+
             try
             {
                 DataFeedDetail dataFeedDetail = dataFeed.GetDataFeedDetail();
@@ -272,7 +289,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
                 {
                     CancellationToken = cancellationToken,
                 };
-                Response response = CreateDataFeed(content, context);
+                Response response = InternalCreateDataFeed(content, context);
 
                 var location = response.Headers.TryGetValue("Location", out string value) ? value : null;
                 string dataFeedId = ClientCommon.GetDataFeedId(location);
@@ -288,8 +305,9 @@ namespace Azure.AI.MetricsAdvisor.Administration
                     throw new RequestFailedException($"The data feed has been created successfully, but the client failed to fetch its data. Data feed ID: {dataFeedId}", ex);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                scope.Failed(e);
                 throw;
             }
         }
