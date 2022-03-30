@@ -1506,10 +1506,10 @@ namespace Azure.AI.MetricsAdvisor
         /// </remarks>
         public virtual AsyncPageable<BinaryData> GetMetricFeedbacksAsync(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
-            return InternalGetMetricFeedbacksAsync("MetricsAdvisorClient.GetMetricFeedbacks", content, skip, maxpagesize, context);
+            return GetMetricFeedbacksInternalAsync("MetricsAdvisorClient.GetMetricFeedbacks", content, skip, maxpagesize, context);
         }
 
-        private AsyncPageable<BinaryData> InternalGetMetricFeedbacksAsync(string scopeName, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        private AsyncPageable<BinaryData> GetMetricFeedbacksInternalAsync(string scopeName, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 
@@ -1574,10 +1574,10 @@ namespace Azure.AI.MetricsAdvisor
         /// </remarks>
         public virtual Pageable<BinaryData> GetMetricFeedbacks(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
-            return IntetnalGetMetricFeedbacks("MetricsAdvisorClient.GetMetricFeedbacks", content, skip, maxpagesize, context);
+            return GetMetricFeedbacksInternal("MetricsAdvisorClient.GetMetricFeedbacks", content, skip, maxpagesize, context);
         }
 
-        private Pageable<BinaryData> IntetnalGetMetricFeedbacks(string scopeName, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        private Pageable<BinaryData> GetMetricFeedbacksInternal(string scopeName, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
             Argument.AssertNotNull(content, nameof(content));
 

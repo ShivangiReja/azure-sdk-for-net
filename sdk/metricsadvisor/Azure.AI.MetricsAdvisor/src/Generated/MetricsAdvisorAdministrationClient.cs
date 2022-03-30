@@ -1694,7 +1694,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
             scope.Start();
             try
             {
-                return await InternalCreateDataFeedAsync(content, context).ConfigureAwait(false);
+                return await CreateDataFeedInternalAsync(content, context).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -1703,7 +1703,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
             }
         }
 
-        private async ValueTask<Response> InternalCreateDataFeedAsync(RequestContent content, RequestContext context = null)
+        private async ValueTask<Response> CreateDataFeedInternalAsync(RequestContent content, RequestContext context = null)
         {
             using HttpMessage message = CreateCreateDataFeedRequest(content, context);
             return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
@@ -1776,7 +1776,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
             scope.Start();
             try
             {
-                return InternalCreateDataFeed(content, context);
+                return CreateDataFeedInternal(content, context);
             }
             catch (Exception e)
             {
@@ -1785,7 +1785,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
             }
         }
 
-        private Response InternalCreateDataFeed(RequestContent content, RequestContext context = null)
+        private Response CreateDataFeedInternal(RequestContent content, RequestContext context = null)
         {
             using HttpMessage message = CreateCreateDataFeedRequest(content, context);
             return _pipeline.ProcessMessage(message, context);
@@ -1855,7 +1855,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
             scope.Start();
             try
             {
-                return await InternalGetDataFeedByIdAsync(dataFeedId, context).ConfigureAwait(false);
+                return await GetDataFeedByIdInternalAsync(dataFeedId, context).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -1864,7 +1864,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
             }
         }
 
-        private async ValueTask<Response> InternalGetDataFeedByIdAsync(Guid dataFeedId, RequestContext context = null)
+        private async ValueTask<Response> GetDataFeedByIdInternalAsync(Guid dataFeedId, RequestContext context = null)
         {
             using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
             return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
@@ -1934,7 +1934,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
             scope.Start();
             try
             {
-                return InternalGetDataFeedById(dataFeedId, context);
+                return GetDataFeedByIdInternal(dataFeedId, context);
             }
             catch (Exception e)
             {
@@ -1943,7 +1943,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
             }
         }
 
-        private Response InternalGetDataFeedById(Guid dataFeedId, RequestContext context = null)
+        private Response GetDataFeedByIdInternal(Guid dataFeedId, RequestContext context = null)
         {
             using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
             return _pipeline.ProcessMessage(message, context);
@@ -2986,10 +2986,10 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// </remarks>
         public virtual AsyncPageable<BinaryData> GetDataFeedsAsync(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
-            return InternalGetDataFeedsAsync("MetricsAdvisorAdministrationClient.GetDataFeeds", dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
+            return GetDataFeedsInternalAsync("MetricsAdvisorAdministrationClient.GetDataFeeds", dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
         }
 
-        private AsyncPageable<BinaryData> InternalGetDataFeedsAsync(string scope, string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        private AsyncPageable<BinaryData> GetDataFeedsInternalAsync(string scope, string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
             return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, scope);
             async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -3077,10 +3077,10 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// </remarks>
         public virtual Pageable<BinaryData> GetDataFeeds(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
-            return InternalGetDataFeeds("MetricsAdvisorAdministrationClient.GetDataFeeds", dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
+            return GetDataFeedsInternal("MetricsAdvisorAdministrationClient.GetDataFeeds", dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
         }
 
-        private Pageable<BinaryData> InternalGetDataFeeds(string scopeName, string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        private Pageable<BinaryData> GetDataFeedsInternal(string scopeName, string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
             return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, scopeName);
             IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
