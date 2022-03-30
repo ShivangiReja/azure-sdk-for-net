@@ -95,7 +95,7 @@ namespace Azure.AI.MetricsAdvisor
             };
 
             RequestContent content = MetricFeedbackFilter.ToRequestContent(queryOptions);
-            AsyncPageable<BinaryData> pageableBinaryData = InternalGetMetricFeedbacksAsync($"{nameof(MetricsAdvisorClient)}.{nameof(GetAllFeedback)}", content, skip, maxPageSize, context);
+            AsyncPageable<BinaryData> pageableBinaryData = GetMetricFeedbacksInternalAsync($"{nameof(MetricsAdvisorClient)}.{nameof(GetAllFeedback)}", content, skip, maxPageSize, context);
             return PageableHelpers.Select(pageableBinaryData, response => MetricFeedbackList.FromResponse(response).Value);
         }
 
@@ -137,7 +137,7 @@ namespace Azure.AI.MetricsAdvisor
             };
 
             RequestContent content = MetricFeedbackFilter.ToRequestContent(queryOptions);
-            Pageable<BinaryData> pageableBinaryData = IntetnalGetMetricFeedbacks($"{nameof(MetricsAdvisorClient)}.{nameof(GetAllFeedback)}", content, skip, maxPageSize, context);
+            Pageable<BinaryData> pageableBinaryData = GetMetricFeedbacksInternal($"{nameof(MetricsAdvisorClient)}.{nameof(GetAllFeedback)}", content, skip, maxPageSize, context);
             return PageableHelpers.Select(pageableBinaryData, response => MetricFeedbackList.FromResponse(response).Value);
         }
 
