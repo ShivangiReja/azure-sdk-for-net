@@ -7,7 +7,7 @@ namespace Azure.AI.MetricsAdvisor
 {
     /// <summary>
     /// Specifies which time property of a <see cref="MetricFeedback"/> will be used to filter results
-    /// in the <see cref="MetricsAdvisorClient.GetAllFeedback"/> and the <see cref="MetricsAdvisorClient.GetAllFeedbackAsync"/>
+    /// in the MetricsAdvisorClient.GetAllFeedback"/> and the MetricsAdvisorClient.GetAllFeedbackAsync"/>
     /// operations. Defaults to <see cref="None"/>.
     /// </summary>
     [CodeGenModel("FeedbackQueryTimeMode")]

@@ -18,7 +18,7 @@ namespace Azure.AI.MetricsAdvisor.Models
     /// In order to create a data feed, you must set up at least the properties <see cref="Name"/>,
     /// <see cref="DataSource"/>, <see cref="Granularity"/>, <see cref="IngestionSettings"/>, and
     /// <see cref="Schema"/>, and pass this instance to the method
-    /// <see cref="MetricsAdvisorAdministrationClient.CreateDataFeedAsync"/>.
+    /// MetricsAdvisorAdministrationClient.CreateDataFeedAsync"/>.
     /// </remarks>
     public class DataFeed
     {

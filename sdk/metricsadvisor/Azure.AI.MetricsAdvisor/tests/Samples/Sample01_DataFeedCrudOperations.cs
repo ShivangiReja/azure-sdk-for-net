@@ -81,7 +81,7 @@ namespace Azure.AI.MetricsAdvisor.Samples
             // Delete the created data feed to clean up the Metrics Advisor resource. Do not perform this
             // step if you intend to keep using the data feed.
 
-            await adminClient.DeleteDataFeedAsync(createdDataFeed.Id);
+            await adminClient.DeleteDataFeedValueAsync(createdDataFeed.Id);
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace Azure.AI.MetricsAdvisor.Samples
 
             int dataFeedCount = 0;
 
-            await foreach (DataFeed dataFeed in adminClient.GetDataFeedsAsync(options))
+            await foreach (DataFeed dataFeed in adminClient.GetDataFeedsValuesAsync(options))
             {
                 Console.WriteLine($"Data feed ID: {dataFeed.Id}");
                 Console.WriteLine($"Name: {dataFeed.Name}");

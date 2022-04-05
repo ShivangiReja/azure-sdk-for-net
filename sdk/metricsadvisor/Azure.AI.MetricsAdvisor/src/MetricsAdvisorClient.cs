@@ -215,6 +215,18 @@ namespace Azure.AI.MetricsAdvisor
         }
 
         /// <summary>
+        /// Gets the possible values a <see cref="DataFeedDimension"/> can assume for a specified <see cref="DataFeedMetric"/>.
+        /// </summary>
+        public virtual AsyncPageable<BinaryData> GetMetricDimensionValuesAsync(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+            => _serviceRestClient.GetMetricDimensionAsync(metricId, content, skip, maxpagesize, context);
+
+        /// <summary>
+        /// Gets the possible values a <see cref="DataFeedDimension"/> can assume for a specified <see cref="DataFeedMetric"/>.
+        /// </summary>
+        public virtual Pageable<BinaryData> GetMetricDimensionValues(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+            => _serviceRestClient.GetMetricDimension(metricId, content, skip, maxpagesize, context);
+
+        /// <summary>
         /// Gets a collection of items describing the time series of a specified <see cref="DataFeedMetric"/>.
         /// </summary>
         /// <param name="metricId">The unique identifier of the <see cref="DataFeedMetric"/>.</param>
@@ -673,6 +685,18 @@ namespace Azure.AI.MetricsAdvisor
         }
 
         /// <summary>
+        /// Gets a collection of <see cref="MetricFeedback"/> related to the given metric.
+        /// </summary>
+        public virtual AsyncPageable<BinaryData> GetAllFeedbackAsync(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+            => _serviceRestClient.ListMetricFeedbacksAsync(content, skip, maxpagesize, context);
+
+        /// <summary>
+        /// Gets a collection of <see cref="MetricFeedback"/> related to the given metric.
+        /// </summary>
+        public virtual Pageable<BinaryData> GetAllFeedback(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+            => _serviceRestClient.ListMetricFeedbacks(content, skip, maxpagesize, context);
+
+        /// <summary>
         /// Adds a <see cref="MetricFeedback"/>.
         /// </summary>
         /// <param name="feedback">The <see cref="MetricFeedback"/> to be created.</param>
@@ -753,6 +777,18 @@ namespace Azure.AI.MetricsAdvisor
         }
 
         /// <summary>
+        /// Adds a <see cref="MetricFeedback"/>.
+        /// </summary>
+        public virtual async Task<Response> AddFeedbackAsync(RequestContent content, RequestContext context = null)
+            => await _serviceRestClient.CreateMetricFeedbackAsync(content, context).ConfigureAwait(false);
+
+        /// <summary>
+        /// Adds a <see cref="MetricFeedback"/>.
+        /// </summary>
+        public virtual Response AddFeedback(RequestContent content, RequestContext context = null)
+            => _serviceRestClient.CreateMetricFeedback(content, context);
+
+        /// <summary>
         /// Gets a <see cref="MetricFeedback"/>.
         /// </summary>
         /// <param name="feedbackId">The ID of the <see cref="MetricFeedback"/>.</param>
@@ -807,6 +843,18 @@ namespace Azure.AI.MetricsAdvisor
                 throw;
             }
         }
+
+        /// <summary>
+        /// Gets a <see cref="MetricFeedback"/>.
+        /// </summary>
+        public virtual async Task<Response> GetFeedbackAsync(Guid feedbackId, RequestContext context = null)
+            => await _serviceRestClient.GetMetricFeedbackAsync(feedbackId, context).ConfigureAwait(false);
+
+        /// <summary>
+        /// Gets a <see cref="MetricFeedback"/>.
+        /// </summary>
+        public virtual Response GetFeedback(Guid feedbackId, RequestContext context = null)
+            => _serviceRestClient.GetMetricFeedback(feedbackId, context);
 
         #endregion MetricFeedback
 

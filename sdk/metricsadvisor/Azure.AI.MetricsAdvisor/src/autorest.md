@@ -10,6 +10,21 @@ input-file:
     - https://github.com/Azure/azure-rest-api-specs/blob/08f5e391f2153a99580b458cc71ef88e45dd0531/specification/cognitiveservices/data-plane/MetricsAdvisor/preview/v1.0/MetricsAdvisor.json
 ```
 
+### Add protocol methods
+
+```yaml
+protocol-method-list:
+  - listMetricFeedbacks
+  - createMetricFeedback
+  - getMetricFeedback
+  - getMetricDimension
+  - getDataFeedById
+  - listDataFeeds
+  - createDataFeed
+  - updateDataFeed
+  - deleteDataFeed
+```
+
 ### Make generated models internal by default
 
 ``` yaml

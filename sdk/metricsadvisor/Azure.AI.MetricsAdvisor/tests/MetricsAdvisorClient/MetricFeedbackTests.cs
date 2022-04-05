@@ -23,9 +23,9 @@ namespace Azure.AI.MetricsAdvisor.Tests
         {
             MetricsAdvisorClient client = GetMetricsAdvisorClient();
 
-            Assert.That(() => client.AddFeedbackAsync(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(() => client.AddFeedbackAsync(null, cancellationToken: default), Throws.InstanceOf<ArgumentNullException>());
 
-            Assert.That(() => client.AddFeedback(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(() => client.AddFeedback(null, cancellationToken: default), Throws.InstanceOf<ArgumentNullException>());
         }
 
         [Test]
