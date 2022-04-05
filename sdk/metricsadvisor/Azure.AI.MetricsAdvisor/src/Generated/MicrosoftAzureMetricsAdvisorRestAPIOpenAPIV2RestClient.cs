@@ -6,8 +6,6 @@
 #nullable disable
 
 using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1792,365 +1790,6 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-        internal HttpMessage CreateListDataFeedsRequest(string dataFeedName, DataFeedSourceKind? dataSourceType, DataFeedGranularityType? granularityName, DataFeedStatus? status, string creator, int? skip, int? maxpagesize, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(_endpoint, false);
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/dataFeeds", false);
-            if (dataFeedName != null)
-            {
-                uri.AppendQuery("dataFeedName", dataFeedName, true);
-            }
-            if (dataSourceType != null)
-            {
-                uri.AppendQuery("dataSourceType", dataSourceType.Value.ToString(), true);
-            }
-            if (granularityName != null)
-            {
-                uri.AppendQuery("granularityName", granularityName.Value.ToString(), true);
-            }
-            if (status != null)
-            {
-                uri.AppendQuery("status", status.Value.ToString(), true);
-            }
-            if (creator != null)
-            {
-                uri.AppendQuery("creator", creator, true);
-            }
-            if (skip != null)
-            {
-                uri.AppendQuery("$skip", skip.Value, true);
-            }
-            if (maxpagesize != null)
-            {
-                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
-            }
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            return message;
-        }
-
-        internal HttpMessage CreateGetDataFeedsRequest(string dataFeedName, string dataSourceType, string granularityName, string status, string creator, int? skip, int? maxpagesize, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.Reset(new Uri(_endpoint));
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/dataFeeds", false);
-            if (dataFeedName != null)
-            {
-                uri.AppendQuery("dataFeedName", dataFeedName, true);
-            }
-            if (dataSourceType != null)
-            {
-                uri.AppendQuery("dataSourceType", dataSourceType, true);
-            }
-            if (granularityName != null)
-            {
-                uri.AppendQuery("granularityName", granularityName, true);
-            }
-            if (status != null)
-            {
-                uri.AppendQuery("status", status, true);
-            }
-            if (creator != null)
-            {
-                uri.AppendQuery("creator", creator, true);
-            }
-            if (skip != null)
-            {
-                uri.AppendQuery("$skip", skip.Value, true);
-            }
-            if (maxpagesize != null)
-            {
-                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
-            }
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            return message;
-        }
-
-        /// <summary> List all data feeds. </summary>
-        /// <param name="dataFeedName"> filter data feed by its name. </param>
-        /// <param name="dataSourceType"> filter data feed by its source type. </param>
-        /// <param name="granularityName"> filter data feed by its granularity. </param>
-        /// <param name="status"> filter data feed by its status. </param>
-        /// <param name="creator"> filter data feed by its creator. </param>
-        /// <param name="skip"> for paging, skipped number. </param>
-        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <remarks>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   @nextLink: string,
-        ///   value: [
-        ///     {
-        ///       dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
-        ///       dataFeedId: DataFeedDetailDataFeedId,
-        ///       dataFeedName: string,
-        ///       dataFeedDescription: string,
-        ///       granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
-        ///       granularityAmount: number,
-        ///       metrics: [
-        ///         {
-        ///           metricId: MetricId,
-        ///           metricName: string,
-        ///           metricDisplayName: string,
-        ///           metricDescription: string
-        ///         }
-        ///       ],
-        ///       dimension: [
-        ///         {
-        ///           dimensionName: string,
-        ///           dimensionDisplayName: string
-        ///         }
-        ///       ],
-        ///       timestampColumn: string,
-        ///       dataStartFrom: string (ISO 8601 Format),
-        ///       startOffsetInSeconds: number,
-        ///       maxConcurrency: number,
-        ///       minRetryIntervalInSeconds: number,
-        ///       stopRetryAfterInSeconds: number,
-        ///       needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///       rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///       rollUpColumns: [string],
-        ///       allUpIdentification: string,
-        ///       fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///       fillMissingPointValue: number,
-        ///       viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///       admins: [string],
-        ///       viewers: [string],
-        ///       isAdmin: boolean,
-        ///       creator: string,
-        ///       status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///       createdTime: string (ISO 8601 Format),
-        ///       actionLinkTemplate: string,
-        ///       authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///       credentialId: string
-        ///     }
-        ///   ]
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual AsyncPageable<BinaryData> ListDataFeedsAsync(string dataFeedName = null, DataFeedSourceKind? dataSourceType = null, DataFeedGranularityType? granularityName = null, DataFeedStatus? status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-        {
-            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.ListDataFeeds");
-            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-            {
-                do
-                {
-                    var message = string.IsNullOrEmpty(nextLink)
-                        ? CreateListDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context)
-                        : CreateListDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
-                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
-                    nextLink = page.ContinuationToken;
-                    yield return page;
-                } while (!string.IsNullOrEmpty(nextLink));
-            }
-        }
-
-        public virtual AsyncPageable<BinaryData> GetDataFeedsAsync(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-        {
-            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetDataFeeds");
-            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-            {
-                do
-                {
-                    var message = string.IsNullOrEmpty(nextLink)
-                        ? CreateGetDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context)
-                        : CreateGetDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
-                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
-                    nextLink = page.ContinuationToken;
-                    yield return page;
-                } while (!string.IsNullOrEmpty(nextLink));
-            }
-        }
-
-        /// <summary> List all data feeds. </summary>
-        /// <param name="dataFeedName"> filter data feed by its name. </param>
-        /// <param name="dataSourceType"> filter data feed by its source type. Allowed values: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;. </param>
-        /// <param name="granularityName"> filter data feed by its granularity. Allowed values: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;. </param>
-        /// <param name="status"> filter data feed by its status. Allowed values: &quot;Active&quot; | &quot;Paused&quot;. </param>
-        /// <param name="creator"> filter data feed by its creator. </param>
-        /// <param name="skip"> for paging, skipped number. </param>
-        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <remarks>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   @nextLink: string,
-        ///   value: [
-        ///     {
-        ///       dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
-        ///       dataFeedId: DataFeedDetailDataFeedId,
-        ///       dataFeedName: string,
-        ///       dataFeedDescription: string,
-        ///       granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
-        ///       granularityAmount: number,
-        ///       metrics: [
-        ///         {
-        ///           metricId: MetricId,
-        ///           metricName: string,
-        ///           metricDisplayName: string,
-        ///           metricDescription: string
-        ///         }
-        ///       ],
-        ///       dimension: [
-        ///         {
-        ///           dimensionName: string,
-        ///           dimensionDisplayName: string
-        ///         }
-        ///       ],
-        ///       timestampColumn: string,
-        ///       dataStartFrom: string (ISO 8601 Format),
-        ///       startOffsetInSeconds: number,
-        ///       maxConcurrency: number,
-        ///       minRetryIntervalInSeconds: number,
-        ///       stopRetryAfterInSeconds: number,
-        ///       needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///       rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///       rollUpColumns: [string],
-        ///       allUpIdentification: string,
-        ///       fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///       fillMissingPointValue: number,
-        ///       viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///       admins: [string],
-        ///       viewers: [string],
-        ///       isAdmin: boolean,
-        ///       creator: string,
-        ///       status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///       createdTime: string (ISO 8601 Format),
-        ///       actionLinkTemplate: string,
-        ///       authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///       credentialId: string
-        ///     }
-        ///   ]
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Pageable<BinaryData> GetDataFeeds(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-        {
-            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetDataFeeds");
-            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
-            {
-                do
-                {
-                    var message = string.IsNullOrEmpty(nextLink)
-                        ? CreateGetDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context)
-                        : CreateGetDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
-                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
-                    nextLink = page.ContinuationToken;
-                    yield return page;
-                } while (!string.IsNullOrEmpty(nextLink));
-            }
-        }
-
-        /// <summary> List all data feeds. </summary>
-        /// <param name="dataFeedName"> filter data feed by its name. </param>
-        /// <param name="dataSourceType"> filter data feed by its source type. </param>
-        /// <param name="granularityName"> filter data feed by its granularity. </param>
-        /// <param name="status"> filter data feed by its status. </param>
-        /// <param name="creator"> filter data feed by its creator. </param>
-        /// <param name="skip"> for paging, skipped number. </param>
-        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <remarks>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   @nextLink: string,
-        ///   value: [
-        ///     {
-        ///       dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
-        ///       dataFeedId: DataFeedDetailDataFeedId,
-        ///       dataFeedName: string,
-        ///       dataFeedDescription: string,
-        ///       granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
-        ///       granularityAmount: number,
-        ///       metrics: [
-        ///         {
-        ///           metricId: MetricId,
-        ///           metricName: string,
-        ///           metricDisplayName: string,
-        ///           metricDescription: string
-        ///         }
-        ///       ],
-        ///       dimension: [
-        ///         {
-        ///           dimensionName: string,
-        ///           dimensionDisplayName: string
-        ///         }
-        ///       ],
-        ///       timestampColumn: string,
-        ///       dataStartFrom: string (ISO 8601 Format),
-        ///       startOffsetInSeconds: number,
-        ///       maxConcurrency: number,
-        ///       minRetryIntervalInSeconds: number,
-        ///       stopRetryAfterInSeconds: number,
-        ///       needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///       rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///       rollUpColumns: [string],
-        ///       allUpIdentification: string,
-        ///       fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///       fillMissingPointValue: number,
-        ///       viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///       admins: [string],
-        ///       viewers: [string],
-        ///       isAdmin: boolean,
-        ///       creator: string,
-        ///       status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///       createdTime: string (ISO 8601 Format),
-        ///       actionLinkTemplate: string,
-        ///       authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///       credentialId: string
-        ///     }
-        ///   ]
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Pageable<BinaryData> ListDataFeeds(string dataFeedName = null, DataFeedSourceKind? dataSourceType = null, DataFeedGranularityType? granularityName = null, DataFeedStatus? status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-        {
-            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.ListDataFeeds");
-            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
-            {
-                do
-                {
-                    var message = string.IsNullOrEmpty(nextLink)
-                        ? CreateListDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context)
-                        : CreateListDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
-                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
-                    nextLink = page.ContinuationToken;
-                    yield return page;
-                } while (!string.IsNullOrEmpty(nextLink));
-            }
-        }
-
         internal HttpMessage CreateCreateDataFeedRequest(DataFeedDetail body)
         {
             var message = _pipeline.CreateMessage();
@@ -2215,176 +1854,6 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-        internal HttpMessage CreateCreateDataFeedRequest(RequestContent content, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier201);
-            var request = message.Request;
-            request.Method = RequestMethod.Post;
-            var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(_endpoint, false);
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/dataFeeds", false);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            request.Headers.Add("Content-Type", "application/json");
-            request.Content = content;
-            return message;
-        }
-
-        /// <summary> Create a new data feed. </summary>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
-        ///   dataFeedId: DataFeedDetailDataFeedId,
-        ///   dataFeedName: string (required),
-        ///   dataFeedDescription: string,
-        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot; (required),
-        ///   granularityAmount: number,
-        ///   metrics: [
-        ///     {
-        ///       metricId: MetricId,
-        ///       metricName: string (required),
-        ///       metricDisplayName: string,
-        ///       metricDescription: string
-        ///     }
-        ///   ] (required),
-        ///   dimension: [
-        ///     {
-        ///       dimensionName: string (required),
-        ///       dimensionDisplayName: string
-        ///     }
-        ///   ],
-        ///   timestampColumn: string,
-        ///   dataStartFrom: string (ISO 8601 Format) (required),
-        ///   startOffsetInSeconds: number,
-        ///   maxConcurrency: number,
-        ///   minRetryIntervalInSeconds: number,
-        ///   stopRetryAfterInSeconds: number,
-        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///   rollUpColumns: [string],
-        ///   allUpIdentification: string,
-        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///   fillMissingPointValue: number,
-        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///   admins: [string],
-        ///   viewers: [string],
-        ///   isAdmin: boolean,
-        ///   creator: string,
-        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   actionLinkTemplate: string,
-        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///   credentialId: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual async Task<Response> CreateDataFeedAsync(RequestContent content, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.CreateDataFeed");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateCreateDataFeedRequest(content, context);
-                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Create a new data feed. </summary>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
-        ///   dataFeedId: DataFeedDetailDataFeedId,
-        ///   dataFeedName: string (required),
-        ///   dataFeedDescription: string,
-        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot; (required),
-        ///   granularityAmount: number,
-        ///   metrics: [
-        ///     {
-        ///       metricId: MetricId,
-        ///       metricName: string (required),
-        ///       metricDisplayName: string,
-        ///       metricDescription: string
-        ///     }
-        ///   ] (required),
-        ///   dimension: [
-        ///     {
-        ///       dimensionName: string (required),
-        ///       dimensionDisplayName: string
-        ///     }
-        ///   ],
-        ///   timestampColumn: string,
-        ///   dataStartFrom: string (ISO 8601 Format) (required),
-        ///   startOffsetInSeconds: number,
-        ///   maxConcurrency: number,
-        ///   minRetryIntervalInSeconds: number,
-        ///   stopRetryAfterInSeconds: number,
-        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///   rollUpColumns: [string],
-        ///   allUpIdentification: string,
-        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///   fillMissingPointValue: number,
-        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///   admins: [string],
-        ///   viewers: [string],
-        ///   isAdmin: boolean,
-        ///   creator: string,
-        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   actionLinkTemplate: string,
-        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///   credentialId: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Response CreateDataFeed(RequestContent content, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.CreateDataFeed");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateCreateDataFeedRequest(content, context);
-                return _pipeline.ProcessMessage(message, context);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
         internal HttpMessage CreateGetDataFeedByIdRequest(Guid dataFeedId)
         {
             var message = _pipeline.CreateMessage();
@@ -2442,169 +1911,6 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-        internal HttpMessage CreateGetDataFeedByIdRequest(Guid dataFeedId, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(_endpoint, false);
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/dataFeeds/", false);
-            uri.AppendPath(dataFeedId, true);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            return message;
-        }
-
-        /// <summary> Get a data feed by its id. </summary>
-        /// <param name="dataFeedId"> The data feed unique id. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <remarks>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
-        ///   dataFeedId: DataFeedDetailDataFeedId,
-        ///   dataFeedName: string,
-        ///   dataFeedDescription: string,
-        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
-        ///   granularityAmount: number,
-        ///   metrics: [
-        ///     {
-        ///       metricId: MetricId,
-        ///       metricName: string,
-        ///       metricDisplayName: string,
-        ///       metricDescription: string
-        ///     }
-        ///   ],
-        ///   dimension: [
-        ///     {
-        ///       dimensionName: string,
-        ///       dimensionDisplayName: string
-        ///     }
-        ///   ],
-        ///   timestampColumn: string,
-        ///   dataStartFrom: string (ISO 8601 Format),
-        ///   startOffsetInSeconds: number,
-        ///   maxConcurrency: number,
-        ///   minRetryIntervalInSeconds: number,
-        ///   stopRetryAfterInSeconds: number,
-        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///   rollUpColumns: [string],
-        ///   allUpIdentification: string,
-        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///   fillMissingPointValue: number,
-        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///   admins: [string],
-        ///   viewers: [string],
-        ///   isAdmin: boolean,
-        ///   creator: string,
-        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   actionLinkTemplate: string,
-        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///   credentialId: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual async Task<Response> GetDataFeedByIdAsync(Guid dataFeedId, RequestContext context = null)
-        {
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.GetDataFeedById");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
-                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Get a data feed by its id. </summary>
-        /// <param name="dataFeedId"> The data feed unique id. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <remarks>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
-        ///   dataFeedId: DataFeedDetailDataFeedId,
-        ///   dataFeedName: string,
-        ///   dataFeedDescription: string,
-        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
-        ///   granularityAmount: number,
-        ///   metrics: [
-        ///     {
-        ///       metricId: MetricId,
-        ///       metricName: string,
-        ///       metricDisplayName: string,
-        ///       metricDescription: string
-        ///     }
-        ///   ],
-        ///   dimension: [
-        ///     {
-        ///       dimensionName: string,
-        ///       dimensionDisplayName: string
-        ///     }
-        ///   ],
-        ///   timestampColumn: string,
-        ///   dataStartFrom: string (ISO 8601 Format),
-        ///   startOffsetInSeconds: number,
-        ///   maxConcurrency: number,
-        ///   minRetryIntervalInSeconds: number,
-        ///   stopRetryAfterInSeconds: number,
-        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///   rollUpColumns: [string],
-        ///   allUpIdentification: string,
-        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///   fillMissingPointValue: number,
-        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///   admins: [string],
-        ///   viewers: [string],
-        ///   isAdmin: boolean,
-        ///   creator: string,
-        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   actionLinkTemplate: string,
-        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///   credentialId: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Response GetDataFeedById(Guid dataFeedId, RequestContext context = null)
-        {
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.GetDataFeedById");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
-                return _pipeline.ProcessMessage(message, context);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
         internal HttpMessage CreateUpdateDataFeedRequest(Guid dataFeedId, DataFeedDetailPatch body)
         {
             var message = _pipeline.CreateMessage();
@@ -2618,9 +1924,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/merge-patch+json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -2680,231 +1986,6 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-        internal HttpMessage CreateUpdateDataFeedRequest(Guid dataFeedId, RequestContent content, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
-            var request = message.Request;
-            request.Method = RequestMethod.Patch;
-            var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(_endpoint, false);
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/dataFeeds/", false);
-            uri.AppendPath(dataFeedId, true);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            request.Headers.Add("Content-Type", "application/merge-patch+json");
-            request.Content = content;
-            return message;
-        }
-
-        /// <summary> Update a data feed. </summary>
-        /// <param name="dataFeedId"> The data feed unique id. </param>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
-        ///   dataFeedName: string,
-        ///   dataFeedDescription: string,
-        ///   timestampColumn: string,
-        ///   dataStartFrom: string (ISO 8601 Format),
-        ///   startOffsetInSeconds: number,
-        ///   maxConcurrency: number,
-        ///   minRetryIntervalInSeconds: number,
-        ///   stopRetryAfterInSeconds: number,
-        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///   rollUpColumns: [string],
-        ///   allUpIdentification: string,
-        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///   fillMissingPointValue: number,
-        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///   admins: [string],
-        ///   viewers: [string],
-        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///   actionLinkTemplate: string,
-        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///   credentialId: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
-        ///   dataFeedId: DataFeedDetailDataFeedId,
-        ///   dataFeedName: string,
-        ///   dataFeedDescription: string,
-        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
-        ///   granularityAmount: number,
-        ///   metrics: [
-        ///     {
-        ///       metricId: MetricId,
-        ///       metricName: string,
-        ///       metricDisplayName: string,
-        ///       metricDescription: string
-        ///     }
-        ///   ],
-        ///   dimension: [
-        ///     {
-        ///       dimensionName: string,
-        ///       dimensionDisplayName: string
-        ///     }
-        ///   ],
-        ///   timestampColumn: string,
-        ///   dataStartFrom: string (ISO 8601 Format),
-        ///   startOffsetInSeconds: number,
-        ///   maxConcurrency: number,
-        ///   minRetryIntervalInSeconds: number,
-        ///   stopRetryAfterInSeconds: number,
-        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///   rollUpColumns: [string],
-        ///   allUpIdentification: string,
-        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///   fillMissingPointValue: number,
-        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///   admins: [string],
-        ///   viewers: [string],
-        ///   isAdmin: boolean,
-        ///   creator: string,
-        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   actionLinkTemplate: string,
-        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///   credentialId: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual async Task<Response> UpdateDataFeedAsync(Guid dataFeedId, RequestContent content, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.UpdateDataFeed");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateUpdateDataFeedRequest(dataFeedId, content, context);
-                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Update a data feed. </summary>
-        /// <param name="dataFeedId"> The data feed unique id. </param>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
-        ///   dataFeedName: string,
-        ///   dataFeedDescription: string,
-        ///   timestampColumn: string,
-        ///   dataStartFrom: string (ISO 8601 Format),
-        ///   startOffsetInSeconds: number,
-        ///   maxConcurrency: number,
-        ///   minRetryIntervalInSeconds: number,
-        ///   stopRetryAfterInSeconds: number,
-        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///   rollUpColumns: [string],
-        ///   allUpIdentification: string,
-        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///   fillMissingPointValue: number,
-        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///   admins: [string],
-        ///   viewers: [string],
-        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///   actionLinkTemplate: string,
-        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///   credentialId: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
-        ///   dataFeedId: DataFeedDetailDataFeedId,
-        ///   dataFeedName: string,
-        ///   dataFeedDescription: string,
-        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
-        ///   granularityAmount: number,
-        ///   metrics: [
-        ///     {
-        ///       metricId: MetricId,
-        ///       metricName: string,
-        ///       metricDisplayName: string,
-        ///       metricDescription: string
-        ///     }
-        ///   ],
-        ///   dimension: [
-        ///     {
-        ///       dimensionName: string,
-        ///       dimensionDisplayName: string
-        ///     }
-        ///   ],
-        ///   timestampColumn: string,
-        ///   dataStartFrom: string (ISO 8601 Format),
-        ///   startOffsetInSeconds: number,
-        ///   maxConcurrency: number,
-        ///   minRetryIntervalInSeconds: number,
-        ///   stopRetryAfterInSeconds: number,
-        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
-        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
-        ///   rollUpColumns: [string],
-        ///   allUpIdentification: string,
-        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
-        ///   fillMissingPointValue: number,
-        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
-        ///   admins: [string],
-        ///   viewers: [string],
-        ///   isAdmin: boolean,
-        ///   creator: string,
-        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   actionLinkTemplate: string,
-        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
-        ///   credentialId: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Response UpdateDataFeed(Guid dataFeedId, RequestContent content, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.UpdateDataFeed");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateUpdateDataFeedRequest(dataFeedId, content, context);
-                return _pipeline.ProcessMessage(message, context);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
         internal HttpMessage CreateDeleteDataFeedRequest(Guid dataFeedId)
         {
             var message = _pipeline.CreateMessage();
@@ -2949,77 +2030,6 @@ namespace Azure.AI.MetricsAdvisor
                     return message.Response;
                 default:
                     throw ClientDiagnostics.CreateRequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateDeleteDataFeedRequest(Guid dataFeedId, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier204);
-            var request = message.Request;
-            request.Method = RequestMethod.Delete;
-            var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(_endpoint, false);
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/dataFeeds/", false);
-            uri.AppendPath(dataFeedId, true);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            return message;
-        }
-
-        /// <summary> Delete a data feed. </summary>
-        /// <param name="dataFeedId"> The data feed unique id. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <remarks>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual async Task<Response> DeleteDataFeedAsync(Guid dataFeedId, RequestContext context = null)
-        {
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.DeleteDataFeed");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateDeleteDataFeedRequest(dataFeedId, context);
-                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Delete a data feed. </summary>
-        /// <param name="dataFeedId"> The data feed unique id. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <remarks>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Response DeleteDataFeed(Guid dataFeedId, RequestContext context = null)
-        {
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.DeleteDataFeed");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateDeleteDataFeedRequest(dataFeedId, context);
-                return _pipeline.ProcessMessage(message, context);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
             }
         }
 
@@ -3080,101 +2090,6 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-        internal HttpMessage CreateGetMetricFeedbackRequest(Guid feedbackId, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
-            var request = message.Request;
-            request.Method = RequestMethod.Get;
-            var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(_endpoint, false);
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/feedback/metric/", false);
-            uri.AppendPath(feedbackId, true);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            return message;
-        }
-
-        /// <summary> Get a metric feedback by its id. </summary>
-        /// <param name="feedbackId"> the unique feedback ID. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <remarks>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
-        ///   feedbackId: MetricFeedbackId,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   userPrincipal: string,
-        ///   metricId: MetricFeedbackMetricId,
-        ///   dimensionFilter: {
-        ///     dimension: Dictionary&lt;string, string&gt;
-        ///   }
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual async Task<Response> GetMetricFeedbackAsync(Guid feedbackId, RequestContext context = null)
-        {
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.GetMetricFeedback");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateGetMetricFeedbackRequest(feedbackId, context);
-                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Get a metric feedback by its id. </summary>
-        /// <param name="feedbackId"> the unique feedback ID. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <remarks>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
-        ///   feedbackId: MetricFeedbackId,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   userPrincipal: string,
-        ///   metricId: MetricFeedbackMetricId,
-        ///   dimensionFilter: {
-        ///     dimension: Dictionary&lt;string, string&gt;
-        ///   }
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Response GetMetricFeedback(Guid feedbackId, RequestContext context = null)
-        {
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.GetMetricFeedback");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateGetMetricFeedbackRequest(feedbackId, context);
-                return _pipeline.ProcessMessage(message, context);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
         internal HttpMessage CreateListMetricFeedbacksRequest(MetricFeedbackFilter body, int? skip, int? maxpagesize)
         {
             var message = _pipeline.CreateMessage();
@@ -3195,9 +2110,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -3259,156 +2174,6 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-        internal HttpMessage CreateListMetricFeedbacksRequest(RequestContent content, int? skip, int? maxpagesize, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
-            var request = message.Request;
-            request.Method = RequestMethod.Post;
-            var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(_endpoint, false);
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/feedback/metric/query", false);
-            if (skip != null)
-            {
-                uri.AppendQuery("$skip", skip.Value, true);
-            }
-            if (maxpagesize != null)
-            {
-                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
-            }
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            request.Headers.Add("Content-Type", "application/json");
-            request.Content = content;
-            return message;
-        }
-
-        /// <summary> List feedback on the given metric. </summary>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="skip"> for paging, skipped number. </param>
-        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   metricId: MetricFeedbackFilterMetricId (required),
-        ///   dimensionFilter: {
-        ///     dimension: Dictionary&lt;string, string&gt; (required)
-        ///   },
-        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
-        ///   startTime: string (ISO 8601 Format),
-        ///   endTime: string (ISO 8601 Format),
-        ///   timeMode: &quot;MetricTimestamp&quot; | &quot;FeedbackCreatedTime&quot;
-        /// }
-        /// </code>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   @nextLink: string,
-        ///   value: [
-        ///     {
-        ///       feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
-        ///       feedbackId: MetricFeedbackId,
-        ///       createdTime: string (ISO 8601 Format),
-        ///       userPrincipal: string,
-        ///       metricId: MetricFeedbackMetricId,
-        ///       dimensionFilter: {
-        ///         dimension: Dictionary&lt;string, string&gt;
-        ///       }
-        ///     }
-        ///   ]
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual AsyncPageable<BinaryData> ListMetricFeedbacksAsync(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.ListMetricFeedbacks");
-            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-            {
-                do
-                {
-                    var message = string.IsNullOrEmpty(nextLink)
-                        ? CreateListMetricFeedbacksRequest(content, skip, maxpagesize, context)
-                        : CreateListMetricFeedbacksRequest(content, skip, maxpagesize, context);
-                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
-                    nextLink = page.ContinuationToken;
-                    yield return page;
-                } while (!string.IsNullOrEmpty(nextLink));
-            }
-        }
-
-        /// <summary> List feedback on the given metric. </summary>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="skip"> for paging, skipped number. </param>
-        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   metricId: MetricFeedbackFilterMetricId (required),
-        ///   dimensionFilter: {
-        ///     dimension: Dictionary&lt;string, string&gt; (required)
-        ///   },
-        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
-        ///   startTime: string (ISO 8601 Format),
-        ///   endTime: string (ISO 8601 Format),
-        ///   timeMode: &quot;MetricTimestamp&quot; | &quot;FeedbackCreatedTime&quot;
-        /// }
-        /// </code>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   @nextLink: string,
-        ///   value: [
-        ///     {
-        ///       feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
-        ///       feedbackId: MetricFeedbackId,
-        ///       createdTime: string (ISO 8601 Format),
-        ///       userPrincipal: string,
-        ///       metricId: MetricFeedbackMetricId,
-        ///       dimensionFilter: {
-        ///         dimension: Dictionary&lt;string, string&gt;
-        ///       }
-        ///     }
-        ///   ]
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Pageable<BinaryData> ListMetricFeedbacks(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.ListMetricFeedbacks");
-            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
-            {
-                do
-                {
-                    var message = string.IsNullOrEmpty(nextLink)
-                        ? CreateListMetricFeedbacksRequest(content, skip, maxpagesize, context)
-                        : CreateListMetricFeedbacksRequest(content, skip, maxpagesize, context);
-                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
-                    nextLink = page.ContinuationToken;
-                    yield return page;
-                } while (!string.IsNullOrEmpty(nextLink));
-            }
-        }
-
         internal HttpMessage CreateCreateMetricFeedbackRequest(MetricFeedback body)
         {
             var message = _pipeline.CreateMessage();
@@ -3421,9 +2186,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -3470,108 +2235,6 @@ namespace Azure.AI.MetricsAdvisor
                     return ResponseWithHeaders.FromValue(headers, message.Response);
                 default:
                     throw ClientDiagnostics.CreateRequestFailedException(message.Response);
-            }
-        }
-
-        internal HttpMessage CreateCreateMetricFeedbackRequest(RequestContent content, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier201);
-            var request = message.Request;
-            request.Method = RequestMethod.Post;
-            var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(_endpoint, false);
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/feedback/metric", false);
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            request.Headers.Add("Content-Type", "application/json");
-            request.Content = content;
-            return message;
-        }
-
-        /// <summary> Create a new metric feedback. </summary>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot; (required),
-        ///   feedbackId: MetricFeedbackId,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   userPrincipal: string,
-        ///   metricId: MetricFeedbackMetricId (required),
-        ///   dimensionFilter: {
-        ///     dimension: Dictionary&lt;string, string&gt; (required)
-        ///   } (required)
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual async Task<Response> CreateMetricFeedbackAsync(RequestContent content, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.CreateMetricFeedback");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateCreateMetricFeedbackRequest(content, context);
-                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
-            }
-        }
-
-        /// <summary> Create a new metric feedback. </summary>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot; (required),
-        ///   feedbackId: MetricFeedbackId,
-        ///   createdTime: string (ISO 8601 Format),
-        ///   userPrincipal: string,
-        ///   metricId: MetricFeedbackMetricId (required),
-        ///   dimensionFilter: {
-        ///     dimension: Dictionary&lt;string, string&gt; (required)
-        ///   } (required)
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Response CreateMetricFeedback(RequestContent content, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            using var scope = ClientDiagnostics.CreateScope("MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.CreateMetricFeedback");
-            scope.Start();
-            try
-            {
-                using HttpMessage message = CreateCreateMetricFeedbackRequest(content, context);
-                return _pipeline.ProcessMessage(message, context);
-            }
-            catch (Exception e)
-            {
-                scope.Failed(e);
-                throw;
             }
         }
 
@@ -3659,9 +2322,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -3781,9 +2444,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/merge-patch+json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -3912,9 +2575,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -3992,9 +2655,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4116,9 +2779,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4200,9 +2863,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4288,9 +2951,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4446,9 +3109,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4525,9 +3188,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4608,9 +3271,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4691,9 +3354,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4774,9 +3437,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4857,9 +3520,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -4940,9 +3603,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -5023,9 +3686,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -5106,9 +3769,9 @@ namespace Azure.AI.MetricsAdvisor
             request.Uri = uri;
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Content-Type", "application/json");
-            var content0 = new Utf8JsonRequestContent();
-            content0.JsonWriter.WriteObjectValue(body);
-            request.Content = content0;
+            var content = new Utf8JsonRequestContent();
+            content.JsonWriter.WriteObjectValue(body);
+            request.Content = content;
             return message;
         }
 
@@ -6062,7 +4725,6 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-
         internal HttpMessage CreateListHooksNextPageRequest(string nextLink, string hookName, int? skip, int? maxpagesize)
         {
             var message = _pipeline.CreateMessage();
@@ -6389,126 +5051,6 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-        internal HttpMessage CreateGetMetricDimensionRequest(Guid metricId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
-        {
-            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
-            var request = message.Request;
-            request.Method = RequestMethod.Post;
-            var uri = new RawRequestUriBuilder();
-            uri.AppendRaw(_endpoint, false);
-            uri.AppendRaw("/metricsadvisor/v1.0", false);
-            uri.AppendPath("/metrics/", false);
-            uri.AppendPath(metricId, true);
-            uri.AppendPath("/dimension/query", false);
-            if (skip != null)
-            {
-                uri.AppendQuery("$skip", skip.Value, true);
-            }
-            if (maxpagesize != null)
-            {
-                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
-            }
-            request.Uri = uri;
-            request.Headers.Add("Accept", "application/json");
-            request.Headers.Add("Content-Type", "application/json");
-            request.Content = content;
-            return message;
-        }
-
-        /// <summary> List dimension from certain metric. </summary>
-        /// <param name="metricId"> metric unique id. </param>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="skip"> for paging, skipped number. </param>
-        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   dimensionName: string (required),
-        ///   dimensionValueFilter: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   @nextLink: string,
-        ///   value: [string]
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual AsyncPageable<BinaryData> GetMetricDimensionAsync(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.GetMetricDimension");
-            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-            {
-                do
-                {
-                    var message = string.IsNullOrEmpty(nextLink)
-                        ? CreateGetMetricDimensionRequest(metricId, content, skip, maxpagesize, context)
-                        : CreateGetMetricDimensionRequest(metricId, content, skip, maxpagesize, context);
-                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
-                    nextLink = page.ContinuationToken;
-                    yield return page;
-                } while (!string.IsNullOrEmpty(nextLink));
-            }
-        }
-
-        /// <summary> List dimension from certain metric. </summary>
-        /// <param name="metricId"> metric unique id. </param>
-        /// <param name="content"> The content to send as the body of the request. </param>
-        /// <param name="skip"> for paging, skipped number. </param>
-        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
-        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
-        /// <remarks>
-        /// Schema for <c>Request Body</c>:
-        /// <code>{
-        ///   dimensionName: string (required),
-        ///   dimensionValueFilter: string
-        /// }
-        /// </code>
-        /// Schema for <c>Response Body</c>:
-        /// <code>{
-        ///   @nextLink: string,
-        ///   value: [string]
-        /// }
-        /// </code>
-        /// Schema for <c>Response Error</c>:
-        /// <code>{
-        ///   message: string,
-        ///   code: string
-        /// }
-        /// </code>
-        /// 
-        /// </remarks>
-        public virtual Pageable<BinaryData> GetMetricDimension(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-        {
-            Argument.AssertNotNull(content, nameof(content));
-
-            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2Client.GetMetricDimension");
-            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
-            {
-                do
-                {
-                    var message = string.IsNullOrEmpty(nextLink)
-                        ? CreateGetMetricDimensionRequest(metricId, content, skip, maxpagesize, context)
-                        : CreateGetMetricDimensionRequest(metricId, content, skip, maxpagesize, context);
-                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
-                    nextLink = page.ContinuationToken;
-                    yield return page;
-                } while (!string.IsNullOrEmpty(nextLink));
-            }
-        }
-
         internal HttpMessage CreateGetAnomalyDetectionConfigurationsByMetricNextPageRequest(string nextLink, Guid metricId, int? skip, int? maxpagesize)
         {
             var message = _pipeline.CreateMessage();
@@ -6666,12 +5208,5 @@ namespace Azure.AI.MetricsAdvisor
                     throw ClientDiagnostics.CreateRequestFailedException(message.Response);
             }
         }
-
-        private static ResponseClassifier _responseClassifier200;
-        private static ResponseClassifier ResponseClassifier200 => _responseClassifier200 ??= new StatusCodeClassifier(stackalloc ushort[] { 200 });
-        private static ResponseClassifier _responseClassifier201;
-        private static ResponseClassifier ResponseClassifier201 => _responseClassifier201 ??= new StatusCodeClassifier(stackalloc ushort[] { 201 });
-        private static ResponseClassifier _responseClassifier204;
-        private static ResponseClassifier ResponseClassifier204 => _responseClassifier204 ??= new StatusCodeClassifier(stackalloc ushort[] { 204 });
     }
 }

@@ -688,13 +688,13 @@ namespace Azure.AI.MetricsAdvisor
         /// Gets a collection of <see cref="MetricFeedback"/> related to the given metric.
         /// </summary>
         public virtual AsyncPageable<BinaryData> GetAllFeedbackAsync(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-            => _serviceRestClient.ListMetricFeedbacksAsync(content, skip, maxpagesize, context);
+            => _serviceRestClient.GetMetricFeedbacksAsync(content, skip, maxpagesize, context);
 
         /// <summary>
         /// Gets a collection of <see cref="MetricFeedback"/> related to the given metric.
         /// </summary>
         public virtual Pageable<BinaryData> GetAllFeedback(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
-            => _serviceRestClient.ListMetricFeedbacks(content, skip, maxpagesize, context);
+            => _serviceRestClient.GetMetricFeedbacks(content, skip, maxpagesize, context);
 
         /// <summary>
         /// Adds a <see cref="MetricFeedback"/>.

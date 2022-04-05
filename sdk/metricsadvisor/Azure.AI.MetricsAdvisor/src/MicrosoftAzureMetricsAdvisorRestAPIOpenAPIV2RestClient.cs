@@ -1,0 +1,7291 @@
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#nullable disable
+
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Core;
+using Azure.Core.Pipeline;
+
+namespace Azure.AI.MetricsAdvisor
+{
+    internal partial class MicrosoftAzureMetricsAdvisorRestAPIOpenAPIV2RestClient
+    {
+        // <summary> Get latest usage stats. </summary>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   timestamp: string (ISO 8601 Format),
+        ///   activeSeriesCount: number,
+        ///   allSeriesCount: number,
+        ///   metricsCount: number,
+        ///   dataFeedCount: number
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetActiveSeriesCountAsync(RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetActiveSeriesCount");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetActiveSeriesCountRequest(context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get latest usage stats. </summary>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   timestamp: string (ISO 8601 Format),
+        ///   activeSeriesCount: number,
+        ///   allSeriesCount: number,
+        ///   metricsCount: number,
+        ///   dataFeedCount: number
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetActiveSeriesCount(RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetActiveSeriesCount");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetActiveSeriesCountRequest(context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Query series enriched by anomaly detection. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   series: [
+        ///     {
+        ///       dimension: Dictionary&lt;string, string&gt; (required)
+        ///     }
+        ///   ] (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       timestampList: [string (ISO 8601 Format)],
+        ///       valueList: [number],
+        ///       isAnomalyList: [boolean],
+        ///       periodList: [number],
+        ///       expectedValueList: [number],
+        ///       lowerBoundaryList: [number],
+        ///       upperBoundaryList: [number]
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetSeriesByAnomalyDetectionConfigurationAsync(Guid configurationId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetSeriesByAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetSeriesByAnomalyDetectionConfigurationRequest(configurationId, content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Query series enriched by anomaly detection. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   series: [
+        ///     {
+        ///       dimension: Dictionary&lt;string, string&gt; (required)
+        ///     }
+        ///   ] (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       timestampList: [string (ISO 8601 Format)],
+        ///       valueList: [number],
+        ///       isAnomalyList: [boolean],
+        ///       periodList: [number],
+        ///       expectedValueList: [number],
+        ///       lowerBoundaryList: [number],
+        ///       upperBoundaryList: [number]
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetSeriesByAnomalyDetectionConfiguration(Guid configurationId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetSeriesByAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetSeriesByAnomalyDetectionConfigurationRequest(configurationId, content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Query root cause for incident. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="incidentId"> incident id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="incidentId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="incidentId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       rootCause: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       path: [string],
+        ///       score: number,
+        ///       description: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetRootCauseOfIncidentByAnomalyDetectionConfigurationAsync(Guid configurationId, string incidentId, RequestContext context = null)
+        {
+            Argument.AssertNotNullOrEmpty(incidentId, nameof(incidentId));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetRootCauseOfIncidentByAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetRootCauseOfIncidentByAnomalyDetectionConfigurationRequest(configurationId, incidentId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Query root cause for incident. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="incidentId"> incident id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="incidentId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="incidentId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       rootCause: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       path: [string],
+        ///       score: number,
+        ///       description: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetRootCauseOfIncidentByAnomalyDetectionConfiguration(Guid configurationId, string incidentId, RequestContext context = null)
+        {
+            Argument.AssertNotNullOrEmpty(incidentId, nameof(incidentId));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetRootCauseOfIncidentByAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetRootCauseOfIncidentByAnomalyDetectionConfigurationRequest(configurationId, incidentId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a metric feedback by its id. </summary>
+        /// <param name="feedbackId"> the unique feedback ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   feedbackId: MetricFeedbackId,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   userPrincipal: string,
+        ///   metricId: MetricFeedbackMetricId,
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt;
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetMetricFeedbackAsync(Guid feedbackId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetMetricFeedback");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetMetricFeedbackRequest(feedbackId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a metric feedback by its id. </summary>
+        /// <param name="feedbackId"> the unique feedback ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   feedbackId: MetricFeedbackId,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   userPrincipal: string,
+        ///   metricId: MetricFeedbackMetricId,
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt;
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetMetricFeedback(Guid feedbackId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetMetricFeedback");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetMetricFeedbackRequest(feedbackId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create a new metric feedback. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot; (required),
+        ///   feedbackId: MetricFeedbackId,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   userPrincipal: string,
+        ///   metricId: MetricFeedbackMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   } (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> CreateMetricFeedbackAsync(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.CreateMetricFeedback");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateMetricFeedbackRequest(content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create a new metric feedback. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot; (required),
+        ///   feedbackId: MetricFeedbackId,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   userPrincipal: string,
+        ///   metricId: MetricFeedbackMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   } (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response CreateMetricFeedback(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.CreateMetricFeedback");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateMetricFeedbackRequest(content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get time series data from metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   series: [Dictionary&lt;string, string&gt;] (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       id: {
+        ///         metricId: MetricSeriesItemMetricId,
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       timestampList: [string (ISO 8601 Format)],
+        ///       valueList: [number]
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetMetricDataAsync(Guid metricId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetMetricData");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetMetricDataRequest(metricId, content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get time series data from metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   series: [Dictionary&lt;string, string&gt;] (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       id: {
+        ///         metricId: MetricSeriesItemMetricId,
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       timestampList: [string (ISO 8601 Format)],
+        ///       valueList: [number]
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetMetricData(Guid metricId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetMetricData");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetMetricDataRequest(metricId, content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Query alerts under anomaly alerting configuration. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   timeMode: &quot;AnomalyTime&quot; | &quot;CreatedTime&quot; | &quot;ModifiedTime&quot; (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       alertId: string,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format)
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetAlertsByAnomalyAlertingConfigurationAsync(Guid configurationId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetAlertsByAnomalyAlertingConfiguration");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAlertsByAnomalyAlertingConfigurationRequest(configurationId, content, skip, maxpagesize, context)
+                        : CreateGetAlertsByAnomalyAlertingConfigurationNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query alerts under anomaly alerting configuration. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   timeMode: &quot;AnomalyTime&quot; | &quot;CreatedTime&quot; | &quot;ModifiedTime&quot; (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       alertId: string,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format)
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetAlertsByAnomalyAlertingConfiguration(Guid configurationId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetAlertsByAnomalyAlertingConfiguration");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAlertsByAnomalyAlertingConfigurationRequest(configurationId, content, skip, maxpagesize, context)
+                        : CreateGetAlertsByAnomalyAlertingConfigurationNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query anomalies under a specific alert. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="alertId"> alert id. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="alertId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="alertId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: AnomalyResultDataFeedId,
+        ///       metricId: AnomalyResultMetricId,
+        ///       anomalyDetectionConfigurationId: AnomalyResultAnomalyDetectionConfigurationId,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format),
+        ///       dimension: Dictionary&lt;string, string&gt;,
+        ///       property: {
+        ///         anomalySeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         anomalyStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         value: number,
+        ///         expectedValue: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetAnomaliesFromAlertByAnomalyAlertingConfigurationAsync(Guid configurationId, string alertId, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNullOrEmpty(alertId, nameof(alertId));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetAnomaliesFromAlertByAnomalyAlertingConfiguration");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAnomaliesFromAlertByAnomalyAlertingConfigurationRequest(configurationId, alertId, skip, maxpagesize, context)
+                        : CreateGetAnomaliesFromAlertByAnomalyAlertingConfigurationNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query anomalies under a specific alert. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="alertId"> alert id. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="alertId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="alertId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: AnomalyResultDataFeedId,
+        ///       metricId: AnomalyResultMetricId,
+        ///       anomalyDetectionConfigurationId: AnomalyResultAnomalyDetectionConfigurationId,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format),
+        ///       dimension: Dictionary&lt;string, string&gt;,
+        ///       property: {
+        ///         anomalySeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         anomalyStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         value: number,
+        ///         expectedValue: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetAnomaliesFromAlertByAnomalyAlertingConfiguration(Guid configurationId, string alertId, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNullOrEmpty(alertId, nameof(alertId));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetAnomaliesFromAlertByAnomalyAlertingConfiguration");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAnomaliesFromAlertByAnomalyAlertingConfigurationRequest(configurationId, alertId, skip, maxpagesize, context)
+                        : CreateGetAnomaliesFromAlertByAnomalyAlertingConfigurationNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query incidents under a specific alert. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="alertId"> alert id. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="alertId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="alertId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: IncidentResultDataFeedId,
+        ///       metricId: IncidentResultMetricId,
+        ///       anomalyDetectionConfigurationId: IncidentResultAnomalyDetectionConfigurationId,
+        ///       incidentId: string,
+        ///       startTime: string (ISO 8601 Format),
+        ///       lastTime: string (ISO 8601 Format),
+        ///       rootNode: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       property: {
+        ///         maxSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         incidentStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         valueOfRootNode: number,
+        ///         expectedValueOfRootNode: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetIncidentsFromAlertByAnomalyAlertingConfigurationAsync(Guid configurationId, string alertId, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNullOrEmpty(alertId, nameof(alertId));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetIncidentsFromAlertByAnomalyAlertingConfiguration");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetIncidentsFromAlertByAnomalyAlertingConfigurationRequest(configurationId, alertId, skip, maxpagesize, context)
+                        : CreateGetIncidentsFromAlertByAnomalyAlertingConfigurationNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query incidents under a specific alert. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="alertId"> alert id. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="alertId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="alertId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: IncidentResultDataFeedId,
+        ///       metricId: IncidentResultMetricId,
+        ///       anomalyDetectionConfigurationId: IncidentResultAnomalyDetectionConfigurationId,
+        ///       incidentId: string,
+        ///       startTime: string (ISO 8601 Format),
+        ///       lastTime: string (ISO 8601 Format),
+        ///       rootNode: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       property: {
+        ///         maxSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         incidentStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         valueOfRootNode: number,
+        ///         expectedValueOfRootNode: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetIncidentsFromAlertByAnomalyAlertingConfiguration(Guid configurationId, string alertId, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNullOrEmpty(alertId, nameof(alertId));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetIncidentsFromAlertByAnomalyAlertingConfiguration");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetIncidentsFromAlertByAnomalyAlertingConfigurationRequest(configurationId, alertId, skip, maxpagesize, context)
+                        : CreateGetIncidentsFromAlertByAnomalyAlertingConfigurationNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query anomalies under anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   filter: {
+        ///     dimensionFilter: [
+        ///       {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       }
+        ///     ],
+        ///     severityFilter: {
+        ///       min: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required),
+        ///       max: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required)
+        ///     }
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: AnomalyResultDataFeedId,
+        ///       metricId: AnomalyResultMetricId,
+        ///       anomalyDetectionConfigurationId: AnomalyResultAnomalyDetectionConfigurationId,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format),
+        ///       dimension: Dictionary&lt;string, string&gt;,
+        ///       property: {
+        ///         anomalySeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         anomalyStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         value: number,
+        ///         expectedValue: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetAnomaliesByAnomalyDetectionConfigurationAsync(Guid configurationId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetAnomaliesByAnomalyDetectionConfiguration");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAnomaliesByAnomalyDetectionConfigurationRequest(configurationId, content, skip, maxpagesize, context)
+                        : CreateGetAnomaliesByAnomalyDetectionConfigurationNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query anomalies under anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   filter: {
+        ///     dimensionFilter: [
+        ///       {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       }
+        ///     ],
+        ///     severityFilter: {
+        ///       min: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required),
+        ///       max: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required)
+        ///     }
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: AnomalyResultDataFeedId,
+        ///       metricId: AnomalyResultMetricId,
+        ///       anomalyDetectionConfigurationId: AnomalyResultAnomalyDetectionConfigurationId,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format),
+        ///       dimension: Dictionary&lt;string, string&gt;,
+        ///       property: {
+        ///         anomalySeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         anomalyStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         value: number,
+        ///         expectedValue: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetAnomaliesByAnomalyDetectionConfiguration(Guid configurationId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetAnomaliesByAnomalyDetectionConfiguration");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAnomaliesByAnomalyDetectionConfigurationRequest(configurationId, content, skip, maxpagesize, context)
+                        : CreateGetAnomaliesByAnomalyDetectionConfigurationNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query dimension values of anomalies. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   dimensionName: string (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetDimensionOfAnomaliesByAnomalyDetectionConfigurationAsync(Guid configurationId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetDimensionOfAnomaliesByAnomalyDetectionConfiguration");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetDimensionOfAnomaliesByAnomalyDetectionConfigurationRequest(configurationId, content, skip, maxpagesize, context)
+                        : CreateGetDimensionOfAnomaliesByAnomalyDetectionConfigurationNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query dimension values of anomalies. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   dimensionName: string (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetDimensionOfAnomaliesByAnomalyDetectionConfiguration(Guid configurationId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetDimensionOfAnomaliesByAnomalyDetectionConfiguration");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetDimensionOfAnomaliesByAnomalyDetectionConfigurationRequest(configurationId, content, skip, maxpagesize, context)
+                        : CreateGetDimensionOfAnomaliesByAnomalyDetectionConfigurationNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query incidents under anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   filter: {
+        ///     dimensionFilter: [
+        ///       {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       }
+        ///     ]
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: IncidentResultDataFeedId,
+        ///       metricId: IncidentResultMetricId,
+        ///       anomalyDetectionConfigurationId: IncidentResultAnomalyDetectionConfigurationId,
+        ///       incidentId: string,
+        ///       startTime: string (ISO 8601 Format),
+        ///       lastTime: string (ISO 8601 Format),
+        ///       rootNode: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       property: {
+        ///         maxSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         incidentStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         valueOfRootNode: number,
+        ///         expectedValueOfRootNode: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetIncidentsByAnomalyDetectionConfigurationAsync(Guid configurationId, RequestContent content, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetIncidentsByAnomalyDetectionConfiguration");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetIncidentsByAnomalyDetectionConfigurationRequest(configurationId, content, maxpagesize, context)
+                        : CreateGetIncidentsByAnomalyDetectionConfigurationNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query incidents under anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   filter: {
+        ///     dimensionFilter: [
+        ///       {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       }
+        ///     ]
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: IncidentResultDataFeedId,
+        ///       metricId: IncidentResultMetricId,
+        ///       anomalyDetectionConfigurationId: IncidentResultAnomalyDetectionConfigurationId,
+        ///       incidentId: string,
+        ///       startTime: string (ISO 8601 Format),
+        ///       lastTime: string (ISO 8601 Format),
+        ///       rootNode: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       property: {
+        ///         maxSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         incidentStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         valueOfRootNode: number,
+        ///         expectedValueOfRootNode: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetIncidentsByAnomalyDetectionConfiguration(Guid configurationId, RequestContent content, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetIncidentsByAnomalyDetectionConfiguration");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetIncidentsByAnomalyDetectionConfigurationRequest(configurationId, content, maxpagesize, context)
+                        : CreateGetIncidentsByAnomalyDetectionConfigurationNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query incidents under anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="token"> the token for getting the next page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: IncidentResultDataFeedId,
+        ///       metricId: IncidentResultMetricId,
+        ///       anomalyDetectionConfigurationId: IncidentResultAnomalyDetectionConfigurationId,
+        ///       incidentId: string,
+        ///       startTime: string (ISO 8601 Format),
+        ///       lastTime: string (ISO 8601 Format),
+        ///       rootNode: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       property: {
+        ///         maxSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         incidentStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         valueOfRootNode: number,
+        ///         expectedValueOfRootNode: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetIncidentsByAnomalyDetectionConfigurationNextPagesAsync(Guid configurationId, int? maxpagesize = null, string token = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetIncidentsByAnomalyDetectionConfigurationNextPages");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetIncidentsByAnomalyDetectionConfigurationNextPagesRequest(configurationId, maxpagesize, token, context)
+                        : CreateGetIncidentsByAnomalyDetectionConfigurationNextPagesNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query incidents under anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="token"> the token for getting the next page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: IncidentResultDataFeedId,
+        ///       metricId: IncidentResultMetricId,
+        ///       anomalyDetectionConfigurationId: IncidentResultAnomalyDetectionConfigurationId,
+        ///       incidentId: string,
+        ///       startTime: string (ISO 8601 Format),
+        ///       lastTime: string (ISO 8601 Format),
+        ///       rootNode: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       property: {
+        ///         maxSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         incidentStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         valueOfRootNode: number,
+        ///         expectedValueOfRootNode: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetIncidentsByAnomalyDetectionConfigurationNextPages(Guid configurationId, int? maxpagesize = null, string token = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetIncidentsByAnomalyDetectionConfigurationNextPages");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetIncidentsByAnomalyDetectionConfigurationNextPagesRequest(configurationId, maxpagesize, token, context)
+                        : CreateGetIncidentsByAnomalyDetectionConfigurationNextPagesNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List feedback on the given metric. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   metricId: MetricFeedbackFilterMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   },
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   startTime: string (ISO 8601 Format),
+        ///   endTime: string (ISO 8601 Format),
+        ///   timeMode: &quot;MetricTimestamp&quot; | &quot;FeedbackCreatedTime&quot;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///       feedbackId: MetricFeedbackId,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       userPrincipal: string,
+        ///       metricId: MetricFeedbackMetricId,
+        ///       dimensionFilter: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetMetricFeedbacksAsync(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetMetricFeedbacks");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetMetricFeedbacksRequest(content, skip, maxpagesize, context)
+                        : CreateGetMetricFeedbacksNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List feedback on the given metric. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   metricId: MetricFeedbackFilterMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   },
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   startTime: string (ISO 8601 Format),
+        ///   endTime: string (ISO 8601 Format),
+        ///   timeMode: &quot;MetricTimestamp&quot; | &quot;FeedbackCreatedTime&quot;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///       feedbackId: MetricFeedbackId,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       userPrincipal: string,
+        ///       metricId: MetricFeedbackMetricId,
+        ///       dimensionFilter: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetMetricFeedbacks(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetMetricFeedbacks");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetMetricFeedbacksRequest(content, skip, maxpagesize, context)
+                        : CreateGetMetricFeedbacksNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List series (dimension combinations) from metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   activeSince: string (ISO 8601 Format) (required),
+        ///   dimensionFilter: Dictionary&lt;string, string[]&gt;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       metricId: MetricSeriesItemMetricId,
+        ///       dimension: Dictionary&lt;string, string&gt;
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetMetricSeriesAsync(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetMetricSeries");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetMetricSeriesRequest(metricId, content, skip, maxpagesize, context)
+                        : CreateGetMetricSeriesNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List series (dimension combinations) from metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   activeSince: string (ISO 8601 Format) (required),
+        ///   dimensionFilter: Dictionary&lt;string, string[]&gt;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       metricId: MetricSeriesItemMetricId,
+        ///       dimension: Dictionary&lt;string, string&gt;
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetMetricSeries(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetMetricSeries");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetMetricSeriesRequest(metricId, content, skip, maxpagesize, context)
+                        : CreateGetMetricSeriesNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List dimension from certain metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dimensionName: string (required),
+        ///   dimensionValueFilter: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetMetricDimensionAsync(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetMetricDimension");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetMetricDimensionRequest(metricId, content, skip, maxpagesize, context)
+                        : CreateGetMetricDimensionNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List dimension from certain metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dimensionName: string (required),
+        ///   dimensionValueFilter: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetMetricDimension(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetMetricDimension");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetMetricDimensionRequest(metricId, content, skip, maxpagesize, context)
+                        : CreateGetMetricDimensionNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query anomaly detection status. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       timestamp: string (ISO 8601 Format),
+        ///       status: string,
+        ///       message: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetEnrichmentStatusByMetricAsync(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetEnrichmentStatusByMetric");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetEnrichmentStatusByMetricRequest(metricId, content, skip, maxpagesize, context)
+                        : CreateGetEnrichmentStatusByMetricNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query anomaly detection status. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       timestamp: string (ISO 8601 Format),
+        ///       status: string,
+        ///       message: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetEnrichmentStatusByMetric(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetEnrichmentStatusByMetric");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetEnrichmentStatusByMetricRequest(metricId, content, skip, maxpagesize, context)
+                        : CreateGetEnrichmentStatusByMetricNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Query alerts under anomaly alerting configuration. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   timeMode: &quot;AnomalyTime&quot; | &quot;CreatedTime&quot; | &quot;ModifiedTime&quot; (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       alertId: string,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format)
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetAlertsByAnomalyAlertingConfigurationNextAsync(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetAlertsByAnomalyAlertingConfigurationNext");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                using var message = CreateGetAlertsByAnomalyAlertingConfigurationNextRequest(nextLink, content, context);
+                var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", null, cancellationToken).ConfigureAwait(false);
+                yield return page;
+            }
+        }
+        /// <summary> Query alerts under anomaly alerting configuration. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   timeMode: &quot;AnomalyTime&quot; | &quot;CreatedTime&quot; | &quot;ModifiedTime&quot; (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       alertId: string,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format)
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetAlertsByAnomalyAlertingConfigurationNext(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetAlertsByAnomalyAlertingConfigurationNext");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                using var message = CreateGetAlertsByAnomalyAlertingConfigurationNextRequest(nextLink, content, context);
+                var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", null);
+                yield return page;
+            }
+        }
+        /// <summary> Query anomalies under anomaly detection configuration. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   filter: {
+        ///     dimensionFilter: [
+        ///       {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       }
+        ///     ],
+        ///     severityFilter: {
+        ///       min: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required),
+        ///       max: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required)
+        ///     }
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: AnomalyResultDataFeedId,
+        ///       metricId: AnomalyResultMetricId,
+        ///       anomalyDetectionConfigurationId: AnomalyResultAnomalyDetectionConfigurationId,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format),
+        ///       dimension: Dictionary&lt;string, string&gt;,
+        ///       property: {
+        ///         anomalySeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         anomalyStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         value: number,
+        ///         expectedValue: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetAnomaliesByAnomalyDetectionConfigurationNextAsync(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetAnomaliesByAnomalyDetectionConfigurationNext");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                using var message = CreateGetAnomaliesByAnomalyDetectionConfigurationNextRequest(nextLink, content, context);
+                var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", null, cancellationToken).ConfigureAwait(false);
+                yield return page;
+            }
+        }
+        /// <summary> Query anomalies under anomaly detection configuration. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   filter: {
+        ///     dimensionFilter: [
+        ///       {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       }
+        ///     ],
+        ///     severityFilter: {
+        ///       min: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required),
+        ///       max: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required)
+        ///     }
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataFeedId: AnomalyResultDataFeedId,
+        ///       metricId: AnomalyResultMetricId,
+        ///       anomalyDetectionConfigurationId: AnomalyResultAnomalyDetectionConfigurationId,
+        ///       timestamp: string (ISO 8601 Format),
+        ///       createdTime: string (ISO 8601 Format),
+        ///       modifiedTime: string (ISO 8601 Format),
+        ///       dimension: Dictionary&lt;string, string&gt;,
+        ///       property: {
+        ///         anomalySeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         anomalyStatus: &quot;Active&quot; | &quot;Resolved&quot;,
+        ///         value: number,
+        ///         expectedValue: number
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetAnomaliesByAnomalyDetectionConfigurationNext(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetAnomaliesByAnomalyDetectionConfigurationNext");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                using var message = CreateGetAnomaliesByAnomalyDetectionConfigurationNextRequest(nextLink, content, context);
+                var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", null);
+                yield return page;
+            }
+        }
+        /// <summary> Query dimension values of anomalies. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   dimensionName: string (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetDimensionOfAnomaliesByAnomalyDetectionConfigurationNextAsync(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetDimensionOfAnomaliesByAnomalyDetectionConfigurationNext");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                using var message = CreateGetDimensionOfAnomaliesByAnomalyDetectionConfigurationNextRequest(nextLink, content, context);
+                var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", null, cancellationToken).ConfigureAwait(false);
+                yield return page;
+            }
+        }
+        /// <summary> Query dimension values of anomalies. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required),
+        ///   dimensionName: string (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetDimensionOfAnomaliesByAnomalyDetectionConfigurationNext(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetDimensionOfAnomaliesByAnomalyDetectionConfigurationNext");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                using var message = CreateGetDimensionOfAnomaliesByAnomalyDetectionConfigurationNextRequest(nextLink, content, context);
+                var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", null);
+                yield return page;
+            }
+        }
+        /// <summary> List feedback on the given metric. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   metricId: MetricFeedbackFilterMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   },
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   startTime: string (ISO 8601 Format),
+        ///   endTime: string (ISO 8601 Format),
+        ///   timeMode: &quot;MetricTimestamp&quot; | &quot;FeedbackCreatedTime&quot;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///       feedbackId: MetricFeedbackId,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       userPrincipal: string,
+        ///       metricId: MetricFeedbackMetricId,
+        ///       dimensionFilter: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetMetricFeedbacksNextAsync(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetMetricFeedbacksNext");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                using var message = CreateGetMetricFeedbacksNextRequest(nextLink, content, context);
+                var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", null, cancellationToken).ConfigureAwait(false);
+                yield return page;
+            }
+        }
+        /// <summary> List feedback on the given metric. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   metricId: MetricFeedbackFilterMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   },
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   startTime: string (ISO 8601 Format),
+        ///   endTime: string (ISO 8601 Format),
+        ///   timeMode: &quot;MetricTimestamp&quot; | &quot;FeedbackCreatedTime&quot;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///       feedbackId: MetricFeedbackId,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       userPrincipal: string,
+        ///       metricId: MetricFeedbackMetricId,
+        ///       dimensionFilter: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetMetricFeedbacksNext(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetMetricFeedbacksNext");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                using var message = CreateGetMetricFeedbacksNextRequest(nextLink, content, context);
+                var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", null);
+                yield return page;
+            }
+        }
+        /// <summary> Get data ingestion status by data feed. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       timestamp: string (ISO 8601 Format),
+        ///       status: &quot;NotStarted&quot; | &quot;Scheduled&quot; | &quot;Running&quot; | &quot;Succeeded&quot; | &quot;Failed&quot; | &quot;NoData&quot; | &quot;Error&quot; | &quot;Paused&quot;,
+        ///       message: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetDataFeedIngestionStatusNextAsync(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetDataFeedIngestionStatusNext");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                using var message = CreateGetDataFeedIngestionStatusNextRequest(nextLink, content, context);
+                var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", null, cancellationToken).ConfigureAwait(false);
+                yield return page;
+            }
+        }
+        /// <summary> Get data ingestion status by data feed. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       timestamp: string (ISO 8601 Format),
+        ///       status: &quot;NotStarted&quot; | &quot;Scheduled&quot; | &quot;Running&quot; | &quot;Succeeded&quot; | &quot;Failed&quot; | &quot;NoData&quot; | &quot;Error&quot; | &quot;Paused&quot;,
+        ///       message: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetDataFeedIngestionStatusNext(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetDataFeedIngestionStatusNext");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                using var message = CreateGetDataFeedIngestionStatusNextRequest(nextLink, content, context);
+                var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", null);
+                yield return page;
+            }
+        }
+        /// <summary> List series (dimension combinations) from metric. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   activeSince: string (ISO 8601 Format) (required),
+        ///   dimensionFilter: Dictionary&lt;string, string[]&gt;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       metricId: MetricSeriesItemMetricId,
+        ///       dimension: Dictionary&lt;string, string&gt;
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetMetricSeriesNextAsync(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetMetricSeriesNext");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                using var message = CreateGetMetricSeriesNextRequest(nextLink, content, context);
+                var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", null, cancellationToken).ConfigureAwait(false);
+                yield return page;
+            }
+        }
+        /// <summary> List series (dimension combinations) from metric. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   activeSince: string (ISO 8601 Format) (required),
+        ///   dimensionFilter: Dictionary&lt;string, string[]&gt;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       metricId: MetricSeriesItemMetricId,
+        ///       dimension: Dictionary&lt;string, string&gt;
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetMetricSeriesNext(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetMetricSeriesNext");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                using var message = CreateGetMetricSeriesNextRequest(nextLink, content, context);
+                var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", null);
+                yield return page;
+            }
+        }
+        /// <summary> List dimension from certain metric. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dimensionName: string (required),
+        ///   dimensionValueFilter: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetMetricDimensionNextAsync(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetMetricDimensionNext");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                using var message = CreateGetMetricDimensionNextRequest(nextLink, content, context);
+                var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", null, cancellationToken).ConfigureAwait(false);
+                yield return page;
+            }
+        }
+        /// <summary> List dimension from certain metric. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dimensionName: string (required),
+        ///   dimensionValueFilter: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetMetricDimensionNext(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetMetricDimensionNext");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                using var message = CreateGetMetricDimensionNextRequest(nextLink, content, context);
+                var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", null);
+                yield return page;
+            }
+        }
+        /// <summary> Query anomaly detection status. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       timestamp: string (ISO 8601 Format),
+        ///       status: string,
+        ///       message: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetEnrichmentStatusByMetricNextAsync(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetEnrichmentStatusByMetricNext");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                using var message = CreateGetEnrichmentStatusByMetricNextRequest(nextLink, content, context);
+                var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", null, cancellationToken).ConfigureAwait(false);
+                yield return page;
+            }
+        }
+        /// <summary> Query anomaly detection status. </summary>
+        /// <param name="nextLink"> the next link. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="nextLink"/> or <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       timestamp: string (ISO 8601 Format),
+        ///       status: string,
+        ///       message: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetEnrichmentStatusByMetricNext(string nextLink, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(nextLink, nameof(nextLink));
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetEnrichmentStatusByMetricNext");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                using var message = CreateGetEnrichmentStatusByMetricNextRequest(nextLink, content, context);
+                var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", null);
+                yield return page;
+            }
+        }
+
+        internal HttpMessage CreateGetActiveSeriesCountRequest(RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/stats/latest", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetAlertsByAnomalyAlertingConfigurationRequest(Guid configurationId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/alert/anomaly/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/alerts/query", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomaliesFromAlertByAnomalyAlertingConfigurationRequest(Guid configurationId, string alertId, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/alert/anomaly/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/alerts/", false);
+            uri.AppendPath(alertId, true);
+            uri.AppendPath("/anomalies", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetIncidentsFromAlertByAnomalyAlertingConfigurationRequest(Guid configurationId, string alertId, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/alert/anomaly/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/alerts/", false);
+            uri.AppendPath(alertId, true);
+            uri.AppendPath("/incidents", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetSeriesByAnomalyDetectionConfigurationRequest(Guid configurationId, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/series/query", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomaliesByAnomalyDetectionConfigurationRequest(Guid configurationId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/anomalies/query", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetDimensionOfAnomaliesByAnomalyDetectionConfigurationRequest(Guid configurationId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/anomalies/dimension/query", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetIncidentsByAnomalyDetectionConfigurationRequest(Guid configurationId, RequestContent content, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/incidents/query", false);
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetIncidentsByAnomalyDetectionConfigurationNextPagesRequest(Guid configurationId, int? maxpagesize, string token, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/incidents/query", false);
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            if (token != null)
+            {
+                uri.AppendQuery("$token", token, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetRootCauseOfIncidentByAnomalyDetectionConfigurationRequest(Guid configurationId, string incidentId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/incidents/", false);
+            uri.AppendPath(incidentId, true);
+            uri.AppendPath("/rootCause", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricFeedbackRequest(Guid feedbackId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/feedback/metric/", false);
+            uri.AppendPath(feedbackId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricFeedbacksRequest(RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/feedback/metric/query", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateCreateMetricFeedbackRequest(RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier201);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/feedback/metric", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricDataRequest(Guid metricId, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/metrics/", false);
+            uri.AppendPath(metricId, true);
+            uri.AppendPath("/data/query", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricSeriesRequest(Guid metricId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/metrics/", false);
+            uri.AppendPath(metricId, true);
+            uri.AppendPath("/series/query", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricDimensionRequest(Guid metricId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/metrics/", false);
+            uri.AppendPath(metricId, true);
+            uri.AppendPath("/dimension/query", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetEnrichmentStatusByMetricRequest(Guid metricId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/metrics/", false);
+            uri.AppendPath(metricId, true);
+            uri.AppendPath("/status/enrichment/anomalyDetection/query", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetAlertsByAnomalyAlertingConfigurationNextRequest(string nextLink, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomaliesByAnomalyDetectionConfigurationNextRequest(string nextLink, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetDimensionOfAnomaliesByAnomalyDetectionConfigurationNextRequest(string nextLink, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricFeedbacksNextRequest(string nextLink, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetDataFeedIngestionStatusNextRequest(string nextLink, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricSeriesNextRequest(string nextLink, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricDimensionNextRequest(string nextLink, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetEnrichmentStatusByMetricNextRequest(string nextLink, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetAlertsByAnomalyAlertingConfigurationNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomaliesFromAlertByAnomalyAlertingConfigurationNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetIncidentsFromAlertByAnomalyAlertingConfigurationNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomaliesByAnomalyDetectionConfigurationNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetDimensionOfAnomaliesByAnomalyDetectionConfigurationNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetIncidentsByAnomalyDetectionConfigurationNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetIncidentsByAnomalyDetectionConfigurationNextPagesNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricFeedbacksNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricSeriesNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetMetricDimensionNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetEnrichmentStatusByMetricNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        private static ResponseClassifier _responseClassifier200;
+        private static ResponseClassifier ResponseClassifier200 => _responseClassifier200 ??= new StatusCodeClassifier(stackalloc ushort[] { 200 });
+        private static ResponseClassifier _responseClassifier201;
+        private static ResponseClassifier ResponseClassifier201 => _responseClassifier201 ??= new StatusCodeClassifier(stackalloc ushort[] { 201 });
+
+        /// <summary> Query a single anomaly alerting configuration. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   anomalyAlertingConfigurationId: AnomalyAlertingConfigurationAnomalyAlertingConfigurationId,
+        ///   name: string,
+        ///   description: string,
+        ///   crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///   splitAlertByDimensions: [string],
+        ///   hookIds: [AnomalyAlertingConfigurationHookIdsItem],
+        ///   metricAlertingConfigurations: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId,
+        ///       anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot;,
+        ///       negationOperation: boolean,
+        ///       dimensionAnomalyScope: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       topNAnomalyScope: {
+        ///         top: number,
+        ///         period: number,
+        ///         minTopCount: number
+        ///       },
+        ///       severityFilter: {
+        ///         minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;
+        ///       },
+        ///       snoozeFilter: {
+        ///         autoSnooze: number,
+        ///         snoozeScope: &quot;Metric&quot; | &quot;Series&quot;,
+        ///         onlyForSuccessive: boolean
+        ///       },
+        ///       valueFilter: {
+        ///         lower: number,
+        ///         upper: number,
+        ///         direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///         type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///         metricId: ValueConditionMetricId,
+        ///         triggerForMissing: boolean
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetAnomalyAlertingConfigurationAsync(Guid configurationId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetAnomalyAlertingConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetAnomalyAlertingConfigurationRequest(configurationId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Query a single anomaly alerting configuration. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   anomalyAlertingConfigurationId: AnomalyAlertingConfigurationAnomalyAlertingConfigurationId,
+        ///   name: string,
+        ///   description: string,
+        ///   crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///   splitAlertByDimensions: [string],
+        ///   hookIds: [AnomalyAlertingConfigurationHookIdsItem],
+        ///   metricAlertingConfigurations: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId,
+        ///       anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot;,
+        ///       negationOperation: boolean,
+        ///       dimensionAnomalyScope: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       topNAnomalyScope: {
+        ///         top: number,
+        ///         period: number,
+        ///         minTopCount: number
+        ///       },
+        ///       severityFilter: {
+        ///         minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;
+        ///       },
+        ///       snoozeFilter: {
+        ///         autoSnooze: number,
+        ///         snoozeScope: &quot;Metric&quot; | &quot;Series&quot;,
+        ///         onlyForSuccessive: boolean
+        ///       },
+        ///       valueFilter: {
+        ///         lower: number,
+        ///         upper: number,
+        ///         direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///         type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///         metricId: ValueConditionMetricId,
+        ///         triggerForMissing: boolean
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetAnomalyAlertingConfiguration(Guid configurationId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetAnomalyAlertingConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetAnomalyAlertingConfigurationRequest(configurationId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update anomaly alerting configuration. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   name: string,
+        ///   description: string,
+        ///   crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///   splitAlertByDimensions: [string],
+        ///   hookIds: [AnomalyAlertingConfigurationPatchHookIdsItem],
+        ///   metricAlertingConfigurations: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId (required),
+        ///       anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot; (required),
+        ///       negationOperation: boolean,
+        ///       dimensionAnomalyScope: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       },
+        ///       topNAnomalyScope: {
+        ///         top: number (required),
+        ///         period: number (required),
+        ///         minTopCount: number (required)
+        ///       },
+        ///       severityFilter: {
+        ///         minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required),
+        ///         maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required)
+        ///       },
+        ///       snoozeFilter: {
+        ///         autoSnooze: number (required),
+        ///         snoozeScope: &quot;Metric&quot; | &quot;Series&quot; (required),
+        ///         onlyForSuccessive: boolean (required)
+        ///       },
+        ///       valueFilter: {
+        ///         lower: number,
+        ///         upper: number,
+        ///         direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///         metricId: ValueConditionMetricId,
+        ///         triggerForMissing: boolean
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   anomalyAlertingConfigurationId: AnomalyAlertingConfigurationAnomalyAlertingConfigurationId,
+        ///   name: string,
+        ///   description: string,
+        ///   crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///   splitAlertByDimensions: [string],
+        ///   hookIds: [AnomalyAlertingConfigurationHookIdsItem],
+        ///   metricAlertingConfigurations: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId,
+        ///       anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot;,
+        ///       negationOperation: boolean,
+        ///       dimensionAnomalyScope: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       topNAnomalyScope: {
+        ///         top: number,
+        ///         period: number,
+        ///         minTopCount: number
+        ///       },
+        ///       severityFilter: {
+        ///         minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;
+        ///       },
+        ///       snoozeFilter: {
+        ///         autoSnooze: number,
+        ///         snoozeScope: &quot;Metric&quot; | &quot;Series&quot;,
+        ///         onlyForSuccessive: boolean
+        ///       },
+        ///       valueFilter: {
+        ///         lower: number,
+        ///         upper: number,
+        ///         direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///         type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///         metricId: ValueConditionMetricId,
+        ///         triggerForMissing: boolean
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> UpdateAnomalyAlertingConfigurationAsync(Guid configurationId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateAnomalyAlertingConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateAnomalyAlertingConfigurationRequest(configurationId, content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update anomaly alerting configuration. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   name: string,
+        ///   description: string,
+        ///   crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///   splitAlertByDimensions: [string],
+        ///   hookIds: [AnomalyAlertingConfigurationPatchHookIdsItem],
+        ///   metricAlertingConfigurations: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId (required),
+        ///       anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot; (required),
+        ///       negationOperation: boolean,
+        ///       dimensionAnomalyScope: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       },
+        ///       topNAnomalyScope: {
+        ///         top: number (required),
+        ///         period: number (required),
+        ///         minTopCount: number (required)
+        ///       },
+        ///       severityFilter: {
+        ///         minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required),
+        ///         maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required)
+        ///       },
+        ///       snoozeFilter: {
+        ///         autoSnooze: number (required),
+        ///         snoozeScope: &quot;Metric&quot; | &quot;Series&quot; (required),
+        ///         onlyForSuccessive: boolean (required)
+        ///       },
+        ///       valueFilter: {
+        ///         lower: number,
+        ///         upper: number,
+        ///         direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///         metricId: ValueConditionMetricId,
+        ///         triggerForMissing: boolean
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   anomalyAlertingConfigurationId: AnomalyAlertingConfigurationAnomalyAlertingConfigurationId,
+        ///   name: string,
+        ///   description: string,
+        ///   crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///   splitAlertByDimensions: [string],
+        ///   hookIds: [AnomalyAlertingConfigurationHookIdsItem],
+        ///   metricAlertingConfigurations: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId,
+        ///       anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot;,
+        ///       negationOperation: boolean,
+        ///       dimensionAnomalyScope: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       topNAnomalyScope: {
+        ///         top: number,
+        ///         period: number,
+        ///         minTopCount: number
+        ///       },
+        ///       severityFilter: {
+        ///         minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///         maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;
+        ///       },
+        ///       snoozeFilter: {
+        ///         autoSnooze: number,
+        ///         snoozeScope: &quot;Metric&quot; | &quot;Series&quot;,
+        ///         onlyForSuccessive: boolean
+        ///       },
+        ///       valueFilter: {
+        ///         lower: number,
+        ///         upper: number,
+        ///         direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///         type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///         metricId: ValueConditionMetricId,
+        ///         triggerForMissing: boolean
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response UpdateAnomalyAlertingConfiguration(Guid configurationId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateAnomalyAlertingConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateAnomalyAlertingConfigurationRequest(configurationId, content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete anomaly alerting configuration. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> DeleteAnomalyAlertingConfigurationAsync(Guid configurationId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteAnomalyAlertingConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteAnomalyAlertingConfigurationRequest(configurationId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete anomaly alerting configuration. </summary>
+        /// <param name="configurationId"> anomaly alerting configuration unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response DeleteAnomalyAlertingConfiguration(Guid configurationId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteAnomalyAlertingConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteAnomalyAlertingConfigurationRequest(configurationId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create anomaly alerting configuration. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   anomalyAlertingConfigurationId: AnomalyAlertingConfigurationAnomalyAlertingConfigurationId,
+        ///   name: string (required),
+        ///   description: string,
+        ///   crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///   splitAlertByDimensions: [string],
+        ///   hookIds: [AnomalyAlertingConfigurationHookIdsItem] (required),
+        ///   metricAlertingConfigurations: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId (required),
+        ///       anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot; (required),
+        ///       negationOperation: boolean,
+        ///       dimensionAnomalyScope: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       },
+        ///       topNAnomalyScope: {
+        ///         top: number (required),
+        ///         period: number (required),
+        ///         minTopCount: number (required)
+        ///       },
+        ///       severityFilter: {
+        ///         minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required),
+        ///         maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required)
+        ///       },
+        ///       snoozeFilter: {
+        ///         autoSnooze: number (required),
+        ///         snoozeScope: &quot;Metric&quot; | &quot;Series&quot; (required),
+        ///         onlyForSuccessive: boolean (required)
+        ///       },
+        ///       valueFilter: {
+        ///         lower: number,
+        ///         upper: number,
+        ///         direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///         metricId: ValueConditionMetricId,
+        ///         triggerForMissing: boolean
+        ///       }
+        ///     }
+        ///   ] (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> CreateAnomalyAlertingConfigurationAsync(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateAnomalyAlertingConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateAnomalyAlertingConfigurationRequest(content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create anomaly alerting configuration. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   anomalyAlertingConfigurationId: AnomalyAlertingConfigurationAnomalyAlertingConfigurationId,
+        ///   name: string (required),
+        ///   description: string,
+        ///   crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///   splitAlertByDimensions: [string],
+        ///   hookIds: [AnomalyAlertingConfigurationHookIdsItem] (required),
+        ///   metricAlertingConfigurations: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId (required),
+        ///       anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot; (required),
+        ///       negationOperation: boolean,
+        ///       dimensionAnomalyScope: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       },
+        ///       topNAnomalyScope: {
+        ///         top: number (required),
+        ///         period: number (required),
+        ///         minTopCount: number (required)
+        ///       },
+        ///       severityFilter: {
+        ///         minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required),
+        ///         maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot; (required)
+        ///       },
+        ///       snoozeFilter: {
+        ///         autoSnooze: number (required),
+        ///         snoozeScope: &quot;Metric&quot; | &quot;Series&quot; (required),
+        ///         onlyForSuccessive: boolean (required)
+        ///       },
+        ///       valueFilter: {
+        ///         lower: number,
+        ///         upper: number,
+        ///         direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///         metricId: ValueConditionMetricId,
+        ///         triggerForMissing: boolean
+        ///       }
+        ///     }
+        ///   ] (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response CreateAnomalyAlertingConfiguration(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateAnomalyAlertingConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateAnomalyAlertingConfigurationRequest(content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Query a single anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   anomalyDetectionConfigurationId: AnomalyDetectionConfigurationAnomalyDetectionConfigurationId,
+        ///   name: string,
+        ///   description: string,
+        ///   metricId: AnomalyDetectionConfigurationMetricId,
+        ///   wholeMetricConfiguration: {
+        ///     conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///     smartDetectionCondition: {
+        ///       sensitivity: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: {
+        ///         minNumber: number,
+        ///         minRatio: number
+        ///       }
+        ///     },
+        ///     hardThresholdCondition: {
+        ///       lowerBound: number,
+        ///       upperBound: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressCondition
+        ///     },
+        ///     changeThresholdCondition: {
+        ///       changePercentage: number,
+        ///       shiftPoint: number,
+        ///       withinRange: boolean,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressCondition
+        ///     }
+        ///   },
+        ///   dimensionGroupOverrideConfigurations: [
+        ///     {
+        ///       group: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ],
+        ///   seriesOverrideConfigurations: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetAnomalyDetectionConfigurationAsync(Guid configurationId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetAnomalyDetectionConfigurationRequest(configurationId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Query a single anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   anomalyDetectionConfigurationId: AnomalyDetectionConfigurationAnomalyDetectionConfigurationId,
+        ///   name: string,
+        ///   description: string,
+        ///   metricId: AnomalyDetectionConfigurationMetricId,
+        ///   wholeMetricConfiguration: {
+        ///     conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///     smartDetectionCondition: {
+        ///       sensitivity: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: {
+        ///         minNumber: number,
+        ///         minRatio: number
+        ///       }
+        ///     },
+        ///     hardThresholdCondition: {
+        ///       lowerBound: number,
+        ///       upperBound: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressCondition
+        ///     },
+        ///     changeThresholdCondition: {
+        ///       changePercentage: number,
+        ///       shiftPoint: number,
+        ///       withinRange: boolean,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressCondition
+        ///     }
+        ///   },
+        ///   dimensionGroupOverrideConfigurations: [
+        ///     {
+        ///       group: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ],
+        ///   seriesOverrideConfigurations: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetAnomalyDetectionConfiguration(Guid configurationId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetAnomalyDetectionConfigurationRequest(configurationId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   name: string,
+        ///   description: string,
+        ///   wholeMetricConfiguration: {
+        ///     conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///     smartDetectionCondition: {
+        ///       sensitivity: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: {
+        ///         minNumber: number,
+        ///         minRatio: number
+        ///       }
+        ///     },
+        ///     hardThresholdCondition: {
+        ///       lowerBound: number,
+        ///       upperBound: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressConditionPatch
+        ///     },
+        ///     changeThresholdCondition: {
+        ///       changePercentage: number,
+        ///       shiftPoint: number,
+        ///       withinRange: boolean,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressConditionPatch
+        ///     }
+        ///   },
+        ///   dimensionGroupOverrideConfigurations: [
+        ///     {
+        ///       group: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       } (required),
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: {
+        ///         sensitivity: number (required),
+        ///         anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         suppressCondition: {
+        ///           minNumber: number (required),
+        ///           minRatio: number (required)
+        ///         } (required)
+        ///       },
+        ///       hardThresholdCondition: {
+        ///         lowerBound: number,
+        ///         upperBound: number,
+        ///         anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         suppressCondition: SuppressCondition (required)
+        ///       },
+        ///       changeThresholdCondition: {
+        ///         changePercentage: number (required),
+        ///         shiftPoint: number (required),
+        ///         withinRange: boolean (required),
+        ///         anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         suppressCondition: SuppressCondition (required)
+        ///       }
+        ///     }
+        ///   ],
+        ///   seriesOverrideConfigurations: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       } (required),
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   anomalyDetectionConfigurationId: AnomalyDetectionConfigurationAnomalyDetectionConfigurationId,
+        ///   name: string,
+        ///   description: string,
+        ///   metricId: AnomalyDetectionConfigurationMetricId,
+        ///   wholeMetricConfiguration: {
+        ///     conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///     smartDetectionCondition: {
+        ///       sensitivity: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: {
+        ///         minNumber: number,
+        ///         minRatio: number
+        ///       }
+        ///     },
+        ///     hardThresholdCondition: {
+        ///       lowerBound: number,
+        ///       upperBound: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressCondition
+        ///     },
+        ///     changeThresholdCondition: {
+        ///       changePercentage: number,
+        ///       shiftPoint: number,
+        ///       withinRange: boolean,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressCondition
+        ///     }
+        ///   },
+        ///   dimensionGroupOverrideConfigurations: [
+        ///     {
+        ///       group: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ],
+        ///   seriesOverrideConfigurations: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> UpdateAnomalyDetectionConfigurationAsync(Guid configurationId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateAnomalyDetectionConfigurationRequest(configurationId, content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   name: string,
+        ///   description: string,
+        ///   wholeMetricConfiguration: {
+        ///     conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///     smartDetectionCondition: {
+        ///       sensitivity: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: {
+        ///         minNumber: number,
+        ///         minRatio: number
+        ///       }
+        ///     },
+        ///     hardThresholdCondition: {
+        ///       lowerBound: number,
+        ///       upperBound: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressConditionPatch
+        ///     },
+        ///     changeThresholdCondition: {
+        ///       changePercentage: number,
+        ///       shiftPoint: number,
+        ///       withinRange: boolean,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressConditionPatch
+        ///     }
+        ///   },
+        ///   dimensionGroupOverrideConfigurations: [
+        ///     {
+        ///       group: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       } (required),
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: {
+        ///         sensitivity: number (required),
+        ///         anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         suppressCondition: {
+        ///           minNumber: number (required),
+        ///           minRatio: number (required)
+        ///         } (required)
+        ///       },
+        ///       hardThresholdCondition: {
+        ///         lowerBound: number,
+        ///         upperBound: number,
+        ///         anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         suppressCondition: SuppressCondition (required)
+        ///       },
+        ///       changeThresholdCondition: {
+        ///         changePercentage: number (required),
+        ///         shiftPoint: number (required),
+        ///         withinRange: boolean (required),
+        ///         anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///         suppressCondition: SuppressCondition (required)
+        ///       }
+        ///     }
+        ///   ],
+        ///   seriesOverrideConfigurations: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       } (required),
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   anomalyDetectionConfigurationId: AnomalyDetectionConfigurationAnomalyDetectionConfigurationId,
+        ///   name: string,
+        ///   description: string,
+        ///   metricId: AnomalyDetectionConfigurationMetricId,
+        ///   wholeMetricConfiguration: {
+        ///     conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///     smartDetectionCondition: {
+        ///       sensitivity: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: {
+        ///         minNumber: number,
+        ///         minRatio: number
+        ///       }
+        ///     },
+        ///     hardThresholdCondition: {
+        ///       lowerBound: number,
+        ///       upperBound: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressCondition
+        ///     },
+        ///     changeThresholdCondition: {
+        ///       changePercentage: number,
+        ///       shiftPoint: number,
+        ///       withinRange: boolean,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///       suppressCondition: SuppressCondition
+        ///     }
+        ///   },
+        ///   dimensionGroupOverrideConfigurations: [
+        ///     {
+        ///       group: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ],
+        ///   seriesOverrideConfigurations: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       },
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response UpdateAnomalyDetectionConfiguration(Guid configurationId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateAnomalyDetectionConfigurationRequest(configurationId, content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> DeleteAnomalyDetectionConfigurationAsync(Guid configurationId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteAnomalyDetectionConfigurationRequest(configurationId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response DeleteAnomalyDetectionConfiguration(Guid configurationId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteAnomalyDetectionConfigurationRequest(configurationId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create anomaly detection configuration. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   anomalyDetectionConfigurationId: AnomalyDetectionConfigurationAnomalyDetectionConfigurationId,
+        ///   name: string (required),
+        ///   description: string,
+        ///   metricId: AnomalyDetectionConfigurationMetricId (required),
+        ///   wholeMetricConfiguration: {
+        ///     conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///     smartDetectionCondition: {
+        ///       sensitivity: number (required),
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///       suppressCondition: {
+        ///         minNumber: number (required),
+        ///         minRatio: number (required)
+        ///       } (required)
+        ///     },
+        ///     hardThresholdCondition: {
+        ///       lowerBound: number,
+        ///       upperBound: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///       suppressCondition: SuppressCondition (required)
+        ///     },
+        ///     changeThresholdCondition: {
+        ///       changePercentage: number (required),
+        ///       shiftPoint: number (required),
+        ///       withinRange: boolean (required),
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///       suppressCondition: SuppressCondition (required)
+        ///     }
+        ///   } (required),
+        ///   dimensionGroupOverrideConfigurations: [
+        ///     {
+        ///       group: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       } (required),
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ],
+        ///   seriesOverrideConfigurations: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       } (required),
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> CreateAnomalyDetectionConfigurationAsync(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateAnomalyDetectionConfigurationRequest(content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create anomaly detection configuration. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   anomalyDetectionConfigurationId: AnomalyDetectionConfigurationAnomalyDetectionConfigurationId,
+        ///   name: string (required),
+        ///   description: string,
+        ///   metricId: AnomalyDetectionConfigurationMetricId (required),
+        ///   wholeMetricConfiguration: {
+        ///     conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///     smartDetectionCondition: {
+        ///       sensitivity: number (required),
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///       suppressCondition: {
+        ///         minNumber: number (required),
+        ///         minRatio: number (required)
+        ///       } (required)
+        ///     },
+        ///     hardThresholdCondition: {
+        ///       lowerBound: number,
+        ///       upperBound: number,
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///       suppressCondition: SuppressCondition (required)
+        ///     },
+        ///     changeThresholdCondition: {
+        ///       changePercentage: number (required),
+        ///       shiftPoint: number (required),
+        ///       withinRange: boolean (required),
+        ///       anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot; (required),
+        ///       suppressCondition: SuppressCondition (required)
+        ///     }
+        ///   } (required),
+        ///   dimensionGroupOverrideConfigurations: [
+        ///     {
+        ///       group: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       } (required),
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ],
+        ///   seriesOverrideConfigurations: [
+        ///     {
+        ///       series: {
+        ///         dimension: Dictionary&lt;string, string&gt; (required)
+        ///       } (required),
+        ///       conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///       smartDetectionCondition: SmartDetectionCondition,
+        ///       hardThresholdCondition: HardThresholdCondition,
+        ///       changeThresholdCondition: ChangeThresholdCondition
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response CreateAnomalyDetectionConfiguration(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateAnomalyDetectionConfiguration");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateAnomalyDetectionConfigurationRequest(content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create a new data source credential. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot; (required),
+        ///   dataSourceCredentialId: DataSourceCredentialDataSourceCredentialId,
+        ///   dataSourceCredentialName: string (required),
+        ///   dataSourceCredentialDescription: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> CreateCredentialAsync(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateCredential");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateCredentialRequest(content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create a new data source credential. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot; (required),
+        ///   dataSourceCredentialId: DataSourceCredentialDataSourceCredentialId,
+        ///   dataSourceCredentialName: string (required),
+        ///   dataSourceCredentialDescription: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response CreateCredential(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateCredential");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateCredentialRequest(content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update a data source credential. </summary>
+        /// <param name="credentialId"> Data source credential unique ID. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot; (required),
+        ///   dataSourceCredentialName: string,
+        ///   dataSourceCredentialDescription: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   dataSourceCredentialId: DataSourceCredentialDataSourceCredentialId,
+        ///   dataSourceCredentialName: string,
+        ///   dataSourceCredentialDescription: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> UpdateCredentialAsync(Guid credentialId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateCredential");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateCredentialRequest(credentialId, content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update a data source credential. </summary>
+        /// <param name="credentialId"> Data source credential unique ID. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot; (required),
+        ///   dataSourceCredentialName: string,
+        ///   dataSourceCredentialDescription: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   dataSourceCredentialId: DataSourceCredentialDataSourceCredentialId,
+        ///   dataSourceCredentialName: string,
+        ///   dataSourceCredentialDescription: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response UpdateCredential(Guid credentialId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateCredential");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateCredentialRequest(credentialId, content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete a data source credential. </summary>
+        /// <param name="credentialId"> Data source credential unique ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> DeleteCredentialAsync(Guid credentialId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteCredential");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteCredentialRequest(credentialId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete a data source credential. </summary>
+        /// <param name="credentialId"> Data source credential unique ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response DeleteCredential(Guid credentialId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteCredential");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteCredentialRequest(credentialId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a data source credential. </summary>
+        /// <param name="credentialId"> Data source credential unique ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   dataSourceCredentialId: DataSourceCredentialDataSourceCredentialId,
+        ///   dataSourceCredentialName: string,
+        ///   dataSourceCredentialDescription: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetCredentialAsync(Guid credentialId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetCredential");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetCredentialRequest(credentialId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a data source credential. </summary>
+        /// <param name="credentialId"> Data source credential unique ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   dataSourceCredentialId: DataSourceCredentialDataSourceCredentialId,
+        ///   dataSourceCredentialName: string,
+        ///   dataSourceCredentialDescription: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetCredential(Guid credentialId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetCredential");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetCredentialRequest(credentialId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create a new data feed. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string (required),
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot; (required),
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string (required),
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ] (required),
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string (required),
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format) (required),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> CreateDataFeedAsync(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateDataFeed");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateDataFeedRequest(content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create a new data feed. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string (required),
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot; (required),
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string (required),
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ] (required),
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string (required),
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format) (required),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response CreateDataFeed(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateDataFeed");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateDataFeedRequest(content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a data feed by its id. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string,
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ],
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string,
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetDataFeedByIdAsync(Guid dataFeedId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetDataFeedById");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a data feed by its id. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string,
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ],
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string,
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetDataFeedById(Guid dataFeedId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetDataFeedById");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetDataFeedByIdRequest(dataFeedId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update a data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string,
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ],
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string,
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> UpdateDataFeedAsync(Guid dataFeedId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateDataFeed");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateDataFeedRequest(dataFeedId, content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update a data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string,
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ],
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string,
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response UpdateDataFeed(Guid dataFeedId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateDataFeed");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateDataFeedRequest(dataFeedId, content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete a data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> DeleteDataFeedAsync(Guid dataFeedId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteDataFeed");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteDataFeedRequest(dataFeedId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete a data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response DeleteDataFeed(Guid dataFeedId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteDataFeed");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteDataFeedRequest(dataFeedId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create a new hook. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   hookType: &quot;Webhook&quot; | &quot;Email&quot; (required),
+        ///   hookId: HookInfoHookId,
+        ///   hookName: string (required),
+        ///   description: string,
+        ///   externalLink: string,
+        ///   admins: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> CreateHookAsync(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateHook");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateHookRequest(content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Create a new hook. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   hookType: &quot;Webhook&quot; | &quot;Email&quot; (required),
+        ///   hookId: HookInfoHookId,
+        ///   hookName: string (required),
+        ///   description: string,
+        ///   externalLink: string,
+        ///   admins: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response CreateHook(RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.CreateHook");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateCreateHookRequest(content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a hook by its id. </summary>
+        /// <param name="hookId"> Hook unique ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   hookType: &quot;Webhook&quot; | &quot;Email&quot;,
+        ///   hookId: HookInfoHookId,
+        ///   hookName: string,
+        ///   description: string,
+        ///   externalLink: string,
+        ///   admins: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetHookAsync(Guid hookId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetHook");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetHookRequest(hookId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get a hook by its id. </summary>
+        /// <param name="hookId"> Hook unique ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   hookType: &quot;Webhook&quot; | &quot;Email&quot;,
+        ///   hookId: HookInfoHookId,
+        ///   hookName: string,
+        ///   description: string,
+        ///   externalLink: string,
+        ///   admins: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetHook(Guid hookId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetHook");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetHookRequest(hookId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update a hook. </summary>
+        /// <param name="hookId"> Hook unique ID. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   hookType: &quot;Webhook&quot; | &quot;Email&quot; (required),
+        ///   hookName: string,
+        ///   description: string,
+        ///   externalLink: string,
+        ///   admins: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   hookType: &quot;Webhook&quot; | &quot;Email&quot;,
+        ///   hookId: HookInfoHookId,
+        ///   hookName: string,
+        ///   description: string,
+        ///   externalLink: string,
+        ///   admins: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> UpdateHookAsync(Guid hookId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateHook");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateHookRequest(hookId, content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Update a hook. </summary>
+        /// <param name="hookId"> Hook unique ID. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   hookType: &quot;Webhook&quot; | &quot;Email&quot; (required),
+        ///   hookName: string,
+        ///   description: string,
+        ///   externalLink: string,
+        ///   admins: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   hookType: &quot;Webhook&quot; | &quot;Email&quot;,
+        ///   hookId: HookInfoHookId,
+        ///   hookName: string,
+        ///   description: string,
+        ///   externalLink: string,
+        ///   admins: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response UpdateHook(Guid hookId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateHook");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateUpdateHookRequest(hookId, content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete a hook. </summary>
+        /// <param name="hookId"> Hook unique ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> DeleteHookAsync(Guid hookId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteHook");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteHookRequest(hookId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Delete a hook. </summary>
+        /// <param name="hookId"> Hook unique ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response DeleteHook(Guid hookId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteHook");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateDeleteHookRequest(hookId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Reset data ingestion status by data feed to backfill data. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> ResetDataFeedIngestionStatusAsync(Guid dataFeedId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.ResetDataFeedIngestionStatus");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateResetDataFeedIngestionStatusRequest(dataFeedId, content, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Reset data ingestion status by data feed to backfill data. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response ResetDataFeedIngestionStatus(Guid dataFeedId, RequestContent content, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.ResetDataFeedIngestionStatus");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateResetDataFeedIngestionStatusRequest(dataFeedId, content, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get data last success ingestion job timestamp by data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   latestSuccessTimestamp: string (ISO 8601 Format),
+        ///   latestActiveTimestamp: string (ISO 8601 Format)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetIngestionProgressAsync(Guid dataFeedId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetIngestionProgress");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetIngestionProgressRequest(dataFeedId, context);
+                return await _pipeline.ProcessMessageAsync(message, context).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> Get data last success ingestion job timestamp by data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   latestSuccessTimestamp: string (ISO 8601 Format),
+        ///   latestActiveTimestamp: string (ISO 8601 Format)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetIngestionProgress(Guid dataFeedId, RequestContext context = null)
+        {
+            using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetIngestionProgress");
+            scope.Start();
+            try
+            {
+                using HttpMessage message = CreateGetIngestionProgressRequest(dataFeedId, context);
+                return _pipeline.ProcessMessage(message, context);
+            }
+            catch (Exception e)
+            {
+                scope.Failed(e);
+                throw;
+            }
+        }
+
+        /// <summary> List all anomaly alerting configurations for specific anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       anomalyAlertingConfigurationId: AnomalyAlertingConfigurationAnomalyAlertingConfigurationId,
+        ///       name: string,
+        ///       description: string,
+        ///       crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///       splitAlertByDimensions: [string],
+        ///       hookIds: [AnomalyAlertingConfigurationHookIdsItem],
+        ///       metricAlertingConfigurations: [
+        ///         {
+        ///           anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId,
+        ///           anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot;,
+        ///           negationOperation: boolean,
+        ///           dimensionAnomalyScope: {
+        ///             dimension: Dictionary&lt;string, string&gt;
+        ///           },
+        ///           topNAnomalyScope: {
+        ///             top: number,
+        ///             period: number,
+        ///             minTopCount: number
+        ///           },
+        ///           severityFilter: {
+        ///             minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///             maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;
+        ///           },
+        ///           snoozeFilter: {
+        ///             autoSnooze: number,
+        ///             snoozeScope: &quot;Metric&quot; | &quot;Series&quot;,
+        ///             onlyForSuccessive: boolean
+        ///           },
+        ///           valueFilter: {
+        ///             lower: number,
+        ///             upper: number,
+        ///             direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///             type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///             metricId: ValueConditionMetricId,
+        ///             triggerForMissing: boolean
+        ///           }
+        ///         }
+        ///       ]
+        ///     }
+        ///   ],
+        ///   @nextLink: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetAnomalyAlertingConfigurationsByAnomalyDetectionConfigurationAsync(Guid configurationId, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetAnomalyAlertingConfigurationsByAnomalyDetectionConfiguration");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAnomalyAlertingConfigurationsByAnomalyDetectionConfigurationRequest(configurationId, skip, maxpagesize, context)
+                        : CreateGetAnomalyAlertingConfigurationsByAnomalyDetectionConfigurationNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List all anomaly alerting configurations for specific anomaly detection configuration. </summary>
+        /// <param name="configurationId"> anomaly detection configuration unique id. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       anomalyAlertingConfigurationId: AnomalyAlertingConfigurationAnomalyAlertingConfigurationId,
+        ///       name: string,
+        ///       description: string,
+        ///       crossMetricsOperator: &quot;AND&quot; | &quot;OR&quot; | &quot;XOR&quot;,
+        ///       splitAlertByDimensions: [string],
+        ///       hookIds: [AnomalyAlertingConfigurationHookIdsItem],
+        ///       metricAlertingConfigurations: [
+        ///         {
+        ///           anomalyDetectionConfigurationId: MetricAlertingConfigurationAnomalyDetectionConfigurationId,
+        ///           anomalyScopeType: &quot;All&quot; | &quot;Dimension&quot; | &quot;TopN&quot;,
+        ///           negationOperation: boolean,
+        ///           dimensionAnomalyScope: {
+        ///             dimension: Dictionary&lt;string, string&gt;
+        ///           },
+        ///           topNAnomalyScope: {
+        ///             top: number,
+        ///             period: number,
+        ///             minTopCount: number
+        ///           },
+        ///           severityFilter: {
+        ///             minAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;,
+        ///             maxAlertSeverity: &quot;Low&quot; | &quot;Medium&quot; | &quot;High&quot;
+        ///           },
+        ///           snoozeFilter: {
+        ///             autoSnooze: number,
+        ///             snoozeScope: &quot;Metric&quot; | &quot;Series&quot;,
+        ///             onlyForSuccessive: boolean
+        ///           },
+        ///           valueFilter: {
+        ///             lower: number,
+        ///             upper: number,
+        ///             direction: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///             type: &quot;Value&quot; | &quot;Mean&quot;,
+        ///             metricId: ValueConditionMetricId,
+        ///             triggerForMissing: boolean
+        ///           }
+        ///         }
+        ///       ]
+        ///     }
+        ///   ],
+        ///   @nextLink: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetAnomalyAlertingConfigurationsByAnomalyDetectionConfiguration(Guid configurationId, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetAnomalyAlertingConfigurationsByAnomalyDetectionConfiguration");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAnomalyAlertingConfigurationsByAnomalyDetectionConfigurationRequest(configurationId, skip, maxpagesize, context)
+                        : CreateGetAnomalyAlertingConfigurationsByAnomalyDetectionConfigurationNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List all credentials. </summary>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///       dataSourceCredentialId: DataSourceCredentialDataSourceCredentialId,
+        ///       dataSourceCredentialName: string,
+        ///       dataSourceCredentialDescription: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetCredentialsAsync(int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetCredentials");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetCredentialsRequest(skip, maxpagesize, context)
+                        : CreateGetCredentialsNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List all credentials. </summary>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataSourceCredentialType: &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///       dataSourceCredentialId: DataSourceCredentialDataSourceCredentialId,
+        ///       dataSourceCredentialName: string,
+        ///       dataSourceCredentialDescription: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetCredentials(int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetCredentials");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetCredentialsRequest(skip, maxpagesize, context)
+                        : CreateGetCredentialsNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List all data feeds. </summary>
+        /// <param name="dataFeedName"> filter data feed by its name. </param>
+        /// <param name="dataSourceType"> filter data feed by its source type. Allowed values: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;. </param>
+        /// <param name="granularityName"> filter data feed by its granularity. Allowed values: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;. </param>
+        /// <param name="status"> filter data feed by its status. Allowed values: &quot;Active&quot; | &quot;Paused&quot;. </param>
+        /// <param name="creator"> filter data feed by its creator. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///       dataFeedId: DataFeedDetailDataFeedId,
+        ///       dataFeedName: string,
+        ///       dataFeedDescription: string,
+        ///       granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///       granularityAmount: number,
+        ///       metrics: [
+        ///         {
+        ///           metricId: MetricId,
+        ///           metricName: string,
+        ///           metricDisplayName: string,
+        ///           metricDescription: string
+        ///         }
+        ///       ],
+        ///       dimension: [
+        ///         {
+        ///           dimensionName: string,
+        ///           dimensionDisplayName: string
+        ///         }
+        ///       ],
+        ///       timestampColumn: string,
+        ///       dataStartFrom: string (ISO 8601 Format),
+        ///       startOffsetInSeconds: number,
+        ///       maxConcurrency: number,
+        ///       minRetryIntervalInSeconds: number,
+        ///       stopRetryAfterInSeconds: number,
+        ///       needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///       rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///       rollUpColumns: [string],
+        ///       allUpIdentification: string,
+        ///       fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///       fillMissingPointValue: number,
+        ///       viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///       admins: [string],
+        ///       viewers: [string],
+        ///       isAdmin: boolean,
+        ///       creator: string,
+        ///       status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       actionLinkTemplate: string,
+        ///       authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///       credentialId: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetDataFeedsAsync(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetDataFeeds");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context)
+                        : CreateGetDataFeedsNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List all data feeds. </summary>
+        /// <param name="dataFeedName"> filter data feed by its name. </param>
+        /// <param name="dataSourceType"> filter data feed by its source type. Allowed values: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;. </param>
+        /// <param name="granularityName"> filter data feed by its granularity. Allowed values: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;. </param>
+        /// <param name="status"> filter data feed by its status. Allowed values: &quot;Active&quot; | &quot;Paused&quot;. </param>
+        /// <param name="creator"> filter data feed by its creator. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///       dataFeedId: DataFeedDetailDataFeedId,
+        ///       dataFeedName: string,
+        ///       dataFeedDescription: string,
+        ///       granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///       granularityAmount: number,
+        ///       metrics: [
+        ///         {
+        ///           metricId: MetricId,
+        ///           metricName: string,
+        ///           metricDisplayName: string,
+        ///           metricDescription: string
+        ///         }
+        ///       ],
+        ///       dimension: [
+        ///         {
+        ///           dimensionName: string,
+        ///           dimensionDisplayName: string
+        ///         }
+        ///       ],
+        ///       timestampColumn: string,
+        ///       dataStartFrom: string (ISO 8601 Format),
+        ///       startOffsetInSeconds: number,
+        ///       maxConcurrency: number,
+        ///       minRetryIntervalInSeconds: number,
+        ///       stopRetryAfterInSeconds: number,
+        ///       needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///       rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///       rollUpColumns: [string],
+        ///       allUpIdentification: string,
+        ///       fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///       fillMissingPointValue: number,
+        ///       viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///       admins: [string],
+        ///       viewers: [string],
+        ///       isAdmin: boolean,
+        ///       creator: string,
+        ///       status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       actionLinkTemplate: string,
+        ///       authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///       credentialId: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetDataFeeds(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetDataFeeds");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetDataFeedsRequest(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context)
+                        : CreateGetDataFeedsNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List all hooks. </summary>
+        /// <param name="hookName"> filter hook by its name. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       hookType: &quot;Webhook&quot; | &quot;Email&quot;,
+        ///       hookId: HookInfoHookId,
+        ///       hookName: string,
+        ///       description: string,
+        ///       externalLink: string,
+        ///       admins: [string]
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetHooksAsync(string hookName = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetHooks");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetHooksRequest(hookName, skip, maxpagesize, context)
+                        : CreateGetHooksNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List all hooks. </summary>
+        /// <param name="hookName"> filter hook by its name. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       hookType: &quot;Webhook&quot; | &quot;Email&quot;,
+        ///       hookId: HookInfoHookId,
+        ///       hookName: string,
+        ///       description: string,
+        ///       externalLink: string,
+        ///       admins: [string]
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetHooks(string hookName = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetHooks");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetHooksRequest(hookName, skip, maxpagesize, context)
+                        : CreateGetHooksNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Get data ingestion status by data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       timestamp: string (ISO 8601 Format),
+        ///       status: &quot;NotStarted&quot; | &quot;Scheduled&quot; | &quot;Running&quot; | &quot;Succeeded&quot; | &quot;Failed&quot; | &quot;NoData&quot; | &quot;Error&quot; | &quot;Paused&quot;,
+        ///       message: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetDataFeedIngestionStatusAsync(Guid dataFeedId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetDataFeedIngestionStatus");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetDataFeedIngestionStatusRequest(dataFeedId, content, skip, maxpagesize, context)
+                        : CreateGetDataFeedIngestionStatusNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> Get data ingestion status by data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   startTime: string (ISO 8601 Format) (required),
+        ///   endTime: string (ISO 8601 Format) (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       timestamp: string (ISO 8601 Format),
+        ///       status: &quot;NotStarted&quot; | &quot;Scheduled&quot; | &quot;Running&quot; | &quot;Succeeded&quot; | &quot;Failed&quot; | &quot;NoData&quot; | &quot;Error&quot; | &quot;Paused&quot;,
+        ///       message: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetDataFeedIngestionStatus(Guid dataFeedId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            Argument.AssertNotNull(content, nameof(content));
+
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetDataFeedIngestionStatus");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetDataFeedIngestionStatusRequest(dataFeedId, content, skip, maxpagesize, context)
+                        : CreateGetDataFeedIngestionStatusNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List all anomaly detection configurations for specific metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: AnomalyDetectionConfigurationAnomalyDetectionConfigurationId,
+        ///       name: string,
+        ///       description: string,
+        ///       metricId: AnomalyDetectionConfigurationMetricId,
+        ///       wholeMetricConfiguration: {
+        ///         conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///         smartDetectionCondition: {
+        ///           sensitivity: number,
+        ///           anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///           suppressCondition: {
+        ///             minNumber: number,
+        ///             minRatio: number
+        ///           }
+        ///         },
+        ///         hardThresholdCondition: {
+        ///           lowerBound: number,
+        ///           upperBound: number,
+        ///           anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///           suppressCondition: SuppressCondition
+        ///         },
+        ///         changeThresholdCondition: {
+        ///           changePercentage: number,
+        ///           shiftPoint: number,
+        ///           withinRange: boolean,
+        ///           anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///           suppressCondition: SuppressCondition
+        ///         }
+        ///       },
+        ///       dimensionGroupOverrideConfigurations: [
+        ///         {
+        ///           group: {
+        ///             dimension: Dictionary&lt;string, string&gt;
+        ///           },
+        ///           conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///           smartDetectionCondition: SmartDetectionCondition,
+        ///           hardThresholdCondition: HardThresholdCondition,
+        ///           changeThresholdCondition: ChangeThresholdCondition
+        ///         }
+        ///       ],
+        ///       seriesOverrideConfigurations: [
+        ///         {
+        ///           series: {
+        ///             dimension: Dictionary&lt;string, string&gt;
+        ///           },
+        ///           conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///           smartDetectionCondition: SmartDetectionCondition,
+        ///           hardThresholdCondition: HardThresholdCondition,
+        ///           changeThresholdCondition: ChangeThresholdCondition
+        ///         }
+        ///       ]
+        ///     }
+        ///   ],
+        ///   @nextLink: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetAnomalyDetectionConfigurationsByMetricAsync(Guid metricId, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetAnomalyDetectionConfigurationsByMetric");
+            async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAnomalyDetectionConfigurationsByMetricRequest(metricId, skip, maxpagesize, context)
+                        : CreateGetAnomalyDetectionConfigurationsByMetricNextPageRequest(nextLink, context);
+                    var page = await LowLevelPageableHelpers.ProcessMessageAsync(_pipeline, message, context, "value", "@nextLink", cancellationToken).ConfigureAwait(false);
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        /// <summary> List all anomaly detection configurations for specific metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   value: [
+        ///     {
+        ///       anomalyDetectionConfigurationId: AnomalyDetectionConfigurationAnomalyDetectionConfigurationId,
+        ///       name: string,
+        ///       description: string,
+        ///       metricId: AnomalyDetectionConfigurationMetricId,
+        ///       wholeMetricConfiguration: {
+        ///         conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///         smartDetectionCondition: {
+        ///           sensitivity: number,
+        ///           anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///           suppressCondition: {
+        ///             minNumber: number,
+        ///             minRatio: number
+        ///           }
+        ///         },
+        ///         hardThresholdCondition: {
+        ///           lowerBound: number,
+        ///           upperBound: number,
+        ///           anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///           suppressCondition: SuppressCondition
+        ///         },
+        ///         changeThresholdCondition: {
+        ///           changePercentage: number,
+        ///           shiftPoint: number,
+        ///           withinRange: boolean,
+        ///           anomalyDetectorDirection: &quot;Both&quot; | &quot;Down&quot; | &quot;Up&quot;,
+        ///           suppressCondition: SuppressCondition
+        ///         }
+        ///       },
+        ///       dimensionGroupOverrideConfigurations: [
+        ///         {
+        ///           group: {
+        ///             dimension: Dictionary&lt;string, string&gt;
+        ///           },
+        ///           conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///           smartDetectionCondition: SmartDetectionCondition,
+        ///           hardThresholdCondition: HardThresholdCondition,
+        ///           changeThresholdCondition: ChangeThresholdCondition
+        ///         }
+        ///       ],
+        ///       seriesOverrideConfigurations: [
+        ///         {
+        ///           series: {
+        ///             dimension: Dictionary&lt;string, string&gt;
+        ///           },
+        ///           conditionOperator: &quot;AND&quot; | &quot;OR&quot;,
+        ///           smartDetectionCondition: SmartDetectionCondition,
+        ///           hardThresholdCondition: HardThresholdCondition,
+        ///           changeThresholdCondition: ChangeThresholdCondition
+        ///         }
+        ///       ]
+        ///     }
+        ///   ],
+        ///   @nextLink: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetAnomalyDetectionConfigurationsByMetric(Guid metricId, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        {
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorAdministrationClient.GetAnomalyDetectionConfigurationsByMetric");
+            IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
+            {
+                do
+                {
+                    var message = string.IsNullOrEmpty(nextLink)
+                        ? CreateGetAnomalyDetectionConfigurationsByMetricRequest(metricId, skip, maxpagesize, context)
+                        : CreateGetAnomalyDetectionConfigurationsByMetricNextPageRequest(nextLink, context);
+                    var page = LowLevelPageableHelpers.ProcessMessage(_pipeline, message, context, "value", "@nextLink");
+                    nextLink = page.ContinuationToken;
+                    yield return page;
+                } while (!string.IsNullOrEmpty(nextLink));
+            }
+        }
+
+        internal HttpMessage CreateGetAnomalyAlertingConfigurationRequest(Guid configurationId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/alert/anomaly/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateUpdateAnomalyAlertingConfigurationRequest(Guid configurationId, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Patch;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/alert/anomaly/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/merge-patch+json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateDeleteAnomalyAlertingConfigurationRequest(Guid configurationId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier204);
+            var request = message.Request;
+            request.Method = RequestMethod.Delete;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/alert/anomaly/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateCreateAnomalyAlertingConfigurationRequest(RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier201);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/alert/anomaly/configurations", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomalyDetectionConfigurationRequest(Guid configurationId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateUpdateAnomalyDetectionConfigurationRequest(Guid configurationId, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Patch;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/merge-patch+json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateDeleteAnomalyDetectionConfigurationRequest(Guid configurationId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier204);
+            var request = message.Request;
+            request.Method = RequestMethod.Delete;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateCreateAnomalyDetectionConfigurationRequest(RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier201);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomalyAlertingConfigurationsByAnomalyDetectionConfigurationRequest(Guid configurationId, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations/", false);
+            uri.AppendPath(configurationId, true);
+            uri.AppendPath("/alert/anomaly/configurations", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateCreateCredentialRequest(RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier201);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/credentials", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetCredentialsRequest(int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/credentials", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateUpdateCredentialRequest(Guid credentialId, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Patch;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/credentials/", false);
+            uri.AppendPath(credentialId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/merge-patch+json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateDeleteCredentialRequest(Guid credentialId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier204);
+            var request = message.Request;
+            request.Method = RequestMethod.Delete;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/credentials/", false);
+            uri.AppendPath(credentialId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetCredentialRequest(Guid credentialId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/credentials/", false);
+            uri.AppendPath(credentialId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetDataFeedsRequest(string dataFeedName, string dataSourceType, string granularityName, string status, string creator, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/dataFeeds", false);
+            if (dataFeedName != null)
+            {
+                uri.AppendQuery("dataFeedName", dataFeedName, true);
+            }
+            if (dataSourceType != null)
+            {
+                uri.AppendQuery("dataSourceType", dataSourceType, true);
+            }
+            if (granularityName != null)
+            {
+                uri.AppendQuery("granularityName", granularityName, true);
+            }
+            if (status != null)
+            {
+                uri.AppendQuery("status", status, true);
+            }
+            if (creator != null)
+            {
+                uri.AppendQuery("creator", creator, true);
+            }
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateCreateDataFeedRequest(RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier201);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/dataFeeds", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetDataFeedByIdRequest(Guid dataFeedId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/dataFeeds/", false);
+            uri.AppendPath(dataFeedId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateUpdateDataFeedRequest(Guid dataFeedId, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Patch;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/dataFeeds/", false);
+            uri.AppendPath(dataFeedId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/merge-patch+json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateDeleteDataFeedRequest(Guid dataFeedId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier204);
+            var request = message.Request;
+            request.Method = RequestMethod.Delete;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/dataFeeds/", false);
+            uri.AppendPath(dataFeedId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetHooksRequest(string hookName, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/hooks", false);
+            if (hookName != null)
+            {
+                uri.AppendQuery("hookName", hookName, true);
+            }
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateCreateHookRequest(RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier201);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/hooks", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetHookRequest(Guid hookId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/hooks/", false);
+            uri.AppendPath(hookId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateUpdateHookRequest(Guid hookId, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Patch;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/hooks/", false);
+            uri.AppendPath(hookId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/merge-patch+json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateDeleteHookRequest(Guid hookId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier204);
+            var request = message.Request;
+            request.Method = RequestMethod.Delete;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/hooks/", false);
+            uri.AppendPath(hookId, true);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetDataFeedIngestionStatusRequest(Guid dataFeedId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/dataFeeds/", false);
+            uri.AppendPath(dataFeedId, true);
+            uri.AppendPath("/ingestionStatus/query", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateResetDataFeedIngestionStatusRequest(Guid dataFeedId, RequestContent content, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier204);
+            var request = message.Request;
+            request.Method = RequestMethod.Post;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/dataFeeds/", false);
+            uri.AppendPath(dataFeedId, true);
+            uri.AppendPath("/ingestionProgress/reset", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            request.Headers.Add("Content-Type", "application/json");
+            request.Content = content;
+            return message;
+        }
+
+        internal HttpMessage CreateGetIngestionProgressRequest(Guid dataFeedId, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/dataFeeds/", false);
+            uri.AppendPath(dataFeedId, true);
+            uri.AppendPath("/ingestionProgress", false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomalyDetectionConfigurationsByMetricRequest(Guid metricId, int? skip, int? maxpagesize, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendPath("/metrics/", false);
+            uri.AppendPath(metricId, true);
+            uri.AppendPath("/enrichment/anomalyDetection/configurations", false);
+            if (skip != null)
+            {
+                uri.AppendQuery("$skip", skip.Value, true);
+            }
+            if (maxpagesize != null)
+            {
+                uri.AppendQuery("$maxpagesize", maxpagesize.Value, true);
+            }
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomalyAlertingConfigurationsByAnomalyDetectionConfigurationNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetCredentialsNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetDataFeedsNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetHooksNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetDataFeedIngestionStatusNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        internal HttpMessage CreateGetAnomalyDetectionConfigurationsByMetricNextPageRequest(string nextLink, RequestContext context)
+        {
+            var message = _pipeline.CreateMessage(context, ResponseClassifier200);
+            var request = message.Request;
+            request.Method = RequestMethod.Get;
+            var uri = new RawRequestUriBuilder();
+            uri.Reset(new Uri(_endpoint));
+            uri.AppendRaw("/metricsadvisor/v1.0", false);
+            uri.AppendRawNextLink(nextLink, false);
+            request.Uri = uri;
+            request.Headers.Add("Accept", "application/json");
+            return message;
+        }
+
+        private static ResponseClassifier _responseClassifier204;
+        private static ResponseClassifier ResponseClassifier204 => _responseClassifier204 ??= new StatusCodeClassifier(stackalloc ushort[] { 204 });
+    }
+}
