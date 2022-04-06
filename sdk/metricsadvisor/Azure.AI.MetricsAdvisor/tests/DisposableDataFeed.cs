@@ -53,6 +53,6 @@ namespace Azure.AI.MetricsAdvisor.Tests
         /// <summary>
         /// Deletes the data feed this instance is associated with.
         /// </summary>
-        public async ValueTask DisposeAsync() => await _adminClient.DeleteDataFeedValueAsync(DataFeed.Id);
+        public async ValueTask DisposeAsync() => await _adminClient.DeleteDataFeedAsync(DataFeed.Id);
     }
 }

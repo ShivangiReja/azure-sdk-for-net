@@ -174,7 +174,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// <param name="options">An optional set of options used to configure the request's behavior.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> controlling the request lifetime.</param>
         /// <returns>An <see cref="AsyncPageable{T}"/> containing the collection of <see cref="DataFeed"/>s.</returns>
-        public virtual AsyncPageable<DataFeed> GetDataFeedsValuesAsync(GetDataFeedsOptions options = default, CancellationToken cancellationToken = default)
+        public virtual AsyncPageable<DataFeed> GetDataFeedsAsync(GetDataFeedsOptions options = default, CancellationToken cancellationToken = default)
         {
             string name = options?.Filter?.Name;
             DataFeedSourceKind? sourceKind = options?.Filter?.SourceKind;
@@ -228,7 +228,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// <param name="options">An optional set of options used to configure the request's behavior.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> controlling the request lifetime.</param>
         /// <returns>A <see cref="Pageable{T}"/> containing the collection of <see cref="DataFeed"/>s.</returns>
-        public virtual Pageable<DataFeed> GetDataFeedsValues(GetDataFeedsOptions options = default, CancellationToken cancellationToken = default)
+        public virtual Pageable<DataFeed> GetDataFeeds(GetDataFeedsOptions options = default, CancellationToken cancellationToken = default)
         {
             string name = options?.Filter?.Name;
             DataFeedSourceKind? sourceKind = options?.Filter?.SourceKind;
@@ -279,14 +279,14 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// Gets a collection of items describing the existing <see cref="DataFeed"/>s in this Metrics
         /// Advisor resource.
         /// </summary>
-        public virtual AsyncPageable<BinaryData> GetDataFeedsAsync(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        public virtual AsyncPageable<BinaryData> GetDataFeedsValuesAsync(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
             => _serviceRestClient.GetDataFeedsAsync(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
 
         /// <summary>
         /// Gets a collection of items describing the existing <see cref="DataFeed"/>s in this Metrics
         /// Advisor resource.
         /// </summary>
-        public virtual Pageable<BinaryData> GetDataFeeds(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        public virtual Pageable<BinaryData> GetDataFeedsValues(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
             => _serviceRestClient.GetDataFeeds(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
 
         /// <summary>
@@ -485,7 +485,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="dataFeedId"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="dataFeedId"/> is empty or not a valid GUID.</exception>
-        public virtual async Task<Response> DeleteDataFeedValueAsync(string dataFeedId, CancellationToken cancellationToken = default)
+        public virtual async Task<Response> DeleteDataFeedAsync(string dataFeedId, CancellationToken cancellationToken = default)
         {
             Guid dataFeedGuid = ClientCommon.ValidateGuid(dataFeedId, nameof(dataFeedId));
 
@@ -512,7 +512,7 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="dataFeedId"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="dataFeedId"/> is empty or not a valid GUID.</exception>
-        public virtual Response DeleteDataFeedValue(string dataFeedId, CancellationToken cancellationToken = default)
+        public virtual Response DeleteDataFeed(string dataFeedId, CancellationToken cancellationToken = default)
         {
             Guid dataFeedGuid = ClientCommon.ValidateGuid(dataFeedId, nameof(dataFeedId));
 

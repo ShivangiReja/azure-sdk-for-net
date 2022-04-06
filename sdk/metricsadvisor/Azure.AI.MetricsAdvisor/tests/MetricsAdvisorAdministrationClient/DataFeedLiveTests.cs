@@ -796,7 +796,7 @@ namespace Azure.AI.MetricsAdvisor.Tests
 
             var dataFeedCount = 0;
 
-            await foreach (DataFeed dataFeed in adminClient.GetDataFeedsValuesAsync())
+            await foreach (DataFeed dataFeed in adminClient.GetDataFeedsAsync())
             {
                 Assert.That(dataFeed.Id, Is.Not.Null.And.Not.Empty);
                 Assert.That(dataFeed.Name, Is.Not.Null.And.Not.Empty);
@@ -903,7 +903,7 @@ namespace Azure.AI.MetricsAdvisor.Tests
             {
                 if (dataFeedId != null)
                 {
-                    await adminClient.DeleteDataFeedValueAsync(dataFeedId);
+                    await adminClient.DeleteDataFeedAsync(dataFeedId);
 
                     var errorCause = "datafeedId is invalid";
                     Assert.That(async () => await adminClient.GetDataFeedAsync(dataFeedId), Throws.InstanceOf<RequestFailedException>().With.Message.Contains(errorCause));

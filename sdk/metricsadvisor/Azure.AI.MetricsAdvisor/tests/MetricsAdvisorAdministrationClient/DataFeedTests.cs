@@ -153,10 +153,10 @@ namespace Azure.AI.MetricsAdvisor.Tests
             using var cancellationSource = new CancellationTokenSource();
             cancellationSource.Cancel();
 
-            IAsyncEnumerator<DataFeed> asyncEnumerator = adminClient.GetDataFeedsValuesAsync(cancellationToken: cancellationSource.Token).GetAsyncEnumerator();
+            IAsyncEnumerator<DataFeed> asyncEnumerator = adminClient.GetDataFeedsAsync(cancellationToken: cancellationSource.Token).GetAsyncEnumerator();
             Assert.That(async () => await asyncEnumerator.MoveNextAsync(), Throws.InstanceOf<OperationCanceledException>());
 
-            IEnumerator<DataFeed> enumerator = adminClient.GetDataFeedsValues(cancellationToken: cancellationSource.Token).GetEnumerator();
+            IEnumerator<DataFeed> enumerator = adminClient.GetDataFeeds(cancellationToken: cancellationSource.Token).GetEnumerator();
             Assert.That(() => enumerator.MoveNext(), Throws.InstanceOf<OperationCanceledException>());
         }
 
@@ -165,13 +165,13 @@ namespace Azure.AI.MetricsAdvisor.Tests
         {
             MetricsAdvisorAdministrationClient adminClient = GetMetricsAdvisorAdministrationClient();
 
-            Assert.That(() => adminClient.DeleteDataFeedValueAsync(null), Throws.InstanceOf<ArgumentNullException>());
-            Assert.That(() => adminClient.DeleteDataFeedValueAsync(""), Throws.InstanceOf<ArgumentException>());
-            Assert.That(() => adminClient.DeleteDataFeedValueAsync("dataFeedId"), Throws.InstanceOf<ArgumentException>().With.InnerException.TypeOf(typeof(FormatException)));
+            Assert.That(() => adminClient.DeleteDataFeedAsync(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(() => adminClient.DeleteDataFeedAsync(""), Throws.InstanceOf<ArgumentException>());
+            Assert.That(() => adminClient.DeleteDataFeedAsync("dataFeedId"), Throws.InstanceOf<ArgumentException>().With.InnerException.TypeOf(typeof(FormatException)));
 
-            Assert.That(() => adminClient.DeleteDataFeedValue(null), Throws.InstanceOf<ArgumentNullException>());
-            Assert.That(() => adminClient.DeleteDataFeedValue(""), Throws.InstanceOf<ArgumentException>());
-            Assert.That(() => adminClient.DeleteDataFeedValue("dataFeedId"), Throws.InstanceOf<ArgumentException>().With.InnerException.TypeOf(typeof(FormatException)));
+            Assert.That(() => adminClient.DeleteDataFeed(null), Throws.InstanceOf<ArgumentNullException>());
+            Assert.That(() => adminClient.DeleteDataFeed(""), Throws.InstanceOf<ArgumentException>());
+            Assert.That(() => adminClient.DeleteDataFeed("dataFeedId"), Throws.InstanceOf<ArgumentException>().With.InnerException.TypeOf(typeof(FormatException)));
         }
 
         [Test]
@@ -182,8 +182,8 @@ namespace Azure.AI.MetricsAdvisor.Tests
             using var cancellationSource = new CancellationTokenSource();
             cancellationSource.Cancel();
 
-            Assert.That(() => adminClient.DeleteDataFeedValueAsync(FakeGuid, cancellationSource.Token), Throws.InstanceOf<OperationCanceledException>());
-            Assert.That(() => adminClient.DeleteDataFeedValue(FakeGuid, cancellationSource.Token), Throws.InstanceOf<OperationCanceledException>());
+            Assert.That(() => adminClient.DeleteDataFeedAsync(FakeGuid, cancellationSource.Token), Throws.InstanceOf<OperationCanceledException>());
+            Assert.That(() => adminClient.DeleteDataFeed(FakeGuid, cancellationSource.Token), Throws.InstanceOf<OperationCanceledException>());
         }
 
         private MetricsAdvisorAdministrationClient GetMetricsAdvisorAdministrationClient()
