@@ -279,14 +279,18 @@ namespace Azure.AI.MetricsAdvisor.Administration
         /// Gets a collection of items describing the existing <see cref="DataFeed"/>s in this Metrics
         /// Advisor resource.
         /// </summary>
-        public virtual AsyncPageable<BinaryData> GetDataFeedsValuesAsync(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+#pragma warning disable AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
+        public virtual AsyncPageable<BinaryData> GetDataFeedsAsync(string dataFeedName, string dataSourceType, string granularityName, string status, string creator, int? skip, int? maxpagesize, RequestContext context)
+#pragma warning restore AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
             => _serviceRestClient.GetDataFeedsAsync(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
 
         /// <summary>
         /// Gets a collection of items describing the existing <see cref="DataFeed"/>s in this Metrics
         /// Advisor resource.
         /// </summary>
-        public virtual Pageable<BinaryData> GetDataFeedsValues(string dataFeedName = null, string dataSourceType = null, string granularityName = null, string status = null, string creator = null, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+#pragma warning disable AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
+        public virtual Pageable<BinaryData> GetDataFeeds(string dataFeedName, string dataSourceType, string granularityName, string status, string creator, int? skip, int? maxpagesize, RequestContext context)
+#pragma warning restore AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
             => _serviceRestClient.GetDataFeeds(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
 
         /// <summary>

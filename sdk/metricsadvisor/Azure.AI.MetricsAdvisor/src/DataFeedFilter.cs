@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Threading;
 using Azure.AI.MetricsAdvisor.Models;
 
 namespace Azure.AI.MetricsAdvisor.Administration
 {
     /// <summary>
-    /// Filters the result of the <see cref="MetricsAdvisorAdministrationClient.GetDataFeeds"/> and
-    /// <see cref="MetricsAdvisorAdministrationClient.GetDataFeedsAsync"/> operations.
+    /// Filters the result of the <see cref="MetricsAdvisorAdministrationClient.GetDataFeeds(GetDataFeedsOptions, CancellationToken)"/> and
+    /// <see cref="MetricsAdvisorAdministrationClient.GetDataFeedsAsync(GetDataFeedsOptions, CancellationToken)"/> operations.
     /// </summary>
     public class DataFeedFilter
     {
