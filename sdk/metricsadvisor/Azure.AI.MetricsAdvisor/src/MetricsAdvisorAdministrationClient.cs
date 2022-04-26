@@ -155,16 +155,130 @@ namespace Azure.AI.MetricsAdvisor.Administration
             }
         }
 
-        /// <summary>
-        /// Gets an existing <see cref="DataFeed"/>.
-        /// </summary>
-        public virtual async Task<Response> GetDataFeedAsync(Guid dataFeedId, RequestContext context = null) =>
+        /// <summary> Get a data feed by its id. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string,
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ],
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string,
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetDataFeedByIdAsync(string dataFeedId, RequestContext context = null) =>
             await _serviceRestClient.GetDataFeedByIdAsync(dataFeedId, context).ConfigureAwait(false);
 
-        /// <summary>
-        /// Gets an existing <see cref="DataFeed"/>.
-        /// </summary>
-        public virtual Response GetDataFeed(Guid dataFeedId, RequestContext context = null) =>
+        /// <summary> Get a data feed by its id. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string,
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ],
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string,
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetDataFeedById(string dataFeedId, RequestContext context = null) =>
             _serviceRestClient.GetDataFeedById(dataFeedId, context);
 
         /// <summary>
@@ -275,19 +389,149 @@ namespace Azure.AI.MetricsAdvisor.Administration
             return PageableHelpers.CreateEnumerable(FirstPageFunc, NextPageFunc);
         }
 
-        /// <summary>
-        /// Gets a collection of items describing the existing <see cref="DataFeed"/>s in this Metrics
-        /// Advisor resource.
-        /// </summary>
+        /// <summary> List all data feeds. </summary>
+        /// <param name="dataFeedName"> filter data feed by its name. </param>
+        /// <param name="dataSourceType"> filter data feed by its source type. Allowed values: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;. </param>
+        /// <param name="granularityName"> filter data feed by its granularity. Allowed values: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;. </param>
+        /// <param name="status"> filter data feed by its status. Allowed values: &quot;Active&quot; | &quot;Paused&quot;. </param>
+        /// <param name="creator"> filter data feed by its creator. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///       dataFeedId: DataFeedDetailDataFeedId,
+        ///       dataFeedName: string,
+        ///       dataFeedDescription: string,
+        ///       granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///       granularityAmount: number,
+        ///       metrics: [
+        ///         {
+        ///           metricId: MetricId,
+        ///           metricName: string,
+        ///           metricDisplayName: string,
+        ///           metricDescription: string
+        ///         }
+        ///       ],
+        ///       dimension: [
+        ///         {
+        ///           dimensionName: string,
+        ///           dimensionDisplayName: string
+        ///         }
+        ///       ],
+        ///       timestampColumn: string,
+        ///       dataStartFrom: string (ISO 8601 Format),
+        ///       startOffsetInSeconds: number,
+        ///       maxConcurrency: number,
+        ///       minRetryIntervalInSeconds: number,
+        ///       stopRetryAfterInSeconds: number,
+        ///       needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///       rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///       rollUpColumns: [string],
+        ///       allUpIdentification: string,
+        ///       fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///       fillMissingPointValue: number,
+        ///       viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///       admins: [string],
+        ///       viewers: [string],
+        ///       isAdmin: boolean,
+        ///       creator: string,
+        ///       status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       actionLinkTemplate: string,
+        ///       authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///       credentialId: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
 #pragma warning disable AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
         public virtual AsyncPageable<BinaryData> GetDataFeedsAsync(string dataFeedName, string dataSourceType, string granularityName, string status, string creator, int? skip, int? maxpagesize, RequestContext context)
 #pragma warning restore AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
             => _serviceRestClient.GetDataFeedsAsync(dataFeedName, dataSourceType, granularityName, status, creator, skip, maxpagesize, context);
 
-        /// <summary>
-        /// Gets a collection of items describing the existing <see cref="DataFeed"/>s in this Metrics
-        /// Advisor resource.
-        /// </summary>
+        /// <summary> List all data feeds. </summary>
+        /// <param name="dataFeedName"> filter data feed by its name. </param>
+        /// <param name="dataSourceType"> filter data feed by its source type. Allowed values: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;. </param>
+        /// <param name="granularityName"> filter data feed by its granularity. Allowed values: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;. </param>
+        /// <param name="status"> filter data feed by its status. Allowed values: &quot;Active&quot; | &quot;Paused&quot;. </param>
+        /// <param name="creator"> filter data feed by its creator. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///       dataFeedId: DataFeedDetailDataFeedId,
+        ///       dataFeedName: string,
+        ///       dataFeedDescription: string,
+        ///       granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///       granularityAmount: number,
+        ///       metrics: [
+        ///         {
+        ///           metricId: MetricId,
+        ///           metricName: string,
+        ///           metricDisplayName: string,
+        ///           metricDescription: string
+        ///         }
+        ///       ],
+        ///       dimension: [
+        ///         {
+        ///           dimensionName: string,
+        ///           dimensionDisplayName: string
+        ///         }
+        ///       ],
+        ///       timestampColumn: string,
+        ///       dataStartFrom: string (ISO 8601 Format),
+        ///       startOffsetInSeconds: number,
+        ///       maxConcurrency: number,
+        ///       minRetryIntervalInSeconds: number,
+        ///       stopRetryAfterInSeconds: number,
+        ///       needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///       rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///       rollUpColumns: [string],
+        ///       allUpIdentification: string,
+        ///       fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///       fillMissingPointValue: number,
+        ///       viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///       admins: [string],
+        ///       viewers: [string],
+        ///       isAdmin: boolean,
+        ///       creator: string,
+        ///       status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       actionLinkTemplate: string,
+        ///       authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///       credentialId: string
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
 #pragma warning disable AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
         public virtual Pageable<BinaryData> GetDataFeeds(string dataFeedName, string dataSourceType, string granularityName, string status, string creator, int? skip, int? maxpagesize, RequestContext context)
 #pragma warning restore AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
@@ -377,15 +621,127 @@ namespace Azure.AI.MetricsAdvisor.Administration
             }
         }
 
-        /// <summary>
-        /// Creates a <see cref="DataFeed"/> and assigns it a unique ID.
-        /// </summary>
+        /// <summary> Create a new data feed. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string (required),
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot; (required),
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string (required),
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ] (required),
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string (required),
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format) (required),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
         public virtual async Task<Response> CreateDataFeedAsync(RequestContent content, RequestContext context = null)
             => await _serviceRestClient.CreateDataFeedAsync(content, context).ConfigureAwait(false);
 
-        /// <summary>
-        /// Creates a <see cref="DataFeed"/> and assigns it a unique ID.
-        /// </summary>
+        /// <summary> Create a new data feed. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string (required),
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot; (required),
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string (required),
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ] (required),
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string (required),
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format) (required),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
         public virtual Response CreateDataFeed(RequestContent content, RequestContext context = null)
             => _serviceRestClient.CreateDataFeed(content, context);
 
@@ -463,20 +819,184 @@ namespace Azure.AI.MetricsAdvisor.Administration
             }
         }
 
-        /// <summary>
-        /// Updates an existing <see cref="DataFeed"/>. In order to update your data feed, you cannot create a <see cref="DataFeed"/>
-        /// directly from its constructor. You need to obtain an instance via another CRUD operation and update it
-        /// before calling this method.
-        /// </summary>
-        public virtual async Task<Response> UpdateDataFeedAsync(Guid dataFeedId, RequestContent content, RequestContext context = null)
+        /// <summary> Update a data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string,
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ],
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string,
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> UpdateDataFeedAsync(string dataFeedId, RequestContent content, RequestContext context = null)
             => await _serviceRestClient.UpdateDataFeedAsync(dataFeedId, content, context).ConfigureAwait(false);
 
-        /// <summary>
-        /// Updates an existing <see cref="DataFeed"/>. In order to update your data feed, you cannot create a <see cref="DataFeed"/>
-        /// directly from its constructor. You need to obtain an instance via another CRUD operation and update it
-        /// before calling this method.
-        /// </summary>
-        public virtual Response UpdateDataFeed(Guid dataFeedId, RequestContent content, RequestContext context = null)
+        /// <summary> Update a data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot; (required),
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   dataSourceType: &quot;AzureApplicationInsights&quot; | &quot;AzureBlob&quot; | &quot;AzureCosmosDB&quot; | &quot;AzureDataExplorer&quot; | &quot;AzureDataLakeStorageGen2&quot; | &quot;AzureEventHubs&quot; | &quot;AzureLogAnalytics&quot; | &quot;AzureTable&quot; | &quot;InfluxDB&quot; | &quot;MongoDB&quot; | &quot;MySql&quot; | &quot;PostgreSql&quot; | &quot;SqlServer&quot;,
+        ///   dataFeedId: DataFeedDetailDataFeedId,
+        ///   dataFeedName: string,
+        ///   dataFeedDescription: string,
+        ///   granularityName: &quot;Yearly&quot; | &quot;Monthly&quot; | &quot;Weekly&quot; | &quot;Daily&quot; | &quot;Hourly&quot; | &quot;Minutely&quot; | &quot;Custom&quot;,
+        ///   granularityAmount: number,
+        ///   metrics: [
+        ///     {
+        ///       metricId: MetricId,
+        ///       metricName: string,
+        ///       metricDisplayName: string,
+        ///       metricDescription: string
+        ///     }
+        ///   ],
+        ///   dimension: [
+        ///     {
+        ///       dimensionName: string,
+        ///       dimensionDisplayName: string
+        ///     }
+        ///   ],
+        ///   timestampColumn: string,
+        ///   dataStartFrom: string (ISO 8601 Format),
+        ///   startOffsetInSeconds: number,
+        ///   maxConcurrency: number,
+        ///   minRetryIntervalInSeconds: number,
+        ///   stopRetryAfterInSeconds: number,
+        ///   needRollup: &quot;NoRollup&quot; | &quot;NeedRollup&quot; | &quot;AlreadyRollup&quot;,
+        ///   rollUpMethod: &quot;None&quot; | &quot;Sum&quot; | &quot;Max&quot; | &quot;Min&quot; | &quot;Avg&quot; | &quot;Count&quot;,
+        ///   rollUpColumns: [string],
+        ///   allUpIdentification: string,
+        ///   fillMissingPointType: &quot;SmartFilling&quot; | &quot;PreviousValue&quot; | &quot;CustomValue&quot; | &quot;NoFilling&quot;,
+        ///   fillMissingPointValue: number,
+        ///   viewMode: &quot;Private&quot; | &quot;Public&quot;,
+        ///   admins: [string],
+        ///   viewers: [string],
+        ///   isAdmin: boolean,
+        ///   creator: string,
+        ///   status: &quot;Active&quot; | &quot;Paused&quot;,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   actionLinkTemplate: string,
+        ///   authenticationType: &quot;Basic&quot; | &quot;ManagedIdentity&quot; | &quot;AzureSQLConnectionString&quot; | &quot;DataLakeGen2SharedKey&quot; | &quot;ServicePrincipal&quot; | &quot;ServicePrincipalInKV&quot;,
+        ///   credentialId: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response UpdateDataFeed(string dataFeedId, RequestContent content, RequestContext context = null)
             => _serviceRestClient.UpdateDataFeed(dataFeedId, content, context);
 
         /// <summary>
@@ -533,16 +1053,42 @@ namespace Azure.AI.MetricsAdvisor.Administration
             }
         }
 
-        /// <summary>
-        /// Deletes an existing <see cref="DataFeed"/>.
-        /// </summary>
-        public virtual async Task<Response> DeleteDataFeedAsync(Guid dataFeedId, RequestContext context = null)
+        /// <summary> Delete a data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+#pragma warning disable AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
+        public virtual async Task<Response> DeleteDataFeedAsync(string dataFeedId, RequestContext context)
+#pragma warning restore AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
              => await _serviceRestClient.DeleteDataFeedAsync(dataFeedId, context).ConfigureAwait(false);
 
-        /// <summary>
-        /// Deletes an existing <see cref="DataFeed"/>.
-        /// </summary>
-        public virtual Response DeleteDataFeed(Guid dataFeedId, RequestContext context = null)
+        /// <summary> Delete a data feed. </summary>
+        /// <param name="dataFeedId"> The data feed unique id. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+#pragma warning disable AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
+        public virtual Response DeleteDataFeed(string dataFeedId, RequestContext context)
+#pragma warning restore AZC0002 // DO ensure all service methods, both asynchronous and synchronous, take an optional CancellationToken parameter called cancellationToken.
              => _serviceRestClient.DeleteDataFeed(dataFeedId, context);
 
         /// <summary>

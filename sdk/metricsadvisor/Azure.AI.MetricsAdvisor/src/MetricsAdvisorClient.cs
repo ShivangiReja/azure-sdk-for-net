@@ -214,16 +214,68 @@ namespace Azure.AI.MetricsAdvisor
             return PageableHelpers.CreateEnumerable(FirstPageFunc, NextPageFunc);
         }
 
-        /// <summary>
-        /// Gets the possible values a <see cref="DataFeedDimension"/> can assume for a specified <see cref="DataFeedMetric"/>.
-        /// </summary>
-        public virtual AsyncPageable<BinaryData> GetMetricDimensionValuesAsync(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        /// <summary> List dimension from certain metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="metricId"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="metricId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dimensionName: string (required),
+        ///   dimensionValueFilter: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetMetricDimensionAsync(string metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
             => _serviceRestClient.GetMetricDimensionAsync(metricId, content, skip, maxpagesize, context);
 
-        /// <summary>
-        /// Gets the possible values a <see cref="DataFeedDimension"/> can assume for a specified <see cref="DataFeedMetric"/>.
-        /// </summary>
-        public virtual Pageable<BinaryData> GetMetricDimensionValues(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        /// <summary> List dimension from certain metric. </summary>
+        /// <param name="metricId"> metric unique id. </param>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="metricId"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="metricId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   dimensionName: string (required),
+        ///   dimensionValueFilter: string
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [string]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetMetricDimension(string metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
             => _serviceRestClient.GetMetricDimension(metricId, content, skip, maxpagesize, context);
 
         /// <summary>
@@ -684,16 +736,98 @@ namespace Azure.AI.MetricsAdvisor
             return PageableHelpers.CreateEnumerable(FirstPageFunc, NextPageFunc);
         }
 
-        /// <summary>
-        /// Gets a collection of <see cref="MetricFeedback"/> related to the given metric.
-        /// </summary>
-        public virtual AsyncPageable<BinaryData> GetAllFeedbackAsync(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        /// <summary> List feedback on the given metric. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   metricId: MetricFeedbackFilterMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   },
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   startTime: string (ISO 8601 Format),
+        ///   endTime: string (ISO 8601 Format),
+        ///   timeMode: &quot;MetricTimestamp&quot; | &quot;FeedbackCreatedTime&quot;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///       feedbackId: MetricFeedbackId,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       userPrincipal: string,
+        ///       metricId: MetricFeedbackMetricId,
+        ///       dimensionFilter: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual AsyncPageable<BinaryData> GetMetricFeedbacksAsync(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
             => _serviceRestClient.GetMetricFeedbacksAsync(content, skip, maxpagesize, context);
 
-        /// <summary>
-        /// Gets a collection of <see cref="MetricFeedback"/> related to the given metric.
-        /// </summary>
-        public virtual Pageable<BinaryData> GetAllFeedback(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        /// <summary> List feedback on the given metric. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="skip"> for paging, skipped number. </param>
+        /// <param name="maxpagesize"> the maximum number of items in one page. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   metricId: MetricFeedbackFilterMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   },
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   startTime: string (ISO 8601 Format),
+        ///   endTime: string (ISO 8601 Format),
+        ///   timeMode: &quot;MetricTimestamp&quot; | &quot;FeedbackCreatedTime&quot;
+        /// }
+        /// </code>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   @nextLink: string,
+        ///   value: [
+        ///     {
+        ///       feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///       feedbackId: MetricFeedbackId,
+        ///       createdTime: string (ISO 8601 Format),
+        ///       userPrincipal: string,
+        ///       metricId: MetricFeedbackMetricId,
+        ///       dimensionFilter: {
+        ///         dimension: Dictionary&lt;string, string&gt;
+        ///       }
+        ///     }
+        ///   ]
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Pageable<BinaryData> GetMetricFeedbacks(RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
             => _serviceRestClient.GetMetricFeedbacks(content, skip, maxpagesize, context);
 
         /// <summary>
@@ -776,16 +910,60 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-        /// <summary>
-        /// Adds a <see cref="MetricFeedback"/>.
-        /// </summary>
-        public virtual async Task<Response> AddFeedbackAsync(RequestContent content, RequestContext context = null)
-            => await _serviceRestClient.CreateMetricFeedbackAsync(content, context).ConfigureAwait(false);
+        /// <summary> Create a new metric feedback. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot; (required),
+        ///   feedbackId: MetricFeedbackId,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   userPrincipal: string,
+        ///   metricId: MetricFeedbackMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   } (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> CreateMetricFeedbackAsync(RequestContent content, RequestContext context = null)
+            =>  await _serviceRestClient.CreateMetricFeedbackAsync(content, context).ConfigureAwait(false);
 
-        /// <summary>
-        /// Adds a <see cref="MetricFeedback"/>.
-        /// </summary>
-        public virtual Response AddFeedback(RequestContent content, RequestContext context = null)
+        /// <summary> Create a new metric feedback. </summary>
+        /// <param name="content"> The content to send as the body of the request. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <remarks>
+        /// Schema for <c>Request Body</c>:
+        /// <code>{
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot; (required),
+        ///   feedbackId: MetricFeedbackId,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   userPrincipal: string,
+        ///   metricId: MetricFeedbackMetricId (required),
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt; (required)
+        ///   } (required)
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response CreateMetricFeedback(RequestContent content, RequestContext context = null)
             => _serviceRestClient.CreateMetricFeedback(content, context);
 
         /// <summary>
@@ -844,16 +1022,62 @@ namespace Azure.AI.MetricsAdvisor
             }
         }
 
-        /// <summary>
-        /// Gets a <see cref="MetricFeedback"/>.
-        /// </summary>
-        public virtual async Task<Response> GetFeedbackAsync(Guid feedbackId, RequestContext context = null)
+        /// <summary> Get a metric feedback by its id. </summary>
+        /// <param name="feedbackId"> the unique feedback ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="feedbackId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="feedbackId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   feedbackId: MetricFeedbackId,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   userPrincipal: string,
+        ///   metricId: MetricFeedbackMetricId,
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt;
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual async Task<Response> GetMetricFeedbackAsync(string feedbackId, RequestContext context = null)
             => await _serviceRestClient.GetMetricFeedbackAsync(feedbackId, context).ConfigureAwait(false);
 
-        /// <summary>
-        /// Gets a <see cref="MetricFeedback"/>.
-        /// </summary>
-        public virtual Response GetFeedback(Guid feedbackId, RequestContext context = null)
+        /// <summary> Get a metric feedback by its id. </summary>
+        /// <param name="feedbackId"> the unique feedback ID. </param>
+        /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="feedbackId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="feedbackId"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <remarks>
+        /// Schema for <c>Response Body</c>:
+        /// <code>{
+        ///   feedbackType: &quot;Anomaly&quot; | &quot;ChangePoint&quot; | &quot;Period&quot; | &quot;Comment&quot;,
+        ///   feedbackId: MetricFeedbackId,
+        ///   createdTime: string (ISO 8601 Format),
+        ///   userPrincipal: string,
+        ///   metricId: MetricFeedbackMetricId,
+        ///   dimensionFilter: {
+        ///     dimension: Dictionary&lt;string, string&gt;
+        ///   }
+        /// }
+        /// </code>
+        /// Schema for <c>Response Error</c>:
+        /// <code>{
+        ///   message: string,
+        ///   code: string
+        /// }
+        /// </code>
+        ///
+        /// </remarks>
+        public virtual Response GetMetricFeedback(string feedbackId, RequestContext context = null)
             => _serviceRestClient.GetMetricFeedback(feedbackId, context);
 
         #endregion MetricFeedback

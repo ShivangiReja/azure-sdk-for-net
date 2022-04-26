@@ -306,6 +306,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <summary> Get a metric feedback by its id. </summary>
         /// <param name="feedbackId"> the unique feedback ID. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="feedbackId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="feedbackId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Response Body</c>:
         /// <code>{
@@ -327,8 +329,10 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual async Task<Response> GetMetricFeedbackAsync(Guid feedbackId, RequestContext context = null)
+        public virtual async Task<Response> GetMetricFeedbackAsync(string feedbackId, RequestContext context = null)
         {
+            Argument.AssertNotNullOrEmpty(feedbackId, nameof(feedbackId));
+
             using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetMetricFeedback");
             scope.Start();
             try
@@ -346,6 +350,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <summary> Get a metric feedback by its id. </summary>
         /// <param name="feedbackId"> the unique feedback ID. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="feedbackId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="feedbackId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Response Body</c>:
         /// <code>{
@@ -367,8 +373,10 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual Response GetMetricFeedback(Guid feedbackId, RequestContext context = null)
+        public virtual Response GetMetricFeedback(string feedbackId, RequestContext context = null)
         {
+            Argument.AssertNotNullOrEmpty(feedbackId, nameof(feedbackId));
+
             using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorClient.GetMetricFeedback");
             scope.Start();
             try
@@ -1659,7 +1667,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <param name="skip"> for paging, skipped number. </param>
         /// <param name="maxpagesize"> the maximum number of items in one page. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="metricId"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="metricId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Request Body</c>:
         /// <code>{
@@ -1681,11 +1690,17 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual AsyncPageable<BinaryData> GetMetricDimensionAsync(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        public virtual AsyncPageable<BinaryData> GetMetricDimensionAsync(string metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
+            Argument.AssertNotNullOrEmpty(metricId, nameof(metricId));
             Argument.AssertNotNull(content, nameof(content));
 
-            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, "MetricsAdvisorClient.GetMetricDimension");
+            return GetMetricDimensionImplementationAsync("MetricsAdvisorClient.GetMetricDimension", metricId, content, skip, maxpagesize, context);
+        }
+
+        private AsyncPageable<BinaryData> GetMetricDimensionImplementationAsync(string diagnosticsScopeName, string metricId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            return PageableHelpers.CreateAsyncPageable(CreateEnumerableAsync, ClientDiagnostics, diagnosticsScopeName);
             async IAsyncEnumerable<Page<BinaryData>> CreateEnumerableAsync(string nextLink, int? pageSizeHint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
             {
                 do
@@ -1706,7 +1721,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <param name="skip"> for paging, skipped number. </param>
         /// <param name="maxpagesize"> the maximum number of items in one page. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="metricId"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="metricId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Request Body</c>:
         /// <code>{
@@ -1728,11 +1744,17 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual Pageable<BinaryData> GetMetricDimension(Guid metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
+        public virtual Pageable<BinaryData> GetMetricDimension(string metricId, RequestContent content, int? skip = null, int? maxpagesize = null, RequestContext context = null)
         {
+            Argument.AssertNotNullOrEmpty(metricId, nameof(metricId));
             Argument.AssertNotNull(content, nameof(content));
 
-            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, "MetricsAdvisorClient.GetMetricDimension");
+            return GetMetricDimensionImplementation("MetricsAdvisorClient.GetMetricDimension", metricId, content, skip, maxpagesize, context);
+        }
+
+        private Pageable<BinaryData> GetMetricDimensionImplementation(string diagnosticsScopeName, string metricId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        {
+            return PageableHelpers.CreatePageable(CreateEnumerable, ClientDiagnostics, diagnosticsScopeName);
             IEnumerable<Page<BinaryData>> CreateEnumerable(string nextLink, int? pageSizeHint)
             {
                 do
@@ -2850,7 +2872,7 @@ namespace Azure.AI.MetricsAdvisor
             return message;
         }
 
-        internal HttpMessage CreateGetMetricFeedbackRequest(Guid feedbackId, RequestContext context)
+        internal HttpMessage CreateGetMetricFeedbackRequest(string feedbackId, RequestContext context)
         {
             var message = _pipeline.CreateMessage(context, ResponseClassifier200);
             var request = message.Request;
@@ -2949,7 +2971,7 @@ namespace Azure.AI.MetricsAdvisor
             return message;
         }
 
-        internal HttpMessage CreateGetMetricDimensionRequest(Guid metricId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
+        internal HttpMessage CreateGetMetricDimensionRequest(string metricId, RequestContent content, int? skip, int? maxpagesize, RequestContext context)
         {
             var message = _pipeline.CreateMessage(context, ResponseClassifier200);
             var request = message.Request;
@@ -5027,6 +5049,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <summary> Get a data feed by its id. </summary>
         /// <param name="dataFeedId"> The data feed unique id. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Response Body</c>:
         /// <code>{
@@ -5082,8 +5106,10 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual async Task<Response> GetDataFeedByIdAsync(Guid dataFeedId, RequestContext context = null)
+        public virtual async Task<Response> GetDataFeedByIdAsync(string dataFeedId, RequestContext context = null)
         {
+            Argument.AssertNotNullOrEmpty(dataFeedId, nameof(dataFeedId));
+
             using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetDataFeedById");
             scope.Start();
             try
@@ -5101,6 +5127,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <summary> Get a data feed by its id. </summary>
         /// <param name="dataFeedId"> The data feed unique id. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Response Body</c>:
         /// <code>{
@@ -5156,8 +5184,10 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual Response GetDataFeedById(Guid dataFeedId, RequestContext context = null)
+        public virtual Response GetDataFeedById(string dataFeedId, RequestContext context = null)
         {
+            Argument.AssertNotNullOrEmpty(dataFeedId, nameof(dataFeedId));
+
             using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.GetDataFeedById");
             scope.Start();
             try
@@ -5176,7 +5206,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <param name="dataFeedId"> The data feed unique id. </param>
         /// <param name="content"> The content to send as the body of the request. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Request Body</c>:
         /// <code>{
@@ -5258,8 +5289,9 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual async Task<Response> UpdateDataFeedAsync(Guid dataFeedId, RequestContent content, RequestContext context = null)
+        public virtual async Task<Response> UpdateDataFeedAsync(string dataFeedId, RequestContent content, RequestContext context = null)
         {
+            Argument.AssertNotNullOrEmpty(dataFeedId, nameof(dataFeedId));
             Argument.AssertNotNull(content, nameof(content));
 
             using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateDataFeed");
@@ -5280,7 +5312,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <param name="dataFeedId"> The data feed unique id. </param>
         /// <param name="content"> The content to send as the body of the request. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
-        /// <exception cref="ArgumentNullException"> <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> or <paramref name="content"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Request Body</c>:
         /// <code>{
@@ -5362,8 +5395,9 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual Response UpdateDataFeed(Guid dataFeedId, RequestContent content, RequestContext context = null)
+        public virtual Response UpdateDataFeed(string dataFeedId, RequestContent content, RequestContext context = null)
         {
+            Argument.AssertNotNullOrEmpty(dataFeedId, nameof(dataFeedId));
             Argument.AssertNotNull(content, nameof(content));
 
             using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.UpdateDataFeed");
@@ -5383,6 +5417,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <summary> Delete a data feed. </summary>
         /// <param name="dataFeedId"> The data feed unique id. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Response Error</c>:
         /// <code>{
@@ -5392,8 +5428,10 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual async Task<Response> DeleteDataFeedAsync(Guid dataFeedId, RequestContext context = null)
+        public virtual async Task<Response> DeleteDataFeedAsync(string dataFeedId, RequestContext context)
         {
+            Argument.AssertNotNullOrEmpty(dataFeedId, nameof(dataFeedId));
+
             using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteDataFeed");
             scope.Start();
             try
@@ -5411,6 +5449,8 @@ namespace Azure.AI.MetricsAdvisor
         /// <summary> Delete a data feed. </summary>
         /// <param name="dataFeedId"> The data feed unique id. </param>
         /// <param name="context"> The request context, which can override default behaviors on the request on a per-call basis. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="dataFeedId"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="dataFeedId"/> is an empty string, and was expected to be non-empty. </exception>
         /// <remarks>
         /// Schema for <c>Response Error</c>:
         /// <code>{
@@ -5420,8 +5460,10 @@ namespace Azure.AI.MetricsAdvisor
         /// </code>
         ///
         /// </remarks>
-        public virtual Response DeleteDataFeed(Guid dataFeedId, RequestContext context = null)
+        public virtual Response DeleteDataFeed(string dataFeedId, RequestContext context)
         {
+            Argument.AssertNotNullOrEmpty(dataFeedId, nameof(dataFeedId));
+
             using var scope = ClientDiagnostics.CreateScope("MetricsAdvisorAdministrationClient.DeleteDataFeed");
             scope.Start();
             try
@@ -6981,7 +7023,7 @@ namespace Azure.AI.MetricsAdvisor
             return message;
         }
 
-        internal HttpMessage CreateGetDataFeedByIdRequest(Guid dataFeedId, RequestContext context)
+        internal HttpMessage CreateGetDataFeedByIdRequest(string dataFeedId, RequestContext context)
         {
             var message = _pipeline.CreateMessage(context, ResponseClassifier200);
             var request = message.Request;
@@ -6996,7 +7038,7 @@ namespace Azure.AI.MetricsAdvisor
             return message;
         }
 
-        internal HttpMessage CreateUpdateDataFeedRequest(Guid dataFeedId, RequestContent content, RequestContext context)
+        internal HttpMessage CreateUpdateDataFeedRequest(string dataFeedId, RequestContent content, RequestContext context)
         {
             var message = _pipeline.CreateMessage(context, ResponseClassifier200);
             var request = message.Request;
@@ -7013,7 +7055,7 @@ namespace Azure.AI.MetricsAdvisor
             return message;
         }
 
-        internal HttpMessage CreateDeleteDataFeedRequest(Guid dataFeedId, RequestContext context)
+        internal HttpMessage CreateDeleteDataFeedRequest(string dataFeedId, RequestContext context)
         {
             var message = _pipeline.CreateMessage(context, ResponseClassifier204);
             var request = message.Request;
