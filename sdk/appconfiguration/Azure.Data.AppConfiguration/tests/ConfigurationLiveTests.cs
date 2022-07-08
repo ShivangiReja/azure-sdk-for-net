@@ -33,6 +33,7 @@ namespace Azure.Data.AppConfiguration.Tests
                 throw new TestRecordingMismatchException();
             }
             var options = InstrumentClientOptions(new ConfigurationClientOptions());
+            options.AddPolicy(new CustomRequestPolicy(), HttpPipelinePosition.PerCall);
             return InstrumentClient(new ConfigurationClient(TestEnvironment.ConnectionString, options));
         }
 
