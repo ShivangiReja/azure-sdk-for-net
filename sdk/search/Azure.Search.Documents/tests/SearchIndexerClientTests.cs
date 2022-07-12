@@ -174,6 +174,26 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
+        public async Task TestCosmosDBDataSourceConnection()
+        {
+            await using SearchResources resources = await SearchResources.CreateWithCosmosDBAndIndexAsync(this);
+            SearchIndexerClient client = resources.GetIndexerClient();
+
+
+            var connectionString = "ResourceId=/subscriptions/[subscription-id]/resourceGroups/[rg-name]/providers/Microsoft.DocumentDB/databaseAccounts/[cosmos-account-name];";
+            var userAssignedIdentity = "/subscriptions/[subscription-id]/resourcegroups/[rg-name]/providers/Microsoft.ManagedIdentity/userAssignedIdentities/[my-user-managed-identity-name]";
+            string connectionName = Recording.Random.GetName();
+
+            var ds = new SearchIndexerDataSourceConnection(connectionName, SearchIndexerDataSourceType.CosmosDb, connectionString, new SearchIndexerDataContainer("TestContainer"))
+            {
+                Identity = new SearchIndexerDataUserAssignedIdentity(userAssignedIdentity)
+            };
+
+            SearchIndexerDataSourceConnection createdConnection = await client.CreateDataSourceConnectionAsync(ds);
+            Assert.IsNull(createdConnection.ConnectionString);
+        }
+
+            [Test]
         public async Task CrudDataSourceConnection()
         {
             await using SearchResources resources = await SearchResources.CreateWithBlobStorageAndIndexAsync(this);

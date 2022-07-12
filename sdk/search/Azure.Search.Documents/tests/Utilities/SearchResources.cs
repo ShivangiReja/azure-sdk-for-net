@@ -13,6 +13,7 @@ using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
 using Azure.Storage.Blobs;
+using Microsoft.Azure.Cosmos;
 using NUnit.Framework;
 
 namespace Azure.Search.Documents.Tests
@@ -256,6 +257,17 @@ namespace Azure.Search.Documents.Tests
             return resources;
         }
 
+        public static async Task<SearchResources> CreateWithCosmosDBAndIndexAsync(SearchTestBase fixture, bool populate = false)
+        {
+            var resources = new SearchResources(fixture);
+
+            // Keep them ordered or records may not match seeded random names.
+            await resources.CreateSearchServiceAndIndexAsync();
+            await resources.CreateHotelsCosmodDBContainerAsync(populate);
+
+            return resources;
+        }
+
         /// <summary>
         /// Get a shared Search Service resource with a Hotel index and sample
         /// data set.  See TestResources.Data.cs for the index schema and data
@@ -423,6 +435,46 @@ namespace Azure.Search.Documents.Tests
                 await client.IndexDocumentsAsync(batch);
 
                 await WaitForIndexingAsync();
+            }
+
+            return this;
+        }
+
+        private async Task<SearchResources> CreateHotelsCosmodDBContainerAsync(bool populate)
+        {
+            if (TestFixture.Mode != RecordedTestMode.Playback)
+            {
+                using CancellationTokenSource cts = new CancellationTokenSource(Timeout);
+
+                string endpointUrl = "My_ENDPOINT_URL";
+                string authorizationKey = "MY_AUTHORIZATION_KEY";
+                CosmosClient cosmosClient = new CosmosClient(endpointUrl, authorizationKey, new CosmosClientOptions() { AllowBulkExecution = true });
+                Container container = cosmosClient.GetContainer("TestDatabse", "TestContainer");
+
+                if (populate)
+                {
+                    Hotel[] hotels = TestDocuments;
+                    List<Task> tasks = new List<Task>(hotels.Length);
+
+                    foreach (Hotel hotel in hotels)
+                    {
+                        Task task = Task.Run(async () =>
+                        {
+                            using MemoryStream stream = new MemoryStream();
+                            await JsonSerializer
+                                .SerializeAsync(stream, hotel, JsonSerialization.SerializerOptions, cts.Token)
+                                .ConfigureAwait(false);
+
+                            stream.Seek(0, SeekOrigin.Begin);
+
+                            var response = await container.CreateItemStreamAsync(stream, new PartitionKey(hotel.HotelName)).ConfigureAwait(false);
+                        });
+
+                        tasks.Add(task);
+                    }
+
+                    await Task.WhenAll(tasks);
+                }
             }
 
             return this;

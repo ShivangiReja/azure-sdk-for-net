@@ -26,6 +26,7 @@
     <PackageReference Update="Microsoft.ServiceFabric.Services" Version="3.3.624" />
     <PackageReference Update="Microsoft.ServiceFabric" Version="6.4.624" />
     <PackageReference Update="Microsoft.Spatial" Version="7.5.3" />
+    <PackageReference Update="Microsoft.Azure.Cosmos" Version="3.29.0" />
     <PackageReference Update="Microsoft.AspNetCore.Http" Version="2.1.22" />
 
     <PackageReference Update="Newtonsoft.Json" Version="10.0.3" />
@@ -132,6 +133,7 @@
     <PackageReference Update="Microsoft.Azure.WebJobs" Version="3.0.33" />
     <PackageReference Update="Microsoft.Azure.WebJobs.Sources" Version="3.0.30" />
     <PackageReference Update="Microsoft.Spatial" Version="7.5.3" />
+    <PackageReference Update="Microsoft.Azure.Cosmos" Version="3.29.0" />
     <PackageReference Update="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
@@ -234,6 +236,7 @@
     <PackageReference Update="Microsoft.Rest.ClientRuntime.Azure.TestFramework" Version="[1.7.7, 2.0.0)" />
     <PackageReference Update="Microsoft.ServiceFabric.Data" Version="3.3.624" />
     <PackageReference Update="Microsoft.Spatial" Version="7.5.3" />
+    <PackageReference Update="Microsoft.Azure.Cosmos" Version="3.29.0" />
     <PackageReference Update="Moq" Version="4.10.1" />
     <PackageReference Update="MSTest.TestAdapter" Version="1.3.2" />
     <PackageReference Update="MSTest.TestFramework" Version="1.3.2" />
