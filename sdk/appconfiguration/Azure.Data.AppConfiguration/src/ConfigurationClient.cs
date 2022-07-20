@@ -16,9 +16,7 @@ namespace Azure.Data.AppConfiguration
     /// </summary>
     public partial class ConfigurationClient
     {
-        private readonly Uri _endpoint;
         private readonly SyncTokenPolicy _syncTokenPolicy;
-        private readonly HttpPipeline _pipeline;
         private readonly ClientDiagnostics _clientDiagnostics;
 
         /// <summary>
@@ -88,7 +86,7 @@ namespace Azure.Data.AppConfiguration
         private static HttpPipeline CreatePipeline(ConfigurationClientOptions options, HttpPipelinePolicy authenticationPolicy, HttpPipelinePolicy syncTokenPolicy)
         {
             return HttpPipelineBuilder.Build(options,
-                new HttpPipelinePolicy[] {new CustomHeadersPolicy(), new ApiVersionPolicy(options.GetVersionString())},
+                new HttpPipelinePolicy[] {new CustomHeadersPolicy(), new ApiVersionPolicy(options.Version) },
                 new HttpPipelinePolicy[] {authenticationPolicy, syncTokenPolicy},
                 new ResponseClassifier());
         }

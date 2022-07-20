@@ -31,12 +31,6 @@ namespace Azure.Data.AppConfiguration
         }
 
         /// <summary>
-        /// Gets the <see cref="ServiceVersion"/> of the service API used when
-        /// making requests.
-        /// </summary>
-        internal ServiceVersion Version { get; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurationClientOptions"/>
         /// class.
         /// </summary>
