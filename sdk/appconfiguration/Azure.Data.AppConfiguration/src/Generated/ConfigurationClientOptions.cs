@@ -15,13 +15,6 @@ namespace Azure.Data.AppConfiguration
     {
         private const ServiceVersion LatestVersion = ServiceVersion.V1_0;
 
-        /// <summary> The version of the service to use. </summary>
-        public enum ServiceVersion
-        {
-            /// <summary> Service version "1.0". </summary>
-            V1_0 = 1,
-        }
-
         internal string Version { get; }
     }
 }
