@@ -280,7 +280,8 @@ namespace Azure.Search.Documents.Tests
                     null,
                     new SearchOptions
                     {
-                        Filter = "address/city eq 'New york'"
+                        Filter = "address/city eq 'New york'",
+                        SearchFields = new[] { "address/city" }
                     });
             await AssertKeysEqual(
                 response,
