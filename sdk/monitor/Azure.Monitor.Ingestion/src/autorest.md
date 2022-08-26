@@ -27,3 +27,11 @@ directive:
   where: $.parameters.Endpoint
   transform: $.format = "url";
 ```
+
+### Change paramter default value in Upload method
+``` yaml
+directive:
+- from: swagger-document
+  where: $.paths["/dataCollectionRules/{ruleId}/streams/{stream}"].post.parameters[3]
+  transform: $["x-ms-client-default"] = "gzip";
+```
