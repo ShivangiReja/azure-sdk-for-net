@@ -10,6 +10,7 @@ input-file:
 namespace: Azure.Data.AppConfiguration
 title: ConfigurationClient
 public-clients: true
+generation1-convenience-client: true
 ```
 
 ### Change Endpoint type to Uri
