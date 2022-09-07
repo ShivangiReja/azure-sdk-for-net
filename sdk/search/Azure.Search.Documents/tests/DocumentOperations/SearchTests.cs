@@ -280,8 +280,25 @@ namespace Azure.Search.Documents.Tests
                     null,
                     new SearchOptions
                     {
-                        Filter = "address/city eq 'New york'",
-                        SearchFields = new[] { "address/city" }
+                        Filter = "hotelName eq 'd''octobre'",
+                    });
+            await AssertKeysEqual(
+                response,
+                h => h.Document.HotelId,
+                "5", "9");
+        }
+
+        [Test]
+        public async Task TestNormalizerWithSearchField()
+        {
+            await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
+            Response<SearchResults<Hotel>> response =
+                await resources.GetQueryClient().SearchAsync<Hotel>(
+                    null,
+                    new SearchOptions
+                    {
+                        Filter = "hotelName eq 'd''octobre'",
+                        SearchFields = new[] { "hotelName" }
                     });
             await AssertKeysEqual(
                 response,

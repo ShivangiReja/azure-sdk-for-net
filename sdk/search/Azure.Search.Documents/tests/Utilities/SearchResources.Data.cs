@@ -35,7 +35,7 @@ namespace Azure.Search.Documents.Tests
                 Fields =
                 {
                     new SimpleField("hotelId", SearchFieldDataType.String) { IsKey = true, IsFilterable = true, IsSortable = true, IsFacetable = true },
-                    new SearchableField("hotelName") { IsFilterable = true, IsSortable = true },
+                    new SearchableField("hotelName") { IsFilterable = true, IsSortable = true, AnalyzerName = LexicalAnalyzerName.EnMicrosoft, NormalizerName = LexicalNormalizerName.Values.Elision},
                     new SearchableField("description") { AnalyzerName = LexicalAnalyzerName.EnLucene },
                     new SearchableField("descriptionFr") { AnalyzerName = LexicalAnalyzerName.FrLucene },
                     new SearchableField("category") { IsFilterable = true, IsSortable = true, IsFacetable = true },
@@ -168,7 +168,7 @@ namespace Azure.Search.Documents.Tests
                     HotelId = "5",
                     Description = "Another good hotel",
                     DescriptionFr = "Un autre bon hôtel",
-                    HotelName = "Comfy Place",
+                    HotelName = "d'octobre",
                     Category = "Budget",
                     Tags = new[] { "wifi", "budget" },
                     ParkingIncluded = true,
@@ -208,7 +208,7 @@ namespace Azure.Search.Documents.Tests
                 new Hotel()
                 {
                     HotelId = "9",
-                    HotelName = "Secret Point Motel",
+                    HotelName = "octobre",
                     Description = "The hotel is ideally located on the main commercial artery of the city in the heart of New York. A few minutes away is Time's Square and the historic centre of the city, as well as other places of interest that make New York one of America's most attractive and cosmopolitan cities.",
                     DescriptionFr = "L'hôtel est idéalement situé sur la principale artère commerciale de la ville en plein cœur de New York. A quelques minutes se trouve la place du temps et le centre historique de la ville, ainsi que d'autres lieux d'intérêt qui font de New York l'une des villes les plus attractives et cosmopolites de l'Amérique.",
                     Category = "Boutique",
