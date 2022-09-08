@@ -19,7 +19,7 @@ namespace Azure.Search.Documents.Tests
     public class SearchTests : SearchTestBase
     {
         public SearchTests(bool async, SearchClientOptions.ServiceVersion serviceVersion)
-            : base(async, serviceVersion, null /* RecordedTestMode.Record /* to re-record */)
+            : base(async, SearchClientOptions.ServiceVersion.V2021_04_30_Preview, null /* RecordedTestMode.Record /* to re-record */)
         {
         }
 
@@ -307,9 +307,26 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
-        public async Task NormalizerWithSearchText()
+        public async Task TestAnalyzer()
         {
             await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
+            SearchIndex index = SearchResources.GetHotelIndex(resources.IndexName);
+
+            SearchIndexClient client = resources.GetIndexClient();
+            CustomAnalyzer customAnalyzer = new CustomAnalyzer(
+                "#Microsoft.Azure.Search.CustomAnalyzer",
+                "elision-analyzer",
+                LexicalTokenizerName.MicrosoftLanguageStemmingTokenizer,
+                new List<TokenFilterName>() { TokenFilterName.Elision },
+                new List<string>());
+
+            index.Analyzers.Add(customAnalyzer);
+
+            await client.CreateOrUpdateIndexAsync(
+                index,
+                allowIndexDowntime: true,
+                onlyIfUnchanged: true);
+
             Response<SearchResults<Hotel>> response =
                 await resources.GetQueryClient().SearchAsync<Hotel>(
                     "d'octobre",
