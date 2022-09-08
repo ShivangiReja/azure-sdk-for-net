@@ -307,6 +307,43 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
+        public async Task NormalizerWithSearchText()
+        {
+            await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
+            Response<SearchResults<Hotel>> response =
+                await resources.GetQueryClient().SearchAsync<Hotel>(
+                    "d'octobre",
+                    new SearchOptions
+                    {
+                        SearchMode = SearchMode.Any,
+                        QueryType = SearchQueryType.Simple,
+                    });
+            await AssertKeysEqual(
+                response,
+                h => h.Document.HotelId,
+                "5", "9");
+        }
+
+        [Test]
+        public async Task NormalizerWithSearchField()
+        {
+            await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
+            Response<SearchResults<Hotel>> response =
+                await resources.GetQueryClient().SearchAsync<Hotel>(
+                    "d'octobre",
+                    new SearchOptions
+                    {
+                        SearchMode = SearchMode.Any,
+                        QueryType = SearchQueryType.Simple,
+                        SearchFields = new[] { "hotelName" }
+                    });
+            await AssertKeysEqual(
+                response,
+                h => h.Document.HotelId,
+                "5", "9");
+        }
+
+        [Test]
         public async Task HitHighlighting()
         {
             const string Description = "description";
