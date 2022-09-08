@@ -307,26 +307,9 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
-        public async Task TestAnalyzer()
+        public async Task Normalizer()
         {
             await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
-            SearchIndex index = SearchResources.GetHotelIndex(resources.IndexName);
-
-            SearchIndexClient client = resources.GetIndexClient();
-            CustomAnalyzer customAnalyzer = new CustomAnalyzer(
-                "#Microsoft.Azure.Search.CustomAnalyzer",
-                "elision-analyzer",
-                LexicalTokenizerName.MicrosoftLanguageStemmingTokenizer,
-                new List<TokenFilterName>() { TokenFilterName.Elision },
-                new List<string>());
-
-            index.Analyzers.Add(customAnalyzer);
-
-            await client.CreateOrUpdateIndexAsync(
-                index,
-                allowIndexDowntime: true,
-                onlyIfUnchanged: true);
-
             Response<SearchResults<Hotel>> response =
                 await resources.GetQueryClient().SearchAsync<Hotel>(
                     "d'octobre",
@@ -338,7 +321,7 @@ namespace Azure.Search.Documents.Tests
             await AssertKeysEqual(
                 response,
                 h => h.Document.HotelId,
-                "5", "9");
+                "5");
         }
 
         [Test]
@@ -357,7 +340,7 @@ namespace Azure.Search.Documents.Tests
             await AssertKeysEqual(
                 response,
                 h => h.Document.HotelId,
-                "5", "9");
+                "5");
         }
 
         [Test]
