@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Core.GeoJson;
@@ -307,11 +308,35 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
-        public async Task Normalizer()
+        public async Task TestAnalyzer()
         {
-            await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
+            await using SearchResources resources = SearchResources.CreateWithNoIndexes(this);
+
+            var indexName = SearchResources.Random.GetName(8);
+            SearchIndexClient searchIndexClient = new SearchIndexClient(resources.Endpoint, new AzureKeyCredential(resources.PrimaryApiKey));
+            var index = SearchResources.GetHotelIndex(indexName);
+
+            CustomAnalyzer customAnalyzer = new CustomAnalyzer(
+                "#Microsoft.Azure.Search.CustomAnalyzer",
+                "elision-analyzer",
+                LexicalTokenizerName.MicrosoftLanguageStemmingTokenizer,
+                new List<TokenFilterName>() { TokenFilterName.Elision },
+                new List<string>());
+            index.Analyzers.Add(customAnalyzer);
+            index.Fields[1].AnalyzerName = "elision-analyzer";
+            await searchIndexClient.CreateIndexAsync(index);
+
+            // Give the index time to stabilize before running tests.
+            await resources.WaitForIndexCreationAsync();
+
+            SearchClient client = new SearchClient(resources.Endpoint, indexName, new AzureKeyCredential(resources.PrimaryApiKey));
+            IndexDocumentsBatch<Hotel> batch = IndexDocumentsBatch.Upload(SearchResources.TestDocuments);
+            await client.IndexDocumentsAsync(batch);
+
+            await resources.WaitForIndexingAsync();
+
             Response<SearchResults<Hotel>> response =
-                await resources.GetQueryClient().SearchAsync<Hotel>(
+                await client.SearchAsync<Hotel>(
                     "d'octobre",
                     new SearchOptions
                     {
@@ -321,15 +346,39 @@ namespace Azure.Search.Documents.Tests
             await AssertKeysEqual(
                 response,
                 h => h.Document.HotelId,
-                "5");
+                "5", "9");
         }
 
         [Test]
-        public async Task NormalizerWithSearchField()
+        public async Task TestAnalyzerWithSearchField()
         {
-            await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
+            await using SearchResources resources = SearchResources.CreateWithNoIndexes(this);
+
+            var indexName = SearchResources.Random.GetName(8);
+            SearchIndexClient searchIndexClient = new SearchIndexClient(resources.Endpoint, new AzureKeyCredential(resources.PrimaryApiKey));
+            var index = SearchResources.GetHotelIndex(indexName);
+
+            CustomAnalyzer customAnalyzer = new CustomAnalyzer(
+                "#Microsoft.Azure.Search.CustomAnalyzer",
+                "elision-analyzer",
+                LexicalTokenizerName.MicrosoftLanguageStemmingTokenizer,
+                new List<TokenFilterName>() { TokenFilterName.Elision },
+                new List<string>());
+            index.Analyzers.Add(customAnalyzer);
+            index.Fields[1].AnalyzerName = "elision-analyzer";
+            await searchIndexClient.CreateIndexAsync(index);
+
+            // Give the index time to stabilize before running tests.
+            await resources.WaitForIndexCreationAsync();
+
+            SearchClient client = new SearchClient(resources.Endpoint, indexName, new AzureKeyCredential(resources.PrimaryApiKey));
+            IndexDocumentsBatch<Hotel> batch = IndexDocumentsBatch.Upload(SearchResources.TestDocuments);
+            await client.IndexDocumentsAsync(batch);
+
+            await resources.WaitForIndexingAsync();
+
             Response<SearchResults<Hotel>> response =
-                await resources.GetQueryClient().SearchAsync<Hotel>(
+                await client.SearchAsync<Hotel>(
                     "d'octobre",
                     new SearchOptions
                     {
@@ -340,7 +389,7 @@ namespace Azure.Search.Documents.Tests
             await AssertKeysEqual(
                 response,
                 h => h.Document.HotelId,
-                "5");
+                "5", "9");
         }
 
         [Test]

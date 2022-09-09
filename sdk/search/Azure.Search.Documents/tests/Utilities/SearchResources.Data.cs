@@ -35,7 +35,7 @@ namespace Azure.Search.Documents.Tests
                 Fields =
                 {
                     new SimpleField("hotelId", SearchFieldDataType.String) { IsKey = true, IsFilterable = true, IsSortable = true, IsFacetable = true },
-                    new SearchableField("hotelName") { IsFilterable = true, IsSortable = true, IsFacetable = true, AnalyzerName = LexicalAnalyzerName.EnMicrosoft, NormalizerName = LexicalNormalizerName.Values.Elision},
+                    new SearchableField("hotelName") { IsFilterable = true, IsSortable = true, IsFacetable = true, NormalizerName = LexicalNormalizerName.Values.Elision},
                     new SearchableField("description") { AnalyzerName = LexicalAnalyzerName.EnLucene },
                     new SearchableField("descriptionFr") { AnalyzerName = LexicalAnalyzerName.FrLucene },
                     new SearchableField("category") { IsFilterable = true, IsSortable = true, IsFacetable = true },
@@ -72,10 +72,10 @@ namespace Azure.Search.Documents.Tests
                         },
                     },
                 },
-                Suggesters =
-                {
-                    new SearchSuggester("sg", "description", "hotelName"),
-                },
+                //Suggesters =
+                //{
+                //    new SearchSuggester("sg", "description", "hotelName"),
+                //},
                 ScoringProfiles =
                 {
                     new ScoringProfile("nearest")
