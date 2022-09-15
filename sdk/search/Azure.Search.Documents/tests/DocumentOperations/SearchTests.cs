@@ -8,11 +8,14 @@ using System.Linq;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Azure.Core;
 using Azure.Core.GeoJson;
 using Azure.Core.Serialization;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Azure.Search.Documents.Models;
+using Azure.Search.Documents.Tests.Utilities;
+using Azure.Storage.Blobs;
 using NUnit.Framework;
 
 namespace Azure.Search.Documents.Tests
@@ -48,6 +51,7 @@ namespace Azure.Search.Documents.Tests
             string expectedField,
             int expectedCount)
         {
+            facets.Clear();
             Assert.True(facets.ContainsKey(expectedField), $"Expecting facets to contain {expectedField}");
             ICollection<FacetResult> fieldFacets = facets[expectedField];
             Assert.AreEqual(expectedCount, fieldFacets.Count);
@@ -293,6 +297,10 @@ namespace Azure.Search.Documents.Tests
         public async Task TestNormalizerWithSearchField()
         {
             await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
+            SearchClientOptions options = new();
+            options.AddPolicy(new UnsafeForceHttpPolicy(), HttpPipelinePosition.PerCall);
+
+            Uri Endpoint = new Uri($"http://{resources.SearchServiceName}.{resources.SearchEndpointSuffix}");
             Response<SearchResults<Hotel>> response =
                 await resources.GetQueryClient().SearchAsync<Hotel>(
                     null,
@@ -663,6 +671,90 @@ namespace Azure.Search.Documents.Tests
         /**/
 
         [Test]
+        public async Task TestRangeFacets()
+        {
+            await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
+
+            Response<SearchResults<SearchDocument>> response =
+                await resources.GetQueryClient().SearchAsync<SearchDocument>(
+                    "*",
+                    new SearchOptions
+                    {
+                        Facets = new[]
+                        {
+                            "rooms/baseRate,values:5|8|10",
+                        }
+                    });
+
+            await AssertKeysContains(
+                response,
+                h => (string)h.Document["HotelId"],
+                SearchResources.TestDocuments.Select(h => h.HotelId).ToArray());
+
+            Assert.IsNotNull(response.Value.Facets);
+            AssertFacetsEqual(
+                GetFacetsForField(response.Value.Facets, "rooms/baseRate", 4),
+                MakeRangeFacet(count: 1, from: null, to: 5.0),
+                MakeRangeFacet(count: 1, from: 5.0, to: 8.0),
+                MakeRangeFacet(count: 1, from: 8.0, to: 10.0),
+                MakeRangeFacet(count: 0, from: 10.0, to: null));
+
+            // Check strongly typed range facets
+            ICollection<FacetResult> facets = GetFacetsForField(response.Value.Facets, "rooms/baseRate", 4);
+            RangeFacetResult<double> first = facets.ElementAt(0).AsRangeFacetResult<double>();
+            Assert.AreEqual(1, first.Count);
+            Assert.AreEqual(5, first.To);
+            RangeFacetResult<double> second = facets.ElementAt(1).AsRangeFacetResult<double>();
+            Assert.AreEqual(1, second.Count);
+            Assert.AreEqual(5, second.From);
+            Assert.AreEqual(8, second.To);
+            RangeFacetResult<double> last = facets.ElementAt(3).AsRangeFacetResult<double>();
+            Assert.AreEqual(null, first.From);
+            Assert.AreEqual(null, last.To);
+        }
+
+        // ----------------------Search Test -------------------------------
+        [Test]
+        public async Task TestSearch()
+        {
+            await using SearchResources resources = SearchResources.CreateWithNoIndexes(this);
+
+            var indexName = SearchResources.Random.GetName(8);
+            SearchIndexClient searchIndexClient = new SearchIndexClient(resources.Endpoint, new AzureKeyCredential(resources.PrimaryApiKey));
+            var index = SearchResources.GetHotelIndex(indexName);
+
+            await searchIndexClient.CreateIndexAsync(index);
+
+            // Give the index time to stabilize before running tests.
+            await resources.WaitForIndexCreationAsync();
+
+            SearchClientOptions options = new();
+            options.AddPolicy(new UnsafeForceHttpPolicy(), HttpPipelinePosition.PerCall);
+            Uri Endpoint = new Uri($"http://{resources.SearchServiceName}.{resources.SearchEndpointSuffix}");
+            SearchClient client = new SearchClient(Endpoint, indexName, new AzureKeyCredential(resources.PrimaryApiKey), options);
+
+            IndexDocumentsBatch<Hotel> batch = IndexDocumentsBatch.Upload(SearchResources.TestDocuments);
+            await client.IndexDocumentsAsync(batch);
+
+            await resources.WaitForIndexingAsync();
+
+            Response<SearchResults<Hotel>> response =
+                await client.SearchAsync<Hotel>(
+                    null,
+                    new SearchOptions
+                    {
+                        Filter = "hotelName eq 'd''octobre'",
+                        SearchFields = new[] { "hotelName" }
+                    });
+            await AssertKeysEqual(
+                response,
+                h => h.Document.HotelId,
+                "5", "9");
+        }
+
+        // ------------------------------------------------------------------------------------
+
+        [Test]
         public async Task RangeFacets()
         {
             await using SearchResources resources = await SearchResources.GetSharedHotelsIndexAsync(this);
@@ -674,9 +766,15 @@ namespace Azure.Search.Documents.Tests
                         Facets = new[]
                         {
                             "rooms/baseRate,values:5|8|10",
-                            "lastRenovationDate,values:2000-01-01T00:00:00Z"
                         }
                     });
+            // Not retuning count
+            string result = JsonSerializer.Serialize(response);
+
+            // Returning count
+            using JsonDocument doc = JsonDocument.Parse(response.GetRawResponse().Content.ToMemory());
+            string facetResult = doc.RootElement.GetProperty("@search.facets").ToString();
+
             await AssertKeysContains(
                 response,
                 h => h.Document.HotelId,
@@ -695,17 +793,17 @@ namespace Azure.Search.Documents.Tests
                 MakeRangeFacet(count: 2, from: new DateTimeOffset(2000, 1, 1, 0, 0, 0, TimeSpan.Zero), to: null));
 
             // Check strongly typed range facets
-            ICollection<FacetResult> facets = GetFacetsForField(response.Value.Facets, "rooms/baseRate", 4);
-            RangeFacetResult<double> first = facets.ElementAt(0).AsRangeFacetResult<double>();
-            Assert.AreEqual(1, first.Count);
-            Assert.AreEqual(5, first.To);
-            RangeFacetResult<double> second = facets.ElementAt(1).AsRangeFacetResult<double>();
-            Assert.AreEqual(1, second.Count);
-            Assert.AreEqual(5, second.From);
-            Assert.AreEqual(8, second.To);
-            RangeFacetResult<double> last = facets.ElementAt(3).AsRangeFacetResult<double>();
-            Assert.AreEqual(null, first.From);
-            Assert.AreEqual(null, last.To);
+            //ICollection<FacetResult> facets = GetFacetsForField(response.Value.Facets, "rooms/baseRate", 4);
+            //RangeFacetResult<double> first = facets.ElementAt(0).AsRangeFacetResult<double>();
+            //Assert.AreEqual(1, first.Count);
+            //Assert.AreEqual(5, first.To);
+            //RangeFacetResult<double> second = facets.ElementAt(1).AsRangeFacetResult<double>();
+            //Assert.AreEqual(1, second.Count);
+            //Assert.AreEqual(5, second.From);
+            //Assert.AreEqual(8, second.To);
+            //RangeFacetResult<double> last = facets.ElementAt(3).AsRangeFacetResult<double>();
+            //Assert.AreEqual(null, first.From);
+            //Assert.AreEqual(null, last.To);
         }
 
         [Test]
@@ -735,6 +833,7 @@ namespace Azure.Search.Documents.Tests
             Assert.IsNotNull(response.Value.Facets);
             AssertFacetsEqual(
                 GetFacetsForField(response.Value.Facets, "rating", 2),
+                // Facet value - 5(1 hotel) and 4(4 hotels)
                 MakeValueFacet(1, 5),
                 MakeValueFacet(4, 4));
             AssertFacetsEqual(
