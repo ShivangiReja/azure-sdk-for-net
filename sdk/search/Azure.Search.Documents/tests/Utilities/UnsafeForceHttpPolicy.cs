@@ -13,7 +13,6 @@ namespace Azure.Search.Documents.Tests.Utilities
 {
     public class UnsafeForceHttpPolicy : HttpPipelineSynchronousPolicy
     {
-        public override void OnSendingRequest(HttpMessage message) =>
-            message.Request.Uri.Scheme = "http";
+        public override void OnSendingRequest(HttpMessage message) => message.Request.Uri.Scheme = "http";
     }
 }

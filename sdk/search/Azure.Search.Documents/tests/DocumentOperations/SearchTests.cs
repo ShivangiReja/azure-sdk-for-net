@@ -730,8 +730,10 @@ namespace Azure.Search.Documents.Tests
 
             SearchClientOptions options = new();
             options.AddPolicy(new UnsafeForceHttpPolicy(), HttpPipelinePosition.PerCall);
-            Uri Endpoint = new Uri($"http://{resources.SearchServiceName}.{resources.SearchEndpointSuffix}");
-            SearchClient client = new SearchClient(Endpoint, indexName, new AzureKeyCredential(resources.PrimaryApiKey), options);
+            //Uri endpoint = new Uri("https://<resource-name>.search.windows.net");
+            //SearchClient client = new SearchClient(endpoint, indexName, new AzureKeyCredential("<PrimaryApiKey>"), options);
+            Uri endpoint = new Uri($"https://{resources.SearchServiceName}.{resources.SearchEndpointSuffix}");
+            SearchClient client = new SearchClient(endpoint, indexName, new AzureKeyCredential(resources.PrimaryApiKey), options);
 
             IndexDocumentsBatch<Hotel> batch = IndexDocumentsBatch.Upload(SearchResources.TestDocuments);
             await client.IndexDocumentsAsync(batch);
