@@ -379,6 +379,40 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
+        public async Task TestCustomEntityLookupSkill()
+        {
+            await using SearchResources resources = await SearchResources.CreateWithBlobStorageAndIndexAsync(this);
+
+            SearchIndexerClient client = resources.GetIndexerClient(new SearchClientOptions(ServiceVersion));
+            string skillsetName = Recording.Random.GetName();
+
+            var inputNames = new[] { "text", "languageCode" };
+            var outputNames = new[] { "entities" };
+            var inputs = inputNames.Select(input => new InputFieldMappingEntry(input) { Source = "/document/content" }).ToList();
+            var outputs = outputNames.Select(output => new OutputFieldMappingEntry(output, targetName: Recording.Random.GetName())).ToList();
+
+            SearchIndexerSkill skill1 = new CustomEntityLookupSkill(inputs, outputs)
+            {
+                EntitiesDefinitionUri = new Uri("")
+            };
+
+            SearchIndexerSkillset skillset = new SearchIndexerSkillset(skillsetName, new[] { skill1 })
+            {
+                CognitiveServicesAccount = new DefaultCognitiveServicesAccount(),
+                KnowledgeStore = new KnowledgeStore(resources.StorageAccountConnectionString, new List<KnowledgeStoreProjection>()),
+            };
+
+            // Create the skillset.
+            SearchIndexerSkillset createdSkillset = await client.CreateSkillsetAsync(skillset);
+
+            Response<IReadOnlyList<SearchIndexerSkillset>> response = await client.GetSkillsetsAsync();
+
+            IReadOnlyList<SearchIndexerSkillset> searchIndexerSkillsets = response.Value;
+
+            var test = searchIndexerSkillsets;
+        }
+
+        [Test]
         public async Task CrudSkillset()
         {
             await using SearchResources resources = await SearchResources.CreateWithBlobStorageAndIndexAsync(this);
