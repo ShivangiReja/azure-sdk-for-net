@@ -408,8 +408,6 @@ namespace Azure.Search.Documents.Tests
             Response<IReadOnlyList<SearchIndexerSkillset>> response = await client.GetSkillsetsAsync();
 
             IReadOnlyList<SearchIndexerSkillset> searchIndexerSkillsets = response.Value;
-
-            var test = searchIndexerSkillsets;
         }
 
         [Test]
