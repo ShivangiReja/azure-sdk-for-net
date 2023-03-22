@@ -14,6 +14,9 @@ using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Core.GeoJson;
+using Microsoft.Extensions.Options;
+using NUnit.Framework.Internal;
+using System.Net;
 #endregion Snippet:Azure_Search_Tests_Samples_Readme_Namespace
 
 namespace Azure.Search.Documents.Tests.Samples
@@ -330,6 +333,78 @@ namespace Azure.Search.Documents.Tests.Samples
                 }
                 #endregion Snippet:Azure_Search_Tests_Samples_Readme_Troubleshooting
             }
+        }
+
+        [Test]
+        public async Task CustomerTest()
+        {
+            await using SearchResources resources = SearchResources.CreateWithNoIndexes(this);
+            Environment.SetEnvironmentVariable("SEARCH_ENDPOINT", resources.Endpoint.ToString());
+            Environment.SetEnvironmentVariable("SEARCH_API_KEY", resources.PrimaryApiKey);
+
+            Uri endpoint = new Uri(Environment.GetEnvironmentVariable("SEARCH_ENDPOINT"));
+            string key = Environment.GetEnvironmentVariable("SEARCH_API_KEY");
+
+            // Create SearchIndexClient
+            AzureKeyCredential credential = new AzureKeyCredential(key);
+            SearchIndexClient indexClient = new SearchIndexClient(endpoint, credential);
+
+            var indexName = Recording.Random.GetName();
+            SearchIndex index = new SearchIndex(indexName)
+            {
+                Fields = new FieldBuilder().Build(typeof(Customer)),
+            };
+
+            await indexClient.CreateIndexAsync(index);
+
+            // Create SearchClient
+            SearchClient client = new SearchClient(endpoint, indexName, credential);
+
+            Customer customer = new Customer
+            {
+                Id = "783",
+                Name = "asdadads",
+                ParentLevel = new LookuPreference()
+                {
+                    Id = "8dbb5abe-dc23-45f2-aa10-8b4383708bbe",
+                    ExternalId = 23
+                }
+            };
+
+            await client.IndexDocumentsAsync(IndexDocumentsBatch.Upload(new[] { customer }));
+
+            SearchResults<Customer> searchResponse = await client.SearchAsync<Customer>(
+                    null,
+                    new SearchOptions
+                    {
+                        Filter = "ParentLevel/Id eq '8dbb5abe-dc23-45f2-aa10-8b4383708bbe'"
+                    });
+            await foreach (SearchResult<Customer> result in searchResponse.GetResultsAsync())
+            {
+                Customer doc = result.Document;
+                Console.WriteLine($"{doc.Id}: {doc.Name}");
+            }
+        }
+
+        public class Customer
+        {
+            [SimpleField(IsKey = true, IsFilterable = true, IsSortable = true)]
+            public string Id { get; set; }
+
+            [SearchableField(IsFilterable = true, IsSortable = true)]
+            public string Name { get; set; }
+
+            [SearchableField(IsFilterable = true, IsSortable = true)]
+            public LookuPreference ParentLevel { get; set; }
+        }
+
+        public class LookuPreference
+        {
+            [SearchableField(IsFilterable = true, IsSortable = true)]
+            public string Id { get; set; }
+
+            [SimpleField(IsFilterable = true, IsSortable = true)]
+            public int ExternalId { get; set; }
         }
     }
 }
