@@ -339,14 +339,10 @@ namespace Azure.Search.Documents.Tests.Samples
         public async Task CustomerTest()
         {
             await using SearchResources resources = SearchResources.CreateWithNoIndexes(this);
-            Environment.SetEnvironmentVariable("SEARCH_ENDPOINT", resources.Endpoint.ToString());
-            Environment.SetEnvironmentVariable("SEARCH_API_KEY", resources.PrimaryApiKey);
-
-            Uri endpoint = new Uri(Environment.GetEnvironmentVariable("SEARCH_ENDPOINT"));
-            string key = Environment.GetEnvironmentVariable("SEARCH_API_KEY");
 
             // Create SearchIndexClient
-            AzureKeyCredential credential = new AzureKeyCredential(key);
+            Uri endpoint = new Uri(resources.Endpoint.ToString());
+            AzureKeyCredential credential = new AzureKeyCredential(resources.PrimaryApiKey);
             SearchIndexClient indexClient = new SearchIndexClient(endpoint, credential);
 
             var indexName = Recording.Random.GetName();
