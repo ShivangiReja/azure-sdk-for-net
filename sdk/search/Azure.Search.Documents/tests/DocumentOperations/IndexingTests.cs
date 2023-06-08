@@ -704,6 +704,36 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
+        public async Task TestSearch()
+        {
+            await using SearchResources resources = await SearchResources.CreateWithEmptyHotelsIndexAsync(this);
+            SearchClient client = resources.GetSearchClient();
+
+            IDictionary<string, object> fields = new Dictionary<string, object>();
+            fields["hotelId"] = "1";
+            fields["hotelName"] = "West Western";
+            fields["tags"] = new[] { "pool", "air conditioning", "luxury" };
+            SearchDocument document = new SearchDocument(fields);
+
+            IndexDocumentsBatch<SearchDocument> batch = IndexDocumentsBatch.Upload(new[] { document });
+            await client.IndexDocumentsAsync(batch);
+            await resources.WaitForIndexingAsync();
+
+            long count = await client.GetDocumentCountAsync();
+            Assert.AreEqual(1, count);
+
+            SearchResults<SearchDocument> response = await client.SearchAsync<SearchDocument>("luxury");
+            await foreach (SearchResult<SearchDocument> result in response.GetResultsAsync())
+            {
+                SearchDocument doc = result.Document;
+                string id = (string)doc["hotelId"];
+                string name = (string)doc["hotelName"];
+                object tags = doc["tags"];
+                Console.WriteLine($"{id}: {name}, {tags}");
+            }
+        }
+
+        [Test]
         public async Task DeleteByKeys()
         {
             await using SearchResources resources = await SearchResources.CreateWithEmptyHotelsIndexAsync(this);
