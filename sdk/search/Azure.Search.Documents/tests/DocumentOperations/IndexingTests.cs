@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Azure.Core.Serialization;
 using Azure.Core.TestFramework;
 using Azure.Search.Documents.Models;
+using System.Text.Json.Nodes;
 using NUnit.Framework;
 
 namespace Azure.Search.Documents.Tests
@@ -712,7 +713,8 @@ namespace Azure.Search.Documents.Tests
             IDictionary<string, object> fields = new Dictionary<string, object>();
             fields["hotelId"] = "1";
             fields["hotelName"] = "West Western";
-            fields["tags"] = new[] { "pool", "air conditioning", "luxury" };
+            fields["tags"] = new JsonArray{ "luxury", "pool", "view", "wifi" };
+
             SearchDocument document = new SearchDocument(fields);
 
             IndexDocumentsBatch<SearchDocument> batch = IndexDocumentsBatch.Upload(new[] { document });
@@ -729,7 +731,7 @@ namespace Azure.Search.Documents.Tests
                 string id = (string)doc["hotelId"];
                 string name = (string)doc["hotelName"];
                 object tags = doc["tags"];
-                Console.WriteLine($"{id}: {name}, {tags}");
+                Console.WriteLine($"{id}: {name}");
             }
         }
 
