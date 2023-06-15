@@ -517,10 +517,7 @@ namespace Azure.Search.Documents.Tests
                     }
             };
 
-            SearchIndex updatedIndex = await client.CreateOrUpdateIndexAsync(
-                createdIndex,
-                allowIndexDowntime: true,
-                onlyIfUnchanged: true);
+            SearchIndex updatedIndex = await client.CreateOrUpdateIndexAsync(createdIndex);
 
             Assert.AreEqual(updatedIndex.Name, createdIndex.Name);
         }
