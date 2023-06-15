@@ -479,14 +479,12 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
-        public async Task SetScoringProfile()
+        [ServiceVersion(Min = SearchClientOptions.ServiceVersion.V2023_07_01_Preview)]
+        public async Task TestSearch()
         {
-            // Testing: https://github.com/Azure/azure-sdk-for-net/issues/16570
-
             await using SearchResources resources = SearchResources.CreateWithNoIndexes(this);
 
             string indexName = Recording.Random.GetName();
-            string scoringProfileName = Recording.Random.GetName();
 
             // Make sure the index, if created, is cleaned up.
             resources.IndexName = indexName;
@@ -498,24 +496,33 @@ namespace Azure.Search.Documents.Tests
                     new SimpleField("id", SearchFieldDataType.String) { IsKey = true },
                     new SearchableField("title") { IsFilterable = true, IsSortable = false },
                 },
-                DefaultScoringProfile = scoringProfileName,
-                ScoringProfiles =
-                {
-                    new ScoringProfile(scoringProfileName)
-                    {
-                        TextWeights = new TextWeights(new Dictionary<string, double>
-                        {
-                            { "title", 2 },
-                        }),
-                    },
-                },
             };
 
             SearchIndexClient client = resources.GetIndexClient();
             SearchIndex createdIndex = await client.CreateIndexAsync(index);
 
-            Assert.AreEqual(1, createdIndex.ScoringProfiles.Count);
-            Assert.AreEqual(scoringProfileName, createdIndex.ScoringProfiles[0].Name);
+            createdIndex.Fields.Add(
+                new SearchField("descriptionVector", SearchFieldDataType.Collection(SearchFieldDataType.Single))
+                {
+                    IsSearchable = true,
+                    VectorSearchDimensions = 1536,
+                    VectorSearchConfiguration = "my-vector-config"
+                });
+
+            createdIndex.VectorSearch = new()
+            {
+                AlgorithmConfigurations =
+                    {
+                        new HnswVectorSearchAlgorithmConfiguration( "my-vector-config")
+                    }
+            };
+
+            SearchIndex updatedIndex = await client.CreateOrUpdateIndexAsync(
+                createdIndex,
+                allowIndexDowntime: true,
+                onlyIfUnchanged: true);
+
+            Assert.AreEqual(updatedIndex.Name, createdIndex.Name);
         }
     }
 }
