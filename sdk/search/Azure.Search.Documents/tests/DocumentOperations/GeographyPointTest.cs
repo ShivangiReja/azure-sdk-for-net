@@ -31,7 +31,6 @@ namespace Azure.Search.Documents.Tests
             string indexName = Recording.Random.GetName();
             resources.IndexName = indexName;
 
-            // Search the documents
             JsonSerializerSettings serializerSettings = new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
