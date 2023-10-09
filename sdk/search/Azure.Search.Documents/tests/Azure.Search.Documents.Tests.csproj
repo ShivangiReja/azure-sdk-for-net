@@ -35,6 +35,8 @@
     <PackageReference Include="Azure.Storage.Blobs" />
     <PackageReference Include="Azure.Security.KeyVault.Keys" />
     <PackageReference Include="Microsoft.Spatial" />
+    <PackageReference Include="Microsoft.Azure.Core.NewtonsoftJson" />
+    <PackageReference Include="Microsoft.Azure.Core.Spatial.NewtonsoftJson" />
   </ItemGroup>
 
   <ItemGroup>
