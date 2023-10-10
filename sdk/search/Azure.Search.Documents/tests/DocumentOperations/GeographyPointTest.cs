@@ -61,7 +61,7 @@ namespace Azure.Search.Documents.Tests
             {
                Id = "1",
                Name = "Rainier",
-               Summit = TestExtensions.CreatePoint(-75.5646879643, 39.7093928328)
+               Summit = GeographyPoint.Create(-75.5646879643, 39.7093928328)
             };
 
             SearchClient searchClient = resources.GetSearchClient(clientOptions);
