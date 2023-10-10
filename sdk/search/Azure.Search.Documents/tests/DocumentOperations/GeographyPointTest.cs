@@ -12,6 +12,9 @@ using Newtonsoft.Json;
 using Azure.Core.Serialization;
 using Microsoft.Spatial;
 using System;
+using System.Text.Json;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace Azure.Search.Documents.Tests
 {
@@ -89,6 +92,81 @@ namespace Azure.Search.Documents.Tests
 
             [SimpleField(IsFilterable = true)]
             public Microsoft.Spatial.GeographyPoint Summit { get; set; }
+        }
+
+        [Test]
+        public async Task SearchGeographyPointUsingSerializer()
+        {
+            await using SearchResources resources = SearchResources.CreateWithNoIndexes(this);
+
+            string indexName = Recording.Random.GetName();
+            resources.IndexName = indexName;
+
+            //------- Create Index ----------------
+            SearchIndex index = new SearchIndex(indexName)
+            {
+                Fields =
+                {
+                    new SimpleField("Id", SearchFieldDataType.String) { IsKey = true },
+                    new SearchableField("Name") { IsFilterable = true, IsSortable = false },
+                    new SimpleField("Location", SearchFieldDataType.GeographyPoint) { IsFilterable = true },
+                },
+            };
+
+            SearchIndexClient indexClient = resources.GetIndexClient();
+            await indexClient.CreateIndexAsync(index);
+
+            SearchIndex createdIndex = await indexClient.GetIndexAsync(indexName);
+            Assert.AreEqual(indexName, createdIndex.Name);
+
+            //------- Upload data ------------------
+
+            SearchDocument document = new SearchDocument
+            {
+                ["Id"] = "1",
+                ["Name"] = "Rainier",
+                ["Location"] = GeographyPoint.Create(-75.5646879643, 39.7093928328)
+            };
+
+            JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+            {
+                Converters =
+                {
+                    new NewtonsoftJsonMicrosoftSpatialGeoJsonConverter()
+                }
+            };
+            SearchClientOptions clientOptions = new SearchClientOptions
+            {
+                Serializer = new NewtonsoftJsonObjectSerializer(serializerSettings)
+            };
+            SearchClient searchClient = resources.GetSearchClient(clientOptions);
+            await searchClient.IndexDocumentsAsync(IndexDocumentsBatch.Upload(new[] { document }));
+            await resources.WaitForIndexingAsync();
+
+            //--------- Search the docuement ------------
+            Response<SearchResults<SearchDocument>> results = await searchClient.SearchAsync<SearchDocument>("Rainier");
+            await foreach (SearchResult<SearchDocument> result in results.Value.GetResultsAsync())
+            {
+                SearchDocument doc = result.Document;
+                dynamic location = doc["Location"];
+
+                string locationJsonString =
+                    @"{
+                        ""type"": ""Point"",
+                        ""coordinates"": [
+                            39.7093928328,
+                            -75.5646879643
+                         ],
+                        ""crs"": {
+                            ""type"": ""name"",
+                            ""properties"": {
+                                ""name"": ""EPSG:4326""
+                            }
+                         }
+                     }";
+
+                Console.WriteLine(locationJsonString);
+            }
         }
     }
 }
