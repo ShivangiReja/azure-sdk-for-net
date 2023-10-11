@@ -34,7 +34,6 @@ namespace Azure.Search.Documents.Tests
 
             JsonSerializerSettings serializerSettings = new JsonSerializerSettings
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters =
                 {
                     new NewtonsoftJsonMicrosoftSpatialGeoJsonConverter()
