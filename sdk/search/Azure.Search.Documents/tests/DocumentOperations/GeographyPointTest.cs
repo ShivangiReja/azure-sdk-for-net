@@ -12,9 +12,7 @@ using Newtonsoft.Json;
 using Azure.Core.Serialization;
 using Microsoft.Spatial;
 using System;
-using System.Text.Json;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
 
 namespace Azure.Search.Documents.Tests
 {
@@ -27,7 +25,7 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
-        public async Task TestGeographyPoint()
+        public async Task TestGeographyPointOption1()
         {
             await using SearchResources resources = SearchResources.CreateWithNoIndexes(this);
 
@@ -64,7 +62,7 @@ namespace Azure.Search.Documents.Tests
             {
                Id = "1",
                Name = "Rainier",
-               Summit = GeographyPoint.Create(-75.5646879643, 39.7093928328)
+                Location = GeographyPoint.Create(-75.5646879643, 39.7093928328)
             };
 
             SearchClient searchClient = resources.GetSearchClient(clientOptions);
@@ -76,10 +74,26 @@ namespace Azure.Search.Documents.Tests
             await foreach (SearchResult<Mountain> result in results.Value.GetResultsAsync())
             {
                 Mountain mountain = result.Document;
-                Console.WriteLine("https://www.bing.com/maps?cp={0}~{1}&sp=point.{0}_{1}_{2}",
-                    mountain.Summit.Latitude,
-                    mountain.Summit.Longitude,
-                    Uri.EscapeDataString(mountain.Name));
+
+                string locationJson = System.Text.Json.JsonSerializer.Serialize(mountain.Location);
+                JToken actual = JToken.Parse(locationJson);
+
+                string expactedLocationJson =
+                            @"{
+                                ""Latitude"": -75.5646879643,
+                                ""Longitude"": 39.7093928328,
+                                ""Z"": null,
+                                ""M"": null,
+                                ""CoordinateSystem"": {
+                                     ""EpsgId"": 4326,
+                                     ""Id"": ""4326"",
+                                     ""Name"": ""WGS84""
+                                    },
+                               ""IsEmpty"": false,
+                              }";
+                JToken expected = JToken.Parse(expactedLocationJson);
+
+                Assert.AreEqual(expected, actual);
             }
         }
         public class Mountain
@@ -91,7 +105,7 @@ namespace Azure.Search.Documents.Tests
             public string Name { get; set; }
 
             [SimpleField(IsFilterable = true)]
-            public Microsoft.Spatial.GeographyPoint Summit { get; set; }
+            public Microsoft.Spatial.GeographyPoint Location { get; set; }
         }
 
         [Test]
