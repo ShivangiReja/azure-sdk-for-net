@@ -109,7 +109,7 @@ namespace Azure.Search.Documents.Tests
         }
 
         [Test]
-        public async Task SearchGeographyPointUsingSerializer()
+        public async Task TestGeographyPointOption2()
         {
             await using SearchResources resources = SearchResources.CreateWithNoIndexes(this);
 
