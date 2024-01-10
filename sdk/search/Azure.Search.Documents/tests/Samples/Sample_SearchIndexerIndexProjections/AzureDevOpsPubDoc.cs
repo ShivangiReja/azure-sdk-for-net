@@ -18,7 +18,7 @@ internal class AzureDevOpsPubDoc
     public const string VectorFieldName = "vector";
 
     [JsonPropertyName("id")]
-    [SearchableField(IsKey = true, IsFilterable = true, AnalyzerName = "en.microsoft")]
+    [SearchableField(IsKey = true, IsFilterable = true, AnalyzerName = "keyword")]
     public string Id { get; set; }
 
     [JsonPropertyName(ParentIdFieldName)]

@@ -83,7 +83,7 @@ namespace Azure.Search.Documents.Tests.Samples
             {
                 TargetName = AzureDevOpsPubDoc.LinksFieldName
             };
-            var s1 = new EntityRecognitionSkill(new List<InputFieldMappingEntry> { s1Input }, new List<OutputFieldMappingEntry> { s1Output })
+            var s1 = new EntityRecognitionSkill(new List<InputFieldMappingEntry> { s1Input }, new List<OutputFieldMappingEntry> { s1Output }, EntityRecognitionSkill.SkillVersion.V3)
             {
                 Name = "extract links"
             };
