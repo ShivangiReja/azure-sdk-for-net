@@ -11,7 +11,7 @@ using System.ComponentModel;
 namespace Azure.Search.Documents.Indexes.Models
 {
     /// <summary> Details the status of an individual indexer execution. </summary>
-    public readonly partial struct IndexerExecutionStatusDetail : IEquatable<IndexerExecutionStatusDetail>
+    internal readonly partial struct IndexerExecutionStatusDetail : IEquatable<IndexerExecutionStatusDetail>
     {
         private readonly string _value;
 

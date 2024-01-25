@@ -13,13 +13,13 @@ using Azure.Core;
 namespace Azure.Search.Documents.Indexes.Models
 {
     /// <summary> Represents an index alias, which describes a mapping from the alias name to an index. The alias name can be used in place of the index name for supported operations. </summary>
-    public partial class SearchAlias
+    internal partial class SearchAlias
     {
         /// <summary> Initializes a new instance of <see cref="SearchAlias"/>. </summary>
         /// <param name="name"> The name of the alias. </param>
         /// <param name="indexes"> The name of the index this alias maps to. Only one index name may be specified. </param>
         /// <exception cref="ArgumentNullException"> <paramref name="name"/> or <paramref name="indexes"/> is null. </exception>
-        public SearchAlias(string name, IEnumerable<string> indexes)
+        internal SearchAlias(string name, IEnumerable<string> indexes)
         {
             Argument.AssertNotNull(name, nameof(name));
             Argument.AssertNotNull(indexes, nameof(indexes));
@@ -31,17 +31,19 @@ namespace Azure.Search.Documents.Indexes.Models
         /// <summary> Initializes a new instance of <see cref="SearchAlias"/>. </summary>
         /// <param name="name"> The name of the alias. </param>
         /// <param name="indexes"> The name of the index this alias maps to. Only one index name may be specified. </param>
-        /// <param name="etag"> The ETag of the alias. </param>
-        internal SearchAlias(string name, IList<string> indexes, string etag)
+        /// <param name="eTag"> The ETag of the alias. </param>
+        internal SearchAlias(string name, IReadOnlyList<string> indexes, string eTag)
         {
             Name = name;
             Indexes = indexes;
-            _etag = etag;
+            ETag = eTag;
         }
 
         /// <summary> The name of the alias. </summary>
-        public string Name { get; set; }
+        public string Name { get; }
         /// <summary> The name of the index this alias maps to. Only one index name may be specified. </summary>
-        public IList<string> Indexes { get; }
+        public IReadOnlyList<string> Indexes { get; }
+        /// <summary> The ETag of the alias. </summary>
+        public string ETag { get; }
     }
 }

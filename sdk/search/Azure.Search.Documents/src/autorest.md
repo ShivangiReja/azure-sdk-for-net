@@ -421,3 +421,125 @@ directive:
       "modelAsString": false
     }
 ```
+
+### ----------------------------------------------------------
+
+**Search Service Swagger**
+
+### Remove paths for aliases, reset documents, and reset skills.
+
+
+```yaml
+directive:
+- from: searchservice.json
+  where: $.paths
+  transform: >
+    delete $["/aliases"];
+    delete $["/aliases('{aliasName}')"];
+    delete $["/indexers('{indexerName}')/search.resetdocs"];
+    delete $["/skillsets('{skillsetName}')/search.resetskills"];
+```
+
+### Filter out cache reprocessing from data source, indexers, and skillsets.
+
+```yaml
+directive:
+- from: searchservice.json
+  where: $.paths
+  transform: >
+    $["/datasources('{dataSourceName}')"].put.parameters = $["/datasources('{dataSourceName}')"].put.parameters
+      .filter(p => p["$ref"] !== "#/parameters/IgnoreResetRequirementsParameter");
+      
+    $["/indexers('{indexerName}')"].put.parameters = $["/indexers('{indexerName}')"].put.parameters
+      .filter(p => p["$ref"] !== "#/parameters/IgnoreResetRequirementsParameter"
+        && p["$ref"] !== "#/parameters/DisableCacheReprocessingChangeDetectionParameter");
+
+    $["/skillsets('{skillsetName}')"].put.parameters = $["/skillsets('{skillsetName}')"].put.parameters
+      .filter(p => p["$ref"] !== "#/parameters/IgnoreResetRequirementsParameter"
+        && p["$ref"] !== "#/parameters/DisableCacheReprocessingChangeDetectionParameter");
+```
+
+### Clean up definitions.
+
+```yaml
+directive:
+- from: searchservice.json
+  where: $.definitions
+  transform: >
+    delete $.AnalyzeRequest.properties.normalizer;
+    delete $.LexicalNormalizerName;
+    delete $.LexicalNormalizer;
+    delete $.CustomNormalizer;
+    delete $.SearchField.properties.normalizer;
+    delete $.SearchIndex.properties.normalizers;
+    
+    delete $.IndexerExecutionResult.properties.currentState;
+    delete $.IndexerExecutionResult.properties.statusDetail;
+    delete $.IndexerCurrentState;
+    delete $.IndexingMode;
+
+    delete $.OcrSkillLineEnding;
+    delete $.OcrSkill.properties.lineEnding;
+
+    delete $.SearchIndexer.properties.cache;
+    delete $.SearchIndexerCache;
+
+    delete $.ServiceCounters.properties.aliasesCount;
+
+    delete $.SearchIndexerKnowledgeStore.properties.parameters;
+    delete $.SearchIndexerKnowledgeStoreParameters;
+    
+    delete $.AmlSkill;
+    delete $.NativeBlobSoftDeleteDeletionDetectionPolicy;
+```
+
+### Clean up properties.
+
+```yaml
+directive:
+- from: searchservice.json
+  where: $.properties
+  transform: >
+    delete $.DisableCacheReprocessingChangeDetectionParameter;
+    delete $.IgnoreResetRequirementsParameter;
+```
+
+**Search Index Swagger**
+
+### Clean up paths.
+
+```yaml
+directive:
+- from: searchindex.json
+  where: $.paths
+  transform: >
+    $["/docs"].get.parameters = $["/docs"].get.parameters
+      .filter(p => p.name !== "speller" && p.name !== "queryLanguage" && p.name !== "debug" && p.name !== "semanticFields");
+```
+
+### Clean up definitions.
+
+```yaml
+directive:
+- from: searchindex.json
+  where: $.definitions
+  transform: >
+    delete $.DocumentDebugInfo;
+    delete $.SemanticDebugInfo;
+    delete $.SearchResult.properties["@search.documentDebugInfo"];
+
+    delete $.Speller;
+    delete $.SearchRequest.properties.speller;
+
+    delete $.QueryResultDocumentSemanticField;
+    delete $.QueryResultDocumentSemanticFieldState;
+    delete $.QueryResultDocumentRerankerInput;
+
+    delete $.QueryLanguage;
+    delete $.SearchRequest.properties.queryLanguage;
+
+    delete $.QueryDebugMode;
+    delete $.SearchRequest.properties.debug;
+    
+    delete $.SearchRequest.properties.semanticFields;
+```

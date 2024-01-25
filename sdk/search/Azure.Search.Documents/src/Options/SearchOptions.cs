@@ -37,12 +37,9 @@ namespace Azure.Search.Documents
         /// <param name="semanticConfigurationName"> The name of a semantic configuration that will be used when processing documents for queries of type semantic. </param>
         /// <param name="semanticErrorMode"> Allows the user to choose whether a semantic call should fail completely, or to return partial results (default). </param>
         /// <param name="semanticMaxWaitInMilliseconds"> Allows the user to set an upper bound on the amount of time it takes for semantic enrichment to finish processing before the request fails. </param>
-        /// <param name="debug"> Enables a debugging tool that can be used to further explore your reranked results. </param>
         /// <param name="searchText"> A full-text search query expression; Use "*" or omit this parameter to match all documents. </param>
         /// <param name="searchFieldsRaw"> The comma-separated list of field names to which to scope the full-text search. When using fielded search (fieldName:searchExpression) in a full Lucene query, the field names of each fielded search expression take precedence over any field names listed in this parameter. </param>
         /// <param name="searchMode"> A value that specifies whether any or all of the search terms must be matched in order to count the document as a match. </param>
-        /// <param name="queryLanguage"> A value that specifies the language of the search query. </param>
-        /// <param name="querySpeller"> A value that specified the type of the speller to use to spell-correct individual search query terms. </param>
         /// <param name="queryAnswerRaw"> A value that specifies whether answers should be returned as part of the search response. </param>
         /// <param name="selectRaw"> The comma-separated list of fields to retrieve. If unspecified, all fields marked as retrievable in the schema are included. </param>
         /// <param name="skip"> The number of search results to skip. This value cannot be greater than 100,000. If you need to scan documents in sequence, but cannot use skip due to this limitation, consider using orderby on a totally-ordered key and filter with a range query instead. </param>
@@ -55,7 +52,7 @@ namespace Azure.Search.Documents
         /// The available derived classes include <see cref="VectorizableTextQuery"/> and <see cref="VectorizedQuery"/>.
         /// </param>
         /// <param name="filterMode"> Determines whether or not filters are applied before or after the vector search is performed. Default is 'preFilter'. </param>
-        internal SearchOptions(bool? includeTotalCount, IList<string> facets, string filter, string highlightFieldsRaw, string highlightPostTag, string highlightPreTag, double? minimumCoverage, string orderByRaw, SearchQueryType? queryType, ScoringStatistics? scoringStatistics, string sessionId, IList<string> scoringParameters, string scoringProfile, string semanticQuery, string semanticConfigurationName, SemanticErrorMode? semanticErrorMode, int? semanticMaxWaitInMilliseconds, QueryDebugMode? debug, string searchText, string searchFieldsRaw, SearchMode? searchMode, QueryLanguage? queryLanguage, QuerySpellerType? querySpeller, string queryAnswerRaw, string selectRaw, int? skip, int? size, string queryCaptionRaw, string semanticFieldsRaw, IList<VectorQuery> vectorQueries, VectorFilterMode? filterMode)
+        internal SearchOptions(bool? includeTotalCount, IList<string> facets, string filter, string highlightFieldsRaw, string highlightPostTag, string highlightPreTag, double? minimumCoverage, string orderByRaw, SearchQueryType? queryType, ScoringStatistics? scoringStatistics, string sessionId, IList<string> scoringParameters, string scoringProfile, string semanticQuery, string semanticConfigurationName, SemanticErrorMode? semanticErrorMode, int? semanticMaxWaitInMilliseconds, string searchText, string searchFieldsRaw, SearchMode? searchMode, string queryAnswerRaw, string selectRaw, int? skip, int? size, string queryCaptionRaw, string semanticFieldsRaw, IList<VectorQuery> vectorQueries, VectorFilterMode? filterMode)
         {
             IncludeTotalCount = includeTotalCount;
             Facets = facets;
@@ -76,10 +73,8 @@ namespace Azure.Search.Documents
             SelectRaw = selectRaw;
             Skip = skip;
             Size = size;
-            QueryLanguage = queryLanguage;
-            QuerySpeller = querySpeller;
 
-            SemanticSearch = (semanticConfigurationName != null || semanticErrorMode != null || semanticMaxWaitInMilliseconds != null || queryAnswerRaw != null || queryCaptionRaw != null || semanticQuery != null || semanticFieldsRaw != null || debug != null) ? new SemanticSearchOptions() : null;
+            SemanticSearch = (semanticConfigurationName != null || semanticErrorMode != null || semanticMaxWaitInMilliseconds != null || queryAnswerRaw != null || queryCaptionRaw != null || semanticQuery != null || semanticFieldsRaw != null) ? new SemanticSearchOptions() : null;
             if (SemanticSearch != null)
             {
                 SemanticSearch.QueryAnswer = queryAnswerRaw != null ? new QueryAnswer() : null;
@@ -92,7 +87,6 @@ namespace Azure.Search.Documents
             QueryCaptionRaw = queryCaptionRaw;
             SemanticQuery = semanticQuery;
             SemanticFieldsRaw = semanticFieldsRaw;
-            Debug = debug;
 
             VectorSearch = (vectorQueries != null || filterMode != null) ? new VectorSearchOptions() : null;
             VectorQueries = vectorQueries;
@@ -238,14 +232,6 @@ namespace Azure.Search.Documents
         [CodeGenMember("ScoringParameters")]
         public IList<string> ScoringParameters { get; internal set; } = new List<string>();
 
-        /// <summary> A value that specifies the language of the search query. </summary>
-        [CodeGenMember("QueryLanguage")]
-        public QueryLanguage? QueryLanguage { get; set; }
-
-        /// <summary> A value that specifies the type of the speller to use to spell-correct individual search query terms. </summary>
-        [CodeGenMember("Speller")]
-        public QuerySpellerType? QuerySpeller { get; set; }
-
         /// <summary> Options for performing Semantic Search. </summary>
         public SemanticSearchOptions SemanticSearch { get; set; }
 
@@ -318,20 +304,6 @@ namespace Azure.Search.Documents
                 if (SemanticSearch != null)
                 {
                     SemanticSearch.SemanticQuery = value;
-                }
-            }
-        }
-
-        /// <summary> Enables a debugging tool that can be used to further explore your reranked results. </summary>
-        [CodeGenMember("Debug")]
-        private QueryDebugMode? Debug
-        {
-            get { return SemanticSearch?.Debug; }
-            set
-            {
-                if (SemanticSearch != null)
-                {
-                    SemanticSearch.Debug = value;
                 }
             }
         }
@@ -422,8 +394,6 @@ namespace Azure.Search.Documents
             destination.SessionId = source.SessionId;
             destination.Size = source.Size;
             destination.Skip = source.Skip;
-            destination.QueryLanguage = source.QueryLanguage;
-            destination.QuerySpeller = source.QuerySpeller;
             destination.SemanticSearch = source.SemanticSearch;
             destination.VectorSearch = source.VectorSearch;
         }

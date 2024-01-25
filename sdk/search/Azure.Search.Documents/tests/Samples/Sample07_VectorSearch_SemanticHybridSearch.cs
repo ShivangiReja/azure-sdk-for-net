@@ -58,7 +58,6 @@ namespace Azure.Search.Documents.Tests.Samples.VectorSearch
                              QueryCaption = new(QueryCaptionType.Extractive),
                              QueryAnswer = new(QueryAnswerType.Extractive)
                          },
-                         QueryLanguage = QueryLanguage.EnUs,
                          QueryType = SearchQueryType.Semantic,
                      });
 

@@ -129,7 +129,6 @@ namespace Azure.Search.Documents.Tests
                         },
                         QueryType = SearchQueryType.Semantic,
                         Select = { "hotelId", "hotelName", "description", "category" },
-                        QueryLanguage = QueryLanguage.EnUs
                     });
 
             Assert.NotNull(response.SemanticSearch.Answers);
