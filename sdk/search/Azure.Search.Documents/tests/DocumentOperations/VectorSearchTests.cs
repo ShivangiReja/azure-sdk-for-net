@@ -612,7 +612,7 @@ namespace Azure.Search.Documents.Tests
             };
 
             SearchClient searchClient = resources.GetSearchClient(options);
-            await searchClient.IndexDocumentsAsync(IndexDocumentsBatch.Upload(new[] { document }));
+            var resultTest = await searchClient.IndexDocumentsAsync(IndexDocumentsBatch.Upload(new[] { document }));
             await resources.WaitForIndexingAsync();
 
             // ------------Query the document-----------------------------
