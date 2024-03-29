@@ -77,7 +77,7 @@ namespace Azure.Search.Documents.Tests.Samples.VectorSearch
             };
 
             SearchClient searchClient = new(endpoint, indexName, credential);
-            Response<IndexDocumentsResult> result = await searchClient.IndexDocumentsAsync(IndexDocumentsBatch.MergeOrUpload(new[] { document }));
+            Response<IndexDocumentsResult> result = await searchClient.MergeOrUploadDocumentsAsync(new[] { document });
 
             Assert.AreEqual(200, result.GetRawResponse().Status);
             Assert.AreEqual("1", result.Value.Results[0].Key);
