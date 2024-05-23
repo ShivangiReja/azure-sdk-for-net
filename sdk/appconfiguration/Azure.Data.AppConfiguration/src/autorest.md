@@ -6,7 +6,7 @@ Run `dotnet build /t:GenerateCode` to generate code.
 > see https://aka.ms/autorest
 ``` yaml
 input-file:
-- https://github.com/Azure/azure-rest-api-specs/blob/c77bbf822be2deaac1b690270c6cd03a52df0e37/specification/appconfiguration/data-plane/Microsoft.AppConfiguration/stable/2023-10-01/appconfiguration.json
+- https://github.com/Azure/azure-rest-api-specs/blob/9583ed6c26ce1f10bbea92346e28a46394a784b4/specification/appconfiguration/data-plane/Microsoft.AppConfiguration/stable/2023-11-01/appconfiguration.json
 namespace: Azure.Data.AppConfiguration
 title: ConfigurationClient
 ```
@@ -15,9 +15,20 @@ title: ConfigurationClient
 ``` yaml
 directive:
   from: swagger-document
-  where: $.parameters.Endpoint
+  where: $["x-ms-parameterized-host"].parameters["0"]
   transform: $.format = "url"
   ```
+
+### Relocate the Endpoint parameter
+
+```yaml
+directive:
+  from: swagger-document
+  where: $["x-ms-parameterized-host"].parameters["0"]
+  transform: >
+    $["x-ms-parameter-location"] = "client";
+    $["x-ms-skip-url-encoding"] = true;
+```
 
 ### Modify operation names
 ``` yaml
